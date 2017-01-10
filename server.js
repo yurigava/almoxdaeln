@@ -57,7 +57,8 @@ http.createServer( function (request, response) {
          response.writeHead(200, {'Content-Type': contentTypes[extension]});
          
          // Write the content of the file to response body
-         response.write(data.toString());		
+         //response.write(data.toString());		
+		 response.write(data);
       }
       // Send the response body 
       response.end();

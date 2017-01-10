@@ -8,7 +8,7 @@
 		  var senha= document.getElementsByName('senha')[0].value;
 		  senha=senha.toLowerCase();
 		  if (usuario=="admin" && senha=="admin") {
-		    window.location="HelloWorld.html";
+		    window.location="malandro.html";
 		    done=1;
 		  }
 		  if (done==0) { alert("Dados incorretos, tente novamente"); }
@@ -19,8 +19,10 @@
 		<body>
 			<div style="text-align:center">
 				   
-					<!-- <img id="img" src="dory.jpg"/> -->
+					 <img id="img" src="dory.jpg"/> 
 
+				<!-- <img id="myImage" src="malandro.jpg" /> -->
+				
 				<div id="all">
 				  <div id="login-box">
 				    <div id="login-header">
@@ -33,7 +35,7 @@
 				    </div>
 				    <div id="enviar">
 				      <input type="button" onclick="Login()" class="botao" value="Login">
-				      <a href="#">Esqueceu a sua senha?</a>
+				      <a href="#" onClick="alert('DICA: usuario=admin    senha=admin')">	Esqueceu a sua senha?</a>
 				    </div>
 				  </div>
 				</div>
