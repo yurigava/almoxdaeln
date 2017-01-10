@@ -1,42 +1,43 @@
 <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script language="JavaScript">
+        function Login() {
+            var done=0;
+            var usuario = document.getElementsByName('usuario')[0].value;
+            var senha = document.getElementsByName('senha')[0].value;
+            if (usuario == "admin" && senha == "admin") {
+                window.location="malandro.html";
+                done=1;
+            }
+            if (done==0) { alert("Dados incorretos, tente novamente"); }
+        }
+        </script>
+    </head>
 
-	<script language="JavaScript">
-	function Login() {
-		  var done=0;
-		  var usuario = document.getElementsByName('usuario')[0].value;
-		  usuario=usuario.toLowerCase();
-		  var senha= document.getElementsByName('senha')[0].value;
-		  senha=senha.toLowerCase();
-		  if (usuario=="admin" && senha=="admin") {
-		    window.location="HelloWorld.html";
-		    done=1;
-		  }
-		  if (done==0) { alert("Dados incorretos, tente novamente"); }
-		}
-	</script>
+    <body>
+    <div style="text-align:center">
 
-		
-		<body>
-			<div style="text-align:center">
-				   
-					<!-- <img id="img" src="dory.jpg"/> -->
+        <img id="img" src="resources/dory.jpg"/>
 
-				<div id="all">
-				  <div id="login-box">
-				    <div id="login-header">
-				      Faca login no sistema
-				    </div>
-				    <div id="login-inputs">
-				      <input type="text" placeholder="Nome de usuario" name="usuario">
-				      <br />
-				      <input type="password" placeholder="Senha" name="senha">
-				    </div>
-				    <div id="enviar">
-				      <input type="button" onclick="Login()" class="botao" value="Login">
-				      <a href="#">Esqueceu a sua senha?</a>
-				    </div>
-				  </div>
-				</div>
-			</div>
-		</body>
+            <div id="all">
+                <div id="login-box">
+                    <div id="login-header">
+                    Faça login no sistema
+                    </div>
+                    <form onsubmit="Login();" action="javascript:Login();">
+                        <input type="text" placeholder="Nome de usuário" name="usuario" required=""/>
+                        <br/>
+                        <input type="password" placeholder="Senha" name="senha" required=""/>
+                        <br/>
+                        <input type="button" id="btnLogin" onclick="Login();" class="botao" value="Login"/>
+                        <input type="submit" style="display: none"/>
+                    </form>
+                    <div id="lembrar-senha">
+                        <a href="#" onClick="alert('DICA: usuário=admin    senha=admin')">    Esqueceu a sua senha?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
