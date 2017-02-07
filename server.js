@@ -3,6 +3,11 @@ var fs = require('fs');
 var url = require('url');
 var path = require('path');
 
+var express = require('express');
+var router = express.Router();
+
+var mysql = require('mysql');
+
 var contentTypes = {
           'html' : 'text/html',
           'css'  : 'text/css',
@@ -18,6 +23,31 @@ var contentTypes = {
           'woff2': 'application/font-woff2',
           'zip'  : 'application/zip'
 };
+
+var connection = mysql.createConnection({
+    host    : '192.168.0.69',
+    user    : 'jquery',
+    password: 'Test123!.',
+    //debug : 'true'
+    database: 'almoxdaeln_db'
+});
+
+connection.connect(function (err) {
+    if (err) {
+        console.log(err);
+    }
+});
+
+connection.query('SELECT * FROM almoxdaeln_db.Equipamentos', function (error, results, fields) {
+    if (error) throw error;
+    for (i in results) {
+        console.log('The type is: ', results[i].type);
+        console.log('The id is:', results[i].eq_id);
+    }
+            //console.log(fields);
+});
+
+connection.end();
 
 // Create a server
 http.createServer(function (request, response) {
