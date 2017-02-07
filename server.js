@@ -30,7 +30,7 @@ http.createServer(function (request, response) {
    // Read the requested file content from file system
    if (pathName.substr(1) == "")
    {
-       pathName="/login.html";
+       pathName="/public/login.html";
    }
 
    var fileName = pathName.substr(1);
