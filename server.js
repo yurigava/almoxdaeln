@@ -32,7 +32,7 @@ var connection = mysql.createConnection({
     database: 'almoxdaeln_db'
 });
 
-connection.connect(function (err) {
+/*connection.connect(function (err) {
     if (err) {
         console.log(err);
     }
@@ -48,6 +48,7 @@ connection.query('SELECT * FROM almoxdaeln_db.Equipamentos', function (error, re
 });
 
 connection.end();
+*/
 
 // Create a server
 http.createServer(function (request, response) {
