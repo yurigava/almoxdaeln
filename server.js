@@ -1,9 +1,9 @@
-var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var path = require('path');
-
 var express = require('express');
+var app = express();
+
 var router = express.Router();
 
 var mysql = require('mysql');
@@ -25,71 +25,29 @@ var contentTypes = {
 };
 
 var connection = mysql.createConnection({
-    host    : '192.168.0.69',
+    host    : '127.0.0.1',
     user    : 'jquery',
     password: 'Test123!.',
-    //debug : 'true'
     database: 'almoxdaeln_db'
 });
 
-/*connection.connect(function (err) {
+connection.connect(function (err) {
     if (err) {
         console.log(err);
     }
 });
 
-connection.query('SELECT * FROM almoxdaeln_db.Equipamentos', function (error, results, fields) {
+app.set('port', (process.env.PORT || 8081));
+//Requests to / to public
+app.use('/', express.static('public'));
+
+app.get('/api/equips', function(req, res) {
+  connection.query('SELECT * FROM almoxdaeln_db.Equipments', function (error, results, fields) {
     if (error) throw error;
-    for (i in results) {
-        console.log('The type is: ', results[i].type);
-        console.log('The id is:', results[i].eq_id);
-    }
-            //console.log(fields);
+    res.json(results);
+  });
 });
 
-connection.end();
-*/
-
-// Create a server
-http.createServer(function (request, response) {
-   // Parse the request containing file name
-   var pathName = url.parse(request.url).pathname;
-
-   // Print the name of the file for which request is made.
-   console.log("Request for " + pathName + " received.");
-
-   // Read the requested file content from file system
-   if (pathName.substr(1) == "")
-   {
-       pathName="/public/login.html";
-   }
-
-   var fileName = pathName.substr(1);
-
-   fs.readFile(pathName.substr(1), function (err, data) {
-      if (err) {
-         console.log(err);
-         console.log(err.errno);
-         // HTTP Status: 404 : NOT FOUND
-         // Content Type: text/plain
-         //response.writeHead(404, {'Content-Type': 'text/html'});
-         response.writeHead(404, {'Content-Type': 'text/plain'});
-         response.write("404 Page Not Found\n");
-         response.end();
-      } else {
-         //Page found
-         // HTTP Status: 200 : OK
-         // Content Type: text/plain
-         var extension = path.extname(pathName).substr(1);
-         response.writeHead(200, {'Content-Type': contentTypes[extension]});
-
-         // Write the content of the file to response body
-         response.write(data);
-      }
-      // Send the response body
-      response.end();
-   });
-}).listen(8081);
-
-// Console will print the message
-console.log('Server running at localhost:8081/');
+app.listen(app.get('port'), function() {
+  console.log('Server started: http://localhost:' + app.get('port') + '/');
+});
