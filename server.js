@@ -3,9 +3,7 @@ var url = require('url');
 var path = require('path');
 var express = require('express');
 var app = express();
-
 var router = express.Router();
-
 var mysql = require('mysql');
 
 var contentTypes = {
@@ -31,6 +29,7 @@ var connection = mysql.createConnection({
     database: 'almoxdaeln_db'
 });
 
+
 connection.connect(function (err) {
     if (err) {
         console.log(err);
@@ -44,8 +43,18 @@ app.use('/', express.static('public'));
 app.get('/api/equips', function(req, res) {
   connection.query('SELECT * FROM almoxdaeln_db.Equipments', function (error, results, fields) {
     if (error) throw error;
+    //console.log('selected');
     res.json(results);
   });
+});
+
+app.get('/api/control', function(req, res) {
+  /*connection.query('INSERT INTO almoxdaeln_db.Equipments SET =' + req.body.name, function (error, results, fields) {
+    if (error) throw error;
+      else res.sendo('success');
+      console.log('oi');
+  });*/
+    console.log('oi');
 });
 
 app.listen(app.get('port'), function() {

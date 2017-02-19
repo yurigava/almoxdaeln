@@ -32,6 +32,16 @@ CREATE TABLE `Equipments` (
   UNIQUE KEY `eq_id_UNIQUE` (`eq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Equipments`
+--
+
+LOCK TABLES `Equipments` WRITE;
+/*!40000 ALTER TABLE `Equipments` DISABLE KEYS */;
+INSERT INTO `Equipments` VALUES (1,1,'Disponível','Osciloscópio'),(2,2,'Disponível','Multímetro'),(3,3,'Disponível','Gerador de Funções'),(4,4,'Disponível','Osciloscópio'),(5,123,'Disponível','Multímetro'),(6,6,'Disponível','Gerador de Funções');
+/*!40000 ALTER TABLE `Equipments` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -42,4 +52,4 @@ CREATE TABLE `Equipments` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-15 17:10:33
+-- Dump completed on 2017-02-15 17:09:42
