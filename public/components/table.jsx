@@ -1,5 +1,12 @@
-var Equips = React.createClass({
-  loadDataFromServer: function() {
+import  React from 'react';
+import $ from 'jquery/src/core';
+
+export default class Equips extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {data:  []};
+  }
+  loadDataFromServer() {
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -11,24 +18,28 @@ var Equips = React.createClass({
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
-  },
-  getInitialState: function() {
+  }
+  getInitialState() {
     return {data: []};
-  },
+  }
   render () {
     return (
       <div className="equipTable">
         <h1>Equipamentos</h1>
-        <Table data={this.state.data}/>
         <div>
+          <Table data={this.state.data}/>
           <button onClick={this.loadDataFromServer}> Recarregar </button>
         </div>
       </div>
     );
   }
-});
+}
 
-var Table = React.createClass({
+Equips.propTypes = {
+  url: React.PropTypes.string.isRequired
+};
+
+class Table extends React.Component {
   render() {
     var equipNodes = this.props.data.map(function(equip) {
       return (
@@ -46,9 +57,9 @@ var Table = React.createClass({
       </table>
     );
   }
-});
+}
 
-var Item = React.createClass({
+class Item extends React.Component {
   render () {
     return (
       <tr>
@@ -58,9 +69,4 @@ var Item = React.createClass({
       </tr>
     );
   }
-});
-
-ReactDOM.render(
-  <Equips url="/api/equips"/>,
-  document.getElementById('content')
-);
+}
