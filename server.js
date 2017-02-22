@@ -8,22 +8,6 @@ var router = express.Router();
 
 var mysql = require('mysql');
 
-var contentTypes = {
-          'html' : 'text/html',
-          'css'  : 'text/css',
-          'ico'  : 'image/x-icon',
-          'png'  : 'image/png',
-          'svg'  : 'image/svg+xml',
-          'js'   : 'application/javascript',
-          'jpg'  : 'image/jpg',
-          'otf'  : 'application/x-font-otf',
-          'ttf'  : 'application/x-font-ttf',
-          'eot'  : 'application/vnd.ms-fontobject',
-          'woff' : 'application/x-font-woff',
-          'woff2': 'application/font-woff2',
-          'zip'  : 'application/zip'
-};
-
 var connection = mysql.createConnection({
     host    : '127.0.0.1',
     user    : 'jquery',
@@ -41,10 +25,19 @@ app.set('port', (process.env.PORT || 8081));
 //Requests to / to public
 app.use('/', express.static('public'));
 
+app.use(function(req,res,next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.disable('etag');
+
 app.get('/api/equips', function(req, res) {
   connection.query('SELECT * FROM almoxdaeln_db.Equipments', function (error, results, fields) {
     if (error) throw error;
-    res.json(results);
+		console.log('Received request on /api/equips')
+    res.send(results);
   });
 });
 
