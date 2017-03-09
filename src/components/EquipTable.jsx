@@ -1,5 +1,6 @@
-import  React from 'react';
+import React from 'react';
 import axios from 'axios';
+import Field from './Field.jsx';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
@@ -13,7 +14,7 @@ export default class EquipTable extends React.Component {
       data: []
     };
   }
-
+  
   loadDataFromServer() {
 		axios.get(this.props.url)
 			.then((response) => {
@@ -66,6 +67,10 @@ export default class EquipTable extends React.Component {
           </TableBody>
         </Table>
         <RaisedButton label="Recarregar" primary={true} onClick={this.loadDataFromServer.bind(this)}/>
+        
+        <div>
+        <Field/>
+        </div>
       </div>
     );
   }
