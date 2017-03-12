@@ -37,7 +37,7 @@ app.get('/api/equips', function(req, res) {
   connection.query('SELECT * FROM almoxdaeln_db.Equipments', function (error, results, fields) {
     if (error) throw error;
 		console.log('Received request on /api/equips')
-    res.send(results);
+    res.send({fields: fields, results: results});
   });
 });
 
