@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
 let tableData = [];
+let aux = [];
 
 export default class EquipTable extends React.Component {
 	constructor(props) {
@@ -31,47 +32,10 @@ export default class EquipTable extends React.Component {
   }
 
   render () {
-    return (
-      <div>
-        <Table
-          height='300px'
-          fixedHeader={true}
-          selectable={false}
-          multiSelectable={false}
-        >
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}
-            enableSelectAll={false}
-          >
-            <TableRow>
-              <TableHeaderColumn tooltip="Código de Barras do equipamento">Código de Barras</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Número do patrimônio do Equipamento">Patrimônio</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Nome do Equipamento">Nome</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Estado do Equipamento">Estado</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
-            showRowHover={true}
-            stripedRows={true}
-          >
-            {this.state.data.map( (row) => (
-              <TableRow key={row.eq_id}>
-                <TableRowColumn>{row.eq_id}</TableRowColumn>
-                <TableRowColumn>{row.pat}</TableRowColumn>
-                <TableRowColumn>{row.state}</TableRowColumn>
-                <TableRowColumn>{row.type}</TableRowColumn>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <RaisedButton label="Recarregar" primary={true} onClick={this.loadDataFromServer.bind(this)}/>
-        
+    return (        
         <div>
         <Field/>
         </div>
-      </div>
     );
   }
 }

@@ -7,11 +7,11 @@ let value = null;
 var Field = React.createClass({
 
 getInitialState: function() {
-    return {message: 'Hello!'};
+    return {state: value}
   },
- 
- handleClick: function() {
-    alert(this.state.message);
+  
+ handleClick: function(event, index, value) {
+    this.setState({value})
   },
         render: function() {
             return (
@@ -23,8 +23,10 @@ getInitialState: function() {
                     >
                     <MenuItem value={1} primaryText="Osciloscopio" />
                     <MenuItem value={2} primaryText="Multimetro" />
-                    <MenuItem value={null} primaryText="Gerador de Funçao" />
+                    <MenuItem value={3} primaryText="Gerador de Funçao" />
+                    <MenuItem value={4} primaryText="Yuri Garcia Vaz" />
                     </SelectField>
+                    
                 </div>
             );
         }
