@@ -12,7 +12,7 @@ function main() {
   document.body.appendChild(app);
   ReactDOM.render(
     <MuiThemeProvider>
-      <App />
+      <App url="http://localhost:8081" />
     </MuiThemeProvider>
     , app);
 }

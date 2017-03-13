@@ -9,7 +9,7 @@ var Field = React.createClass({
 getInitialState: function() {
     return {state: value}
   },
- 
+
  handleClick: function(event, index, value) {
     this.setState({value})
   },
@@ -26,6 +26,7 @@ getInitialState: function() {
                     <MenuItem value={3} primaryText="Gerador de Funçao" />
                     <MenuItem value={4} primaryText="Yuri Garcia Vaz" />
                     </SelectField>
+
                 </div>
             );
         }

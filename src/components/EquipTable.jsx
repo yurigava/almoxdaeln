@@ -5,16 +5,29 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
-let tableData = [];
+let aux = [];
+
+let headerProps = {
+  enableSelectAll: false,
+  displaySelectAll: false,
+  adjustForCheckbox: false
+};
+
+let headers = [
+  {name: "Código de Barras", key: "eq_id"},
+  {name: "Patrimônio", key: "pat"},
+  {name: "Nome", key: "type"},
+  {name: "Estado", key: "state"},
+];
 
 export default class EquipTable extends React.Component {
 	constructor(props) {
 		super(props);
     this.state = {
-      data: []
+      data: [], sortBy: ''
     };
   }
-  
+
   loadDataFromServer() {
 		axios.get(this.props.url)
 			.then((response) => {
@@ -30,7 +43,39 @@ export default class EquipTable extends React.Component {
 			});
   }
 
+  renderHeaders(){
+    let header= headers.map( (h) => {
+      return <SortableHeader
+                name={h.name}
+                key={h.key}
+                onClicked={()=>this.updateSortBy(h.key)}
+                isSortColumn={this.state.sortBy == h.key}/>
+    });
+    return <TableRow>{header}</TableRow>;
+  }
+
+   updateSortBy(sortBy){
+      // multiple clicks on the same column reverse the sort order
+      if( sortBy == this.state.sortBy ){
+        this.setState( {data: [...this.state.data.reverse()]} );
+        return;
+      }
+
+      let data = [...this.state.data];
+      data.sort( (a,b) => {
+        if (a[sortBy] < b[sortBy])
+          return -1;
+        if(a[sortBy] > b[sortBy])
+          return 1;
+        return 0;
+      });
+
+      this.setState({data, sortBy});
+    }
+
+
   render () {
+
     return (
       <div>
         <Table
@@ -39,18 +84,10 @@ export default class EquipTable extends React.Component {
           selectable={false}
           multiSelectable={false}
         >
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}
-            enableSelectAll={false}
-          >
-            <TableRow>
-              <TableHeaderColumn tooltip="Código de Barras do equipamento">Código de Barras</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Número do patrimônio do Equipamento">Patrimônio</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Nome do Equipamento">Nome</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Estado do Equipamento">Estado</TableHeaderColumn>
-            </TableRow>
+          <TableHeader {...headerProps}>
+              {this.renderHeaders()}
           </TableHeader>
+
           <TableBody
             displayRowCheckbox={false}
             showRowHover={true}
@@ -60,20 +97,33 @@ export default class EquipTable extends React.Component {
               <TableRow key={row.eq_id}>
                 <TableRowColumn>{row.eq_id}</TableRowColumn>
                 <TableRowColumn>{row.pat}</TableRowColumn>
-                <TableRowColumn>{row.state}</TableRowColumn>
                 <TableRowColumn>{row.type}</TableRowColumn>
+                <TableRowColumn>{row.state}</TableRowColumn>
               </TableRow>
             ))}
           </TableBody>
         </Table>
         <RaisedButton label="Recarregar" primary={true} onClick={this.loadDataFromServer.bind(this)}/>
-        
-        <div>
-        <Field/>
-        </div>
+
       </div>
     );
   }
+}
+
+function SortableHeader(props){
+  let style = {
+    cursor: "pointer"
+  }
+  if(props.isSortColumn){
+    style.fontWeight = "bold";
+    style.color = "black";
+  }
+
+  return (
+    <TableHeaderColumn>
+      <div style={style} onClick={() => props.onClicked()}>{props.name}</div>
+    </TableHeaderColumn>
+  );
 }
 
 EquipTable.propTypes = {
