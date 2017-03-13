@@ -3,15 +3,32 @@ import axios from 'axios';
 import Field from './Field.jsx';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
+import { MuiThemeProvider} from 'material-ui';
 import update from 'immutability-helper';
 
-let tableData = [];
+let aux = [];
+
+let headerProps = {
+  enableSelectAll: false,
+  displaySelectAll: false,
+  adjustForCheckbox: false
+};
+
+let headers = [
+  {name: "Código de Barras", key: "eq_id"},
+  {name: "Patrimônio", key: "pat"},
+  {name: "Nome", key: "type"},
+  {name: "Estado", key: "state"},
+  {name: "Data", key: "date"},
+  {name: "Hora", key: "time"}
+  
+];
 
 export default class EquipTable extends React.Component {
 	constructor(props) {
 		super(props);
     this.state = {
-      data: []
+      data: [], sortBy: 'state'
     };
   }
   
@@ -29,9 +46,42 @@ export default class EquipTable extends React.Component {
           }));
 			});
   }
+  
+  renderHeaders(){
+    let header= headers.map( (h) => {
+      return <SortableHeader 
+                name={h.name}
+                key={h.key}
+                onClicked={()=>this.updateSortBy(h.key)} 
+                isSortColumn={this.state.sortBy == h.key}/>
+    });
+    return <TableRow>{header}</TableRow>;
+  }
+
+   updateSortBy(sortBy){
+      // multiple clicks on the same column reverse the sort order
+      if( sortBy == this.state.sortBy ){
+        this.setState( {data: [...this.state.data.reverse()]} );
+        return;
+      }
+      
+      let data = [...this.state.data];
+      data.sort( (a,b) => {
+        if (a[sortBy] < b[sortBy])
+          return -1;
+        if(a[sortBy] > b[sortBy])
+          return 1;
+        return 0;
+      });
+      
+      this.setState({data, sortBy});
+    }
+
 
   render () {
+  
     return (
+    <MuiThemeProvider>
       <div>
         <Table
           height='300px'
@@ -39,42 +89,52 @@ export default class EquipTable extends React.Component {
           selectable={false}
           multiSelectable={false}
         >
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}
-            enableSelectAll={false}
-          >
-            <TableRow>
-              <TableHeaderColumn tooltip="Código de Barras do equipamento">Código de Barras</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Número do patrimônio do Equipamento">Patrimônio</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Nome do Equipamento">Nome</TableHeaderColumn>
-              <TableHeaderColumn tooltip="Estado do Equipamento">Estado</TableHeaderColumn>
-            </TableRow>
+          <TableHeader {...headerProps}>
+              {this.renderHeaders()}
           </TableHeader>
+          
           <TableBody
             displayRowCheckbox={false}
             showRowHover={true}
             stripedRows={true}
           >
-            {this.state.data.map( (row) => (
-              <TableRow key={row.eq_id}>
-                <TableRowColumn>{row.eq_id}</TableRowColumn>
-                <TableRowColumn>{row.pat}</TableRowColumn>
-                <TableRowColumn>{row.state}</TableRowColumn>
-                <TableRowColumn>{row.type}</TableRowColumn>
-              </TableRow>
+            {this.state.data.map( (row, i) => (
+                <TableRow key={row.eq_id}>
+                    <TableRowColumn>{row.eq_id}</TableRowColumn>
+                    <TableRowColumn>{row.pat}</TableRowColumn>
+                    <TableRowColumn>{row.type}</TableRowColumn>
+                    <TableRowColumn>{row.state}</TableRowColumn>
+                    <TableRowColumn>{row.date}</TableRowColumn>
+                    <TableRowColumn>{row.time}</TableRowColumn>
+                </TableRow>
             ))}
           </TableBody>
         </Table>
         <RaisedButton label="Recarregar" primary={true} onClick={this.loadDataFromServer.bind(this)}/>
         
-        <div>
-        <Field/>
-        </div>
       </div>
+      </MuiThemeProvider>
     );
   }
 }
+
+function SortableHeader(props){
+  let style = {
+    cursor: "pointer"
+  }
+  if(props.isSortColumn){
+    style.fontWeight = "bold";
+    style.color = "black";
+  }
+  
+  return (
+    <TableHeaderColumn>
+      <div style={style} onClick={() => props.onClicked()}>{props.name}</div>
+    </TableHeaderColumn>
+  );
+}
+  
+
 
 EquipTable.propTypes = {
   url: React.PropTypes.string.isRequired
