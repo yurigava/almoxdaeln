@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d404833_3d8f253a",
+        "filename": "src/components/EquipTable.jsx",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1010039
+      },
+      "writtenOn": "2017-03-16T00:41:07Z",
+      "side": 1,
+      "message": "Evita esses espaços.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 2
+      },
+      "revId": "aa66fb0c49f5de910839067d1c11ad9a9401c4d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ab29fe6_a01c2cf0",
+        "filename": "src/components/EquipTable.jsx",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1010039
+      },
+      "writtenOn": "2017-03-16T00:41:07Z",
+      "side": 1,
+      "message": "Sempre q der enter, lembra de tirar os espaços.",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 8
+      },
+      "revId": "aa66fb0c49f5de910839067d1c11ad9a9401c4d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
