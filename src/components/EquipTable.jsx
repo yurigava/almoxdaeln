@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Field from './Field.jsx';
+import Input_Authentication from './Input_Authentication.jsx';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
@@ -29,7 +30,7 @@ export default class EquipTable extends React.Component {
   }
 
   loadDataFromServer() {
-		axios.get(this.props.url)
+		axios.get(this.props.url + "/api/equips")
 			.then((response) => {
         this.setState(update(this.state, {data: {$set: response.data}}));
 			})
@@ -104,6 +105,10 @@ export default class EquipTable extends React.Component {
           </TableBody>
         </Table>
         <RaisedButton label="Recarregar" primary={true} onClick={this.loadDataFromServer.bind(this)}/>
+
+        <div>
+          <Input_Authentication url={this.props.url}/>
+        </div>
 
       </div>
     );
