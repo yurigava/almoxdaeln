@@ -4,8 +4,13 @@
   "description": "TCC Yuri e Ramon",
   "main": "server.js",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "connect-flash": "^0.1.1",
     "express": "^4.14.0",
+    "express-session": "^1.15.1",
     "mysql": "^2.13.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.2",
