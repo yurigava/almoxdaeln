@@ -22,7 +22,7 @@ export default class App extends React.Component {
     return (
       <div>
         <center>
-          <EquipTable url={this.props.url + "/api/equips"} />
+            <EquipTable url={this.props.url} />
         </center>
       </div>
     );
