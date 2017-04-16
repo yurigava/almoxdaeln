@@ -3,7 +3,7 @@ import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-export default class Input_Authentication extends React.Component {
+export default class InputAuthentication extends React.Component {
 
 constructor(props) {
     super(props);
@@ -44,7 +44,7 @@ constructor(props) {
               name="login"
               hintText="Código do Usuário"
               floatingLabelText="Login"
-              value={this.state.login} 
+              value={this.state.login}
               onChange={this.handleChange}
             /><br/>
 
@@ -56,18 +56,18 @@ constructor(props) {
               onChange={this.handleChange}
             /><br/>
 
-            <RaisedButton 
-              label="Enviar" 
+            <RaisedButton
+              label="Enviar"
               primary={true}
-              type="submit" 
+              type="submit"
             />
-          </form> 
+          </form>
         </center>
       </div>
     );
   }
 }
 
-Input_Authentication.propTypes = {
+InputAuthentication.propTypes = {
   url: React.PropTypes.string.isRequired
 };
