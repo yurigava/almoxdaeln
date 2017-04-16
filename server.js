@@ -72,6 +72,21 @@ app.get('/api/equips', function(req, res) {
   });
 });
 
+// process the login form
+app.post('/login', passport.authenticate('local-login', {
+  //successRedirect : '/profile', // redirect to the secure profile section
+  //failureRedirect : '/login', // redirect back to the signup page if there is an error
+}),
+function(req, res) {
+  res.send('almoxarife');
+
+  if (req.body.remember) {
+    req.session.cookie.maxAge = 1000 * 60 * 3;
+  } else {
+    req.session.cookie.expires = false;
+  }
+});
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });

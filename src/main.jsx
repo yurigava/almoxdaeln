@@ -6,7 +6,7 @@ import InputAuthentication from './components/InputAuthentication.jsx';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-const url = "http://192.168.0.105:8081";
+const url = "http://localhost:8081";
 
 main();
 
@@ -18,7 +18,7 @@ function main() {
     <MuiThemeProvider>
       <Router history={hashHistory}>
         <Route path="/" component={App}>
-          <IndexRoute component={InputAuthentication} url={url}/>
+          <Route path="/login" component={InputAuthentication} url={url}/>
           <Route path="/equips" component={EquipTable} url={url}/>
         </Route>
       </Router>

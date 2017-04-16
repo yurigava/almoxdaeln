@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import update from 'immutability-helper';
 
 export default class InputAuthentication extends React.Component {
 
@@ -17,20 +18,20 @@ constructor(props) {
   handleChange(event) {
     const name = event.target.name;
     const value = event.target.value;
-    this.setState({[name]: value});
+    this.setState(update(this.state, {[name]: {$set: value}}));
   }
 
   handleSubmit(event) {
-    //alert('A name was submitted: ' + this.state.login);
     axios.post(this.props.route.url + "/login", {
       login: this.state.login,
       password: this.state.password
     })
-    .then(function (response) {
+    .then((response) => {
       alert('A name was submitted: ' + this.state.login);
+      this.props.handleRole(response.data)
     })
-    .catch(function (error) {
-      alert('error');//erro de resposta
+    .catch((error) => {
+      alert(error);//erro de resposta
     });
     event.preventDefault();
   }

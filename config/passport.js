@@ -96,7 +96,7 @@ module.exports = function(passport) {
 
         // if the user is found but the password is wrong
         if (!bcrypt.compareSync(password, rows[0].password))
-          return done(null, false); 
+          return done(null, false);
 
         // all is well, return successful user
         return done(null, rows[0]);
