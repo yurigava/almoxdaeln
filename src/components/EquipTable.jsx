@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import Field from './Field.jsx';
-import Input_Authentication from './Input_Authentication.jsx';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
@@ -22,26 +21,26 @@ let headers = [
 ];
 
 export default class EquipTable extends React.Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
     this.state = {
       data: [], sortBy: ''
     };
   }
 
   loadDataFromServer() {
-		axios.get(this.props.url + "/api/equips")
-			.then((response) => {
-        this.setState(update(this.state, {data: {$set: response.data}}));
-			})
-			.catch((error) => {
-        if(error.response)
-          this.setState(update(this.state, {data: {$set: error.response.data}}));
-        else
-          this.setState(update(this.state, {
-            data: {0: {state: {$set: error.toString()}}}
-          }));
-			});
+    axios.get(this.props.route.url + "/api/equips")
+    .then((response) => {
+      this.setState(update(this.state, {data: {$set: response.data}}));
+    })
+    .catch((error) => {
+      if(error.response)
+        this.setState(update(this.state, {data: {$set: error.response.data}}));
+      else
+        this.setState(update(this.state, {
+          data: {0: {state: {$set: error.toString()}}}
+      }));
+    });
   }
 
   renderHeaders(){
@@ -50,33 +49,33 @@ export default class EquipTable extends React.Component {
                 name={h.name}
                 key={h.key}
                 onClicked={()=>this.updateSortBy(h.key)}
-                isSortColumn={this.state.sortBy == h.key}/>
+                isSortColumn={this.state.sortBy == h.key}
+              />
     });
     return <TableRow>{header}</TableRow>;
   }
 
-   updateSortBy(sortBy){
-      // multiple clicks on the same column reverse the sort order
-      if( sortBy == this.state.sortBy ){
-        this.setState( {data: [...this.state.data.reverse()]} );
-        return;
-      }
-
-      let data = [...this.state.data];
-      data.sort( (a,b) => {
-        if (a[sortBy] < b[sortBy])
-          return -1;
-        if(a[sortBy] > b[sortBy])
-          return 1;
-        return 0;
-      });
-
-      this.setState({data, sortBy});
+  updateSortBy(sortBy){
+    // multiple clicks on the same column reverse the sort order
+    if( sortBy == this.state.sortBy ){
+      this.setState( {data: [...this.state.data.reverse()]} );
+      return;
     }
+
+    let data = [...this.state.data];
+    data.sort( (a,b) => {
+      if (a[sortBy] < b[sortBy])
+        return -1;
+      if(a[sortBy] > b[sortBy])
+        return 1;
+      return 0;
+    });
+
+    this.setState({data, sortBy});
+  }
 
 
   render () {
-
     return (
       <div>
         <Table
@@ -86,7 +85,7 @@ export default class EquipTable extends React.Component {
           multiSelectable={false}
         >
           <TableHeader {...headerProps}>
-              {this.renderHeaders()}
+            {this.renderHeaders()}
           </TableHeader>
 
           <TableBody
@@ -105,11 +104,6 @@ export default class EquipTable extends React.Component {
           </TableBody>
         </Table>
         <RaisedButton label="Recarregar" primary={true} onClick={this.loadDataFromServer.bind(this)}/>
-
-        <div>
-          <Input_Authentication url={this.props.url}/>
-        </div>
-
       </div>
     );
   }

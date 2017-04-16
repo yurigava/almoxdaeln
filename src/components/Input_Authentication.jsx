@@ -17,8 +17,7 @@ constructor(props) {
   handleChange(event) {
     const name = event.target.name;
     const value = event.target.value;
-    this.setState({
-          [name]: value});
+    this.setState({[name]: value});
   }
 
   handleSubmit(event) {
@@ -26,15 +25,15 @@ constructor(props) {
     axios.post(this.props.url + "/login", {
       login: this.state.login,
       password: this.state.password
-      })
-      .then(function (response) {
+    })
+    .then(function (response) {
       alert('A name was submitted: ' + this.state.login);
-      })
-      .catch(function (error) {
-      alert('error');
-      });
-      event.preventDefault();
-     }
+    })
+    .catch(function (error) {
+      alert('error');//erro de resposta
+    });
+    event.preventDefault();
+  }
 
   render() {
     return (
@@ -57,8 +56,11 @@ constructor(props) {
               onChange={this.handleChange}
             /><br/>
 
-            <RaisedButton label="Enviar" primary={true}
-            type="submit" />
+            <RaisedButton 
+              label="Enviar" 
+              primary={true}
+              type="submit" 
+            />
           </form> 
         </center>
       </div>
