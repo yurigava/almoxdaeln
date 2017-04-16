@@ -3,7 +3,7 @@ import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
-export default class Input_Authentication extends React.Component {
+export default class InputAuthentication extends React.Component {
 
 constructor(props) {
     super(props);
