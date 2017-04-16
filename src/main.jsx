@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App.jsx';
 import EquipTable from './components/EquipTable.jsx';
-import Input_Authentication from './components/Input_Authentication.jsx';
+import InputAuthentication from './components/InputAuthentication.jsx';
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -18,7 +18,7 @@ function main() {
     <MuiThemeProvider>
       <Router history={hashHistory}>
         <Route path="/" component={App}>
-          <IndexRoute component={Input_Authentication} url={url}/>
+          <IndexRoute component={InputAuthentication} url={url}/>
           <Route path="/equips" component={EquipTable} url={url}/>
         </Route>
       </Router>
