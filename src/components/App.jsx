@@ -11,40 +11,73 @@ import AppBar from 'material-ui/AppBar';
 import InputAuthentication from './InputAuthentication.jsx';
 
 export default class App extends React.Component {
+
   constructor(props) {
     super(props);
-    this.state = {open: false,
+    this.state = {drawerOpen: false,
                   currentRole: 'loggedOut'};
     this.handleToggle = this.handleToggle.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.renderChildren = this.renderChildren.bind(this);
-    this.handleRole = this.handleRole.bind(this);
+    this.handleLoginAlmoxarife = this.handleLoginAlmoxarife.bind(this);
+    this.handleLoginProfessor = this.handleLoginProfessor.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.handleLogoutButton = this.handleLogoutButton.bind(this);
+  }
+
+	componentWillMount() {
+    axios.get(this.props.route.url + "/", {withCredentials:true})
+    .then((response) => {
+			if (response.data != "loggedOut") {
+        this.setState(update(this.state, {currentRole: {$set: response.data}}));
+			}
+    })
+    .catch((error) => {
+      this.setState(update(this.state, {currentRole: {$set: 'loggedOut'}}));
+    });
   }
 
   handleClose() {
-    this.setState(update(this.state, {open: {$set: false}}));
+    this.setState(update(this.state, {drawerOpen: {$set: false}}));
   }
 
   handleToggle() {
-    this.setState(update(this.state, {open: {$set: !this.state.open}}));
+    this.setState(update(this.state, {drawerOpen: {$set: !this.state.drawerOpen}}));
   }
 
-  handleRole(role) {
-    this.setState(update(this.state, {currentRole: {$set: role}}));
-    if(role === 'loggedOut')
-      this.props.router.push('/login')
-    else if(role === 'almoxarife')
-      this.props.router.push('/equips')
+  handleLoginAlmoxarife() {
+    this.setState(update(this.state, {currentRole: {$set: 'almoxarife'}}));
+    this.context.router.push('/equips');
+  }
+
+  handleLoginProfessor() {
+    this.setState(update(this.state, {currentRole: {$set: 'professor'}}));
+    this.context.router.push('/equips');
+  }
+
+  handleLogout() {
+    this.setState(update(this.state, {currentRole: {$set: 'loggedOut'}}));
+    this.context.router.push('/login');
+  }
+
+  handleLogoutButton() {
+    this.setState(update(this.state, {
+        currentRole: {$set: 'loggedOut'},
+        drawerOpen: {$set: false}
+    }));
+    axios.get(this.props.route.url + "/logout", {withCredentials:true});
+    this.context.router.push('/login');
   }
 
   renderChildren() {
     return React.Children.map(this.props.children, child => {
       if (child.type === InputAuthentication)
         return React.cloneElement(child, {
-          handleRole: this.handleRole
-        })
+          handleLoginAlmoxarife: this.handleLoginAlmoxarife,
+          handleLoginProfessor: this.handleLoginProfessor
+        });
       else
-        return child
+        return child;
     })
   }
 
@@ -67,7 +100,7 @@ export default class App extends React.Component {
           primaryText="Equipamentos"
         />
         <MenuItem
-          onTouchTap={this.handleClose}
+          onTouchTap={this.handleLogoutButton}
           containerElement={<Link to="/login" />}
           primaryText="Logout"
         />
@@ -80,8 +113,8 @@ export default class App extends React.Component {
           <Drawer
             docked={false}
             width={300}
-            open={this.state.open}
-            onRequestChange={(open) => this.setState(update(this.state, {open: {$set: open}}))}
+            open={this.state.drawerOpen}
+            onRequestChange={(drawerOpen) => this.setState(update(this.state, {drawerOpen: {$set: drawerOpen}}))}
           >
             {drawerLinks}
           </Drawer>
@@ -101,3 +134,7 @@ export default class App extends React.Component {
     );
   }
 }
+
+App.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};

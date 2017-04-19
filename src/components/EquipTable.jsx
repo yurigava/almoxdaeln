@@ -4,6 +4,7 @@ import Field from './Field.jsx';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
+import AuthorizedComponent from './AuthorizedComponent.jsx'
 
 let aux = [];
 
@@ -20,7 +21,7 @@ let headers = [
   {name: "Estado", key: "state"},
 ];
 
-export default class EquipTable extends React.Component {
+export default class EquipTable extends AuthorizedComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -76,6 +77,10 @@ export default class EquipTable extends React.Component {
 
 
   render () {
+    if(super.finishedReq == false)
+    {
+      return(<div/>)
+    }
     return (
       <div>
         <Table
@@ -124,7 +129,3 @@ function SortableHeader(props){
     </TableHeaderColumn>
   );
 }
-
-EquipTable.propTypes = {
-  url: React.PropTypes.string.isRequired
-};

@@ -51,18 +51,21 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
-require('./src/authentication.js')(app, passport);
 
 app.set('port', (process.env.PORT || 8081)); //Requests to / to public
 app.use('/', express.static('public'));
 
 app.use(function(req,res,next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Content-Type", "text/plain");
   next();
 });
 
 app.disable('etag');
+//Has to be after the app settings
+require('./src/authentication.js')(app, passport);
 
 app.get('/api/equips', function(req, res) {
   connection.query('SELECT * FROM almoxdaeln_db.Equipments', function (error, results, fields) {
@@ -70,21 +73,6 @@ app.get('/api/equips', function(req, res) {
     console.log('Received request on /api/equips')
     res.send(results);
   });
-});
-
-// process the login form
-app.post('/login', passport.authenticate('local-login', {
-  //successRedirect : '/profile', // redirect to the secure profile section
-  //failureRedirect : '/login', // redirect back to the signup page if there is an error
-}),
-function(req, res) {
-  res.send('almoxarife');
-
-  if (req.body.remember) {
-    req.session.cookie.maxAge = 1000 * 60 * 3;
-  } else {
-    req.session.cookie.expires = false;
-  }
 });
 
 app.listen(app.get('port'), function() {

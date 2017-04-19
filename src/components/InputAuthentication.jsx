@@ -25,10 +25,13 @@ constructor(props) {
     axios.post(this.props.route.url + "/login", {
       login: this.state.login,
       password: this.state.password
-    })
+    }, {withCredentials:true})
     .then((response) => {
-      alert('A name was submitted: ' + this.state.login);
-      this.props.handleRole(response.data)
+      //alert('A name was submitted: ' + this.state.login);
+      if(response.data === 'almoxarife')
+        this.props.handleLoginAlmoxarife()
+      if(response.data === 'professor')
+        this.props.handleLoginProfessor()
     })
     .catch((error) => {
       alert(error);//erro de resposta
@@ -68,7 +71,3 @@ constructor(props) {
     );
   }
 }
-
-InputAuthentication.propTypes = {
-  url: React.PropTypes.string.isRequired
-};
