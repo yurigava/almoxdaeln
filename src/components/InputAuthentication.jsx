@@ -27,7 +27,6 @@ constructor(props) {
       password: this.state.password
     }, {withCredentials:true})
     .then((response) => {
-      //alert('A name was submitted: ' + this.state.login);
       if(response.data === 'almoxarife')
         this.props.handleLoginAlmoxarife()
       if(response.data === 'professor')
