@@ -21,7 +21,7 @@ let headers = [
   {name: "Estado", key: "state"},
 ];
 
-export default class EquipTable extends AuthorizedComponent {
+export default class EquipTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

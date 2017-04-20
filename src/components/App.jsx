@@ -14,8 +14,16 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = {drawerOpen: false,
                   currentRole: 'loggedOut'};
+    axios.get(this.props.route.url + '/getRole', {withCredentials:true})
+    .then((response) => {
+      this.state = {drawerOpen: false,
+                    currentRole: response.data};
+    })
+    .catch((error) => {});
+
     this.handleToggle = this.handleToggle.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.renderChildren = this.renderChildren.bind(this);
@@ -23,18 +31,6 @@ export default class App extends React.Component {
     this.handleLoginProfessor = this.handleLoginProfessor.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleLogoutButton = this.handleLogoutButton.bind(this);
-  }
-
-	componentWillMount() {
-    axios.get(this.props.route.url + "/", {withCredentials:true})
-    .then((response) => {
-			if (response.data != "loggedOut") {
-        this.setState(update(this.state, {currentRole: {$set: response.data}}));
-			}
-    })
-    .catch((error) => {
-      this.setState(update(this.state, {currentRole: {$set: 'loggedOut'}}));
-    });
   }
 
   handleClose() {

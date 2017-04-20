@@ -11,6 +11,7 @@ module.exports = function(app, passport) {
     //failureRedirect : '/login', // redirect back to the signup page if there is an error
   }),
   function(req, res) {
+    //Inserir lógica para verificar papel aqui
     res.send('almoxarife');
 
     if (req.body.remember) {
@@ -37,6 +38,11 @@ module.exports = function(app, passport) {
     res.send('ok');
   });
 
+  app.get('/getRole', isLoggedIn, function (req, res) {
+    //Inserir lógica para verificar papel aqui
+    res.send('almoxarife')
+  });
+
   app.get('/login', function(req, res) {
     res.send('ok');
   });
@@ -48,6 +54,7 @@ module.exports = function(app, passport) {
 
 // route middleware to make sure
 function isLoggedIn(req, res, next) {
+  //Inserir lógica para verificar papel aqui
 
   // if user is authenticated in the session, carry on
   if (req.isAuthenticated())
