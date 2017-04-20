@@ -4,7 +4,6 @@ import Field from './Field.jsx';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
-import AuthorizedComponent from './AuthorizedComponent.jsx'
 
 let aux = [];
 
@@ -21,7 +20,7 @@ let headers = [
   {name: "Estado", key: "state"},
 ];
 
-export default class EquipTable extends AuthorizedComponent {
+export default class EquipTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
