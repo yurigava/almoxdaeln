@@ -1,72 +1,49 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
-export default class InputAuthentication extends React.Component {
+const InputAuthentication = ({login, password, onLoginSubmit, onPasswordChange, onLoginChange}) => (
+  <div>
+    <center>
+      <form onSubmit={e => {
+          e.preventDefault()
+          onLoginSubmit()
+        }}
+      >
+        <TextField
+          name="login"
+          hintText="Código do Usuário"
+          floatingLabelText="Login"
+          value={login}
+          onChange={e => onLoginChange(e.target.value)}
+        /><br/>
 
-constructor(props) {
-    super(props);
-    this.state = {login: '',
-                  password: ''};
+        <TextField
+          name="password"
+          floatingLabelText="Senha"
+          type="password"
+          value={password}
+          onChange={e => onPasswordChange(e.target.value)}
+        /><br/>
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+        <RaisedButton
+          label="Enviar"
+          primary={true}
+          type="submit"
+        />
+      </form>
+    </center>
+  </div>
+)
 
-  handleChange(event) {
-    const name = event.target.name;
-    const value = event.target.value;
-    this.setState(update(this.state, {[name]: {$set: value}}));
-  }
-
-  handleSubmit(event) {
-    axios.post(this.props.route.url + "/login", {
-      login: this.state.login,
-      password: this.state.password
-    }, {withCredentials:true})
-    .then((response) => {
-      if(response.data === 'almoxarife')
-        this.props.handleLoginAlmoxarife()
-      if(response.data === 'professor')
-        this.props.handleLoginProfessor()
-    })
-    .catch((error) => {
-      alert(error);//erro de resposta
-    });
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <div>
-        <center>
-          <form onSubmit={this.handleSubmit}>
-            <TextField
-              name="login"
-              hintText="Código do Usuário"
-              floatingLabelText="Login"
-              value={this.state.login}
-              onChange={this.handleChange}
-            /><br/>
-
-            <TextField
-              name="password"
-              floatingLabelText="Senha"
-              type="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            /><br/>
-
-            <RaisedButton
-              label="Enviar"
-              primary={true}
-              type="submit"
-            />
-          </form>
-        </center>
-      </div>
-    );
-  }
+InputAuthentication.propTypes = {
+  login: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  onLoginSubmit: PropTypes.func.isRequired,
+  onPasswordChange: PropTypes.func.isRequired,
+  onLoginChange: PropTypes.func.isRequired
 }
+
+export default InputAuthentication

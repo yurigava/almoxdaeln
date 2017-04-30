@@ -1,136 +1,73 @@
-import React from 'react';
-import axios from 'axios';
-import AddEquip from './AddEquip.jsx';
+import React, { PropTypes } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import update from 'immutability-helper';
-import { Link } from 'react-router'
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
-import InputAuthentication from './InputAuthentication.jsx';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import { Link } from 'react-router';
 
-export default class App extends React.Component {
+const style = {
+  container: {
+    position: 'relative',
+  },
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
+  },
+};
 
-  constructor(props) {
-    super(props);
-
-    this.state = {drawerOpen: false,
-                  currentRole: 'loggedOut'};
-    axios.get(this.props.route.url + '/getRole', {withCredentials:true})
-    .then((response) => {
-      this.state = {drawerOpen: false,
-                    currentRole: response.data};
-    })
-    .catch((error) => {});
-
-    this.handleToggle = this.handleToggle.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.renderChildren = this.renderChildren.bind(this);
-    this.handleLoginAlmoxarife = this.handleLoginAlmoxarife.bind(this);
-    this.handleLoginProfessor = this.handleLoginProfessor.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.handleLogoutButton = this.handleLogoutButton.bind(this);
-  }
-
-  handleClose() {
-    this.setState(update(this.state, {drawerOpen: {$set: false}}));
-  }
-
-  handleToggle() {
-    this.setState(update(this.state, {drawerOpen: {$set: !this.state.drawerOpen}}));
-  }
-
-  handleLoginAlmoxarife() {
-    this.setState(update(this.state, {currentRole: {$set: 'almoxarife'}}));
-    this.context.router.push('/equips');
-  }
-
-  handleLoginProfessor() {
-    this.setState(update(this.state, {currentRole: {$set: 'professor'}}));
-    this.context.router.push('/equips');
-  }
-
-  handleLogout() {
-    this.setState(update(this.state, {currentRole: {$set: 'loggedOut'}}));
-    this.context.router.push('/login');
-  }
-
-  handleLogoutButton() {
-    this.setState(update(this.state, {
-        currentRole: {$set: 'loggedOut'},
-        drawerOpen: {$set: false}
-    }));
-    axios.get(this.props.route.url + "/logout", {withCredentials:true});
-    this.context.router.push('/login');
-  }
-
-  renderChildren() {
-    return React.Children.map(this.props.children, child => {
-      if (child.type === InputAuthentication)
-        return React.cloneElement(child, {
-          handleLoginAlmoxarife: this.handleLoginAlmoxarife,
-          handleLoginProfessor: this.handleLoginProfessor
-        });
-      else
-        return child;
-    })
-  }
-
-  render() {
-    let drawerLinks = null;
-    if(this.state.currentRole === 'loggedOut')
-    {
-      drawerLinks = <MenuItem
-        onTouchTap={this.handleClose}
-        containerElement={<Link to="/login" />}
-        primaryText="Login"
-      />;
-    }
-    else if(this.state.currentRole === 'almoxarife')
-    {
-      drawerLinks = (<div>
-        <MenuItem
-          onTouchTap={this.handleClose}
-          containerElement={<Link to="/equips" />}
-          primaryText="Equipamentos"
-        />
-        <MenuItem
-          onTouchTap={this.handleLogoutButton}
-          containerElement={<Link to="/login" />}
-          primaryText="Logout"
-        />
-      </div>);
-    }
-
-    return (
-      <div>
-        <div>
-          <Drawer
-            docked={false}
-            width={300}
-            open={this.state.drawerOpen}
-            onRequestChange={(drawerOpen) => this.setState(update(this.state, {drawerOpen: {$set: drawerOpen}}))}
-          >
-            {drawerLinks}
-          </Drawer>
-        </div>
-        <div>
-          <AppBar
-            title="Almoxarifado DAELN"
-            onLeftIconButtonTouchTap={this.handleToggle}
+const App = ({isDrawerOpen, children, loadingStatus, onDrawerRequestChange, onDrawerLinkClick, visibleLinks}) => (
+  <div>
+    <div>
+      <Drawer
+        docked={false}
+        width={300}
+        open={isDrawerOpen}
+        onRequestChange={(drawerOpen) => onDrawerRequestChange(drawerOpen)}
+      >
+        {visibleLinks.map(visibleLink =>
+          <MenuItem
+            onTouchTap={onDrawerLinkClick}
+            containerElement={<Link to={"/"+visibleLink.link} />}
+            primaryText={visibleLink.linkText}
           />
-          <center>
-            <div>
-              {this.renderChildren()}
-            </div>
-          </center>
+        )}
+      </Drawer>
+    </div>
+    <div>
+      <AppBar
+        title="Almoxarifado DAELN"
+        onLeftIconButtonTouchTap={() => onDrawerLinkClick()}
+      />
+      <center>
+        <div>
+          <div style={style.container}>
+            <RefreshIndicator
+              size={40}
+              left={0}
+              top={10}
+              status={loadingStatus}
+              style={style.refresh}
+            />
+          </div>
+          {children}
         </div>
-      </div>
-    );
-  }
+      </center>
+    </div>
+  </div>
+)
+
+App.propTypes = {
+  isDrawerOpen: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
+  loadingStatus: PropTypes.string.isRequired,
+  onDrawerRequestChange: PropTypes.func.isRequired,
+  onDrawerLinkClick: PropTypes.func.isRequired,
+  visibleLinks: PropTypes.arrayOf(PropTypes.shape({
+    link: PropTypes.string.isRequired,
+    linkText: PropTypes.string.isRequired
+  }).isRequired).isRequired
 }
 
-App.contextTypes = {
-  router: React.PropTypes.func.isRequired
-};
+export default App
