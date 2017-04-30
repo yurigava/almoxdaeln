@@ -1,14 +1,18 @@
 import React from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
-import App from './components/App.jsx';
+import appContainer from './containers/appContainer.jsx';
+import loginContainer from './containers/loginContainer.jsx'
 import EquipTable from './components/EquipTable.jsx';
-import InputAuthentication from './components/InputAuthentication.jsx'
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
+import almoxApp from './reducers/index.jsx'
 
-const url = "http://192.168.0.69:8081";
+const url = '192.168.0.69:8081';
 
 main();
 
@@ -27,34 +31,50 @@ function verifyPermission(nextState, replace, callback)
   });
 }
 
-function verifyIfLogged(nextState, replace, callback)
+function verifyLoggedState(store)
 {
-  axios.get(url + '/getRole', {withCredentials:true})
-  .then((response) => {
-    //Lógica pra página inicial de cada papel
-    if (response.data === 'almoxarife') {
-      //replace({ nextPathname: nextState.location.pathname }, '/equips', nextState.location.query)
+  return (nextState, replace, callback) => {
+    let { login } = store.getState();
+    let { appUi } = store.getState();
+    if (!login || !login.userRole) {
+      axios.get('http://192.168.0.69:8081/getRole', {withCredentials:true})
+      .then((response) => {
+        //Lógica pra página inicial de cada papel
+        //replace({ nextPathname: nextState.location.pathname }, '/', nextState.location.query)
+        callback();
+      })
+      .catch((error) => {
+        callback();
+      });
     }
-    callback();
-  })
-  .catch((error) => {
-    callback();
-  });
+    else if (login.userRole !== 'loggedOut') {
+      replace(
+        { nextPathname: nextState.location.pathname }, '/'+appUi.linksById[appUi.visibleLinks[0]].link, nextState.location.query
+      );
+      callback();
+    }
+    else {
+      callback();
+    }
+  };
 }
 
 function main() {
   injectTapEventPlugin();
+  let store = createStore(almoxApp, applyMiddleware(thunkMiddleware));
   const app = document.createElement('div');
   document.body.appendChild(app);
   ReactDOM.render(
     <MuiThemeProvider>
-      <Router history={hashHistory}>
-        <Route path="/" component={App} url={url}>
-          <IndexRedirect to="/login" />
-          <Route path="/login" component={InputAuthentication} url={url} onEnter={verifyIfLogged}/>
-          <Route path="/equips" component={EquipTable} url={url} onEnter={verifyPermission}/>
-        </Route>
-      </Router>
+      <Provider store={store}>
+        <Router history={hashHistory}>
+          <Route path="/" component={appContainer}>
+            <IndexRedirect to="/login" />
+            <Route path="/login" component={loginContainer}/>
+            <Route path="/equips" component={EquipTable} url={url}/>
+          </Route>
+        </Router>
+      </Provider>
     </MuiThemeProvider>
     , app);
 }
