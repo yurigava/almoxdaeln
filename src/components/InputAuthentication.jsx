@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -6,13 +6,12 @@ import update from 'immutability-helper';
 
 export default class InputAuthentication extends React.Component {
 
-constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {login: '',
-                  password: ''};
-
+                  password: ''
+    };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
@@ -21,34 +20,23 @@ constructor(props) {
     this.setState(update(this.state, {[name]: {$set: value}}));
   }
 
-  handleSubmit(event) {
-    axios.post(this.props.route.url + "/login", {
-      login: this.state.login,
-      password: this.state.password
-    }, {withCredentials:true})
-    .then((response) => {
-      if(response.data === 'almoxarife')
-        this.props.handleLoginAlmoxarife()
-      if(response.data === 'professor')
-        this.props.handleLoginProfessor()
-    })
-    .catch((error) => {
-      alert(error);//erro de resposta
-    });
-    event.preventDefault();
-  }
-
   render() {
     return (
       <div>
         <center>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={e => {
+              e.preventDefault()
+              this.props.onLoginSubmit(this.state.login, this.state.password, this.props.router.push)
+            }}
+          >
             <TextField
               name="login"
               hintText="Código do Usuário"
               floatingLabelText="Login"
               value={this.state.login}
               onChange={this.handleChange}
+              disabled={this.props.isInputDisabled}
+              errorText={this.props.errorTextLogin}
             /><br/>
 
             <TextField
@@ -57,8 +45,10 @@ constructor(props) {
               type="password"
               value={this.state.password}
               onChange={this.handleChange}
+              disabled={this.props.isInputDisabled}
+              errorText={this.props.errorTextPassword}
             /><br/>
-
+            <br/>
             <RaisedButton
               label="Enviar"
               primary={true}
@@ -67,6 +57,13 @@ constructor(props) {
           </form>
         </center>
       </div>
-    );
+    )
   }
+}
+
+InputAuthentication.propTypes = {
+  onLoginSubmit: PropTypes.func.isRequired,
+  isInputDisabled: PropTypes.bool.isRequired,
+  errorTextLogin: PropTypes.string.isRequired,
+  errorTextPassword: PropTypes.string.isRequired,
 }
