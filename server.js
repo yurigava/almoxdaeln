@@ -75,6 +75,14 @@ app.get('/api/equips', function(req, res) {
   });
 });
 
+app.get('/api/professor', function(req, res) {
+  connection.query('SELECT type FROM almoxdaeln_db.Equipments', function (error, results, fields) {
+    if (error) throw error;
+    console.log('Received request on /api/professor')
+    res.send(results);
+  });
+});
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
