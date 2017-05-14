@@ -4,31 +4,35 @@ import MenuItem from 'material-ui/MenuItem';
 
 let value = null;
 
-var Field = React.createClass({
+export default class Field extends React.Component {
 
-getInitialState: function() {
-    return {state: value}
-  },
+//var  = React.createClass({
 
- handleClick: function(event, index, value) {
-    this.setState({value})
-  },
-        render: function() {
-            return (
-                <div>
-                    <SelectField
-                    floatingLabelText="Equipamento:"
-                    value={this.state.value}
-                    onChange={this.handleClick}
-                    >
-                    <MenuItem value={1} primaryText="Osciloscopio" />
-                    <MenuItem value={2} primaryText="Multimetro" />
-                    <MenuItem value={3} primaryText="Gerador de Funçao" />
-                    <MenuItem value={4} primaryText="Yuri Garcia Vaz" />
-                    </SelectField>
+  //getInitialState() {
+  //  return {state: value}
+  //}
 
-                </div>
-            );
-        }
-});
-export default Field;
+  //handleClick(event, index, value) {
+  //  this.setState({value});
+  //}
+
+  render() {
+    return (
+      <div>
+        <SelectField
+        floatingLabelText="Equipamento:"
+        //value={this.state.value}
+        //onChange={this.handleClick}
+        >
+        <MenuItem value={1} primaryText="Osciloscopio" />
+        <MenuItem value={2} primaryText="Multimetro" />
+        <MenuItem value={3} primaryText="Gerador de Funçao" />
+        <MenuItem value={4} primaryText="Yuri Garcia Vaz" />
+        </SelectField>
+
+      </div>
+    )
+  }
+}
+
+//export default Field;

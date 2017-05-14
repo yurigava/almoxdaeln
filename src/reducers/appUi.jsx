@@ -28,6 +28,17 @@ const initialState =
     },
     {
       info: {
+        link: 'students',
+        linkText: 'Estudantes'
+      },
+      allowedRoles: [
+        "almoxarife",
+        "professor",
+        "admin"
+      ]
+    },
+    {
+      info: {
         link: 'logout',
         linkText: 'Logout'
       },
