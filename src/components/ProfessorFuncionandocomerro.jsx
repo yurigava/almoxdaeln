@@ -30,13 +30,12 @@ export default class Field extends Component {
     this.handleRemoveShareholder = this.handleRemoveShareholder.bind(this);
   }
 
-  handleShareholderNameChange(event) {  
-
-    //const shareholders = [];
-    const value = event.target.value;
-    this.setState(update(this.state.shareholders, {name: {$set: value}}));
-    //alert(event.target.value);
+  handleShareholderNameChange(event) {
+    //return this.state.shareholders.map((it) => ( alert(it.name)));
     
+    const name = event.target.name;
+    const value = event.target.value;
+    this.setState(update(this.state, {[name]: {$set: value}}));
     //const shareholders = [this.state];
     //const newShareholders = update(shareholders, {$push: [idx]}); // => [1, 2, 3, 4]
     //alert("oi");
@@ -56,7 +55,7 @@ export default class Field extends Component {
   }
 
   handleRemoveShareholder(event) {
-    alert(this.state.shareholders.name);
+    alert(event);
   }
 
   handleChange(event, index, values) {
