@@ -69,3 +69,9 @@ export const toggleDrawerState = () => {
     type: 'TOGGLE_DRAWER'
   }
 }
+
+export const toggleValueProfessor = () => {
+  return {
+    type: 'TOGGLE_PROFESSOR'
+  }
+}
