@@ -131,20 +131,11 @@ export default class Field extends Component {
           {/* ... */}
 
           {this.state.shareholders.map((shareholder, idx) => (
-            <div>
+            <div className="shareholder">
               <TextField
                 name="Family"
                 hintText="Equipamento"
-                floatingLabelText={`Family #${idx + 1} name`} 
-                value={shareholder.name}
-                onChange={this.handleShareholderNameChange}
-              />
-                &nbsp;&nbsp;&nbsp;
-
-                <TextField
-                name="Type"
-                hintText="Equipamento"
-                floatingLabelText={`Type #${idx + 1} name`} 
+                floatingLabelText={`Shareholder #${idx + 1} name`} 
                 value={shareholder.name}
                 onChange={this.handleShareholderNameChange}
               />
@@ -174,3 +165,4 @@ export default class Field extends Component {
     );
   }
 }
+
