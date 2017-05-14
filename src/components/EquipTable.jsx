@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import Field from './Field.jsx';
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
