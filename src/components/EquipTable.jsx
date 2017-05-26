@@ -14,10 +14,10 @@ let headerProps = {
 };
 
 let headers = [
-  {name: "Código de Barras", key: "eq_id"},
   {name: "Patrimônio", key: "pat"},
-  {name: "Nome", key: "type"},
-  {name: "Estado", key: "state"},
+  {name: "Família", key: "familia"},
+  {name: "Tipo", key: "tipo"},
+  {name: "Estado", key: "estado"},
 ];
 
 export default class EquipTable extends React.Component {
@@ -99,10 +99,10 @@ export default class EquipTable extends React.Component {
           >
             {this.state.data.map( (row) => (
               <TableRow key={row.eq_id}>
-                <TableRowColumn>{row.eq_id}</TableRowColumn>
-                <TableRowColumn>{row.pat}</TableRowColumn>
-                <TableRowColumn>{row.type}</TableRowColumn>
-                <TableRowColumn>{row.state}</TableRowColumn>
+                <TableRowColumn>{row.patrimonio}</TableRowColumn>
+                <TableRowColumn>{row.tipo.familia.familia}</TableRowColumn>
+                <TableRowColumn>{row.tipo.tipo}</TableRowColumn>
+                <TableRowColumn>{row.estado.estado}</TableRowColumn>
               </TableRow>
             ))}
           </TableBody>
