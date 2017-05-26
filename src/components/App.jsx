@@ -9,11 +9,13 @@ import { Link } from 'react-router';
 
 const style = {
   container: {
-    position: 'relative',
+    position: 'absolute',
+    left: '50%',
+    'marginLeft': '-25px'
   },
   refresh: {
     display: 'inline-block',
-    position: 'relative',
+    position: 'relative'
   },
 };
 
