@@ -21,13 +21,25 @@ export default class InputAuthentication extends React.Component {
   }
 
   render() {
+    if(this.props.userRole === "")
+    {
+      this.props.getUserRole();
+    }
+    else if(this.props.userRole !== "loggedOut")
+    {
+      this.props.router.push('/'+this.props.visibleLinks[0]);
+    }
+
     return (
       <div>
         <center>
-          <form onSubmit={e => {
-              e.preventDefault()
-              this.props.onLoginSubmit(this.state.login, this.state.password, this.props.router.push)
-            }}
+          <form onSubmit=
+            {
+              e => {
+                e.preventDefault()
+                this.props.onLoginSubmit(this.state.login, this.state.password)
+              }
+            }
           >
             <TextField
               name="login"
@@ -63,7 +75,10 @@ export default class InputAuthentication extends React.Component {
 
 InputAuthentication.propTypes = {
   onLoginSubmit: PropTypes.func.isRequired,
+  getUserRole: PropTypes.func.isRequired,
   isInputDisabled: PropTypes.bool.isRequired,
   errorTextLogin: PropTypes.string.isRequired,
   errorTextPassword: PropTypes.string.isRequired,
+  userRole: PropTypes.string.isRequired,
+  visibleLinks: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
 }

@@ -1,19 +1,31 @@
 import { connect } from 'react-redux'
 import InputAuthentication from '../components/InputAuthentication.jsx'
-import { changeLogin, changePassword, submitLogin } from '../actions/index.js'
+import { submitLogin, getUserRole } from '../actions/index.js'
+import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
   return {
     isInputDisabled: state.login.isInputDisabled,
     errorTextLogin: state.login.errorLogin,
-    errorTextPassword: state.login.errorPassword
+    errorTextPassword: state.login.errorPassword,
+    userRole: state.login.userRole,
+    visibleLinks:
+      state.appUi.pagesList.filter(page =>
+        page.allowedRoles.includes(state.login.userRole)
+      )
+      .map(selectedPage =>
+        selectedPage.info.link
+      )
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLoginSubmit: (login, password, push) => {
-      dispatch(submitLogin(login, password, push))
+    onLoginSubmit: (login, password) => {
+      dispatch(submitLogin(serverUrl, login, password))
+    },
+    getUserRole: () => {
+      dispatch(getUserRole(serverUrl))
     }
   }
 }
