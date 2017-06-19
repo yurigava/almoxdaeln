@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import InputAuthentication from '../components/InputAuthentication.jsx'
 import { changeLogin, changePassword, submitLogin } from '../actions/index.js'
+import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
   return {
@@ -12,8 +13,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLoginSubmit: (login, password, push) => {
-      dispatch(submitLogin(login, password, push))
+    onLoginSubmit: (login, password) => {
+      dispatch(submitLogin(serverUrl, login, password))
     }
   }
 }

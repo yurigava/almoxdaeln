@@ -24,10 +24,13 @@ export default class InputAuthentication extends React.Component {
     return (
       <div>
         <center>
-          <form onSubmit={e => {
-              e.preventDefault()
-              this.props.onLoginSubmit(this.state.login, this.state.password, this.props.router.push)
-            }}
+          <form onSubmit=
+            {
+              e => {
+                e.preventDefault()
+                this.props.onLoginSubmit(this.state.login, this.state.password)
+              }
+            }
           >
             <TextField
               name="login"

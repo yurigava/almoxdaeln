@@ -5,8 +5,10 @@ import { setDrawerState, toggleDrawerState, checkLogout } from '../actions/index
 
 const mapStateToProps = (state) => {
   return {
-    visibleLinks: state.appUi.pagesList.filter(page =>
-      page.allowedRoles.includes(state.login.userRole))
+    visibleLinks:
+      state.appUi.pagesList.filter(page =>
+        page.allowedRoles.includes(state.login.userRole)
+      )
     .map(selectedPage =>
       selectedPage.info
     ),
