@@ -5,8 +5,6 @@ import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow,
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
-let aux = [];
-
 let headerProps = {
   enableSelectAll: false,
   displaySelectAll: false,
@@ -14,10 +12,10 @@ let headerProps = {
 };
 
 let headers = [
-  {name: "Patrimônio", key: "pat"},
+  {name: "Patrimônio", key: "patrimonio"},
   {name: "Família", key: "familia"},
   {name: "Tipo", key: "tipo"},
-  {name: "Estado", key: "estado"},
+  {name: "Estado", key: "estado"}
 ];
 
 export default class EquipTable extends React.Component {
@@ -31,7 +29,16 @@ export default class EquipTable extends React.Component {
   loadDataFromServer() {
     axios.get(this.props.route.url + "/api/equips")
     .then((response) => {
-      this.setState(update(this.state, {data: {$set: response.data}}));
+      let temp = [];
+      response.data.map(it => {
+        temp.push({
+          patrimonio: it.patrimonio,
+          familia: it.Tipo.Familia.familia,
+          tipo: it.Tipo.tipo,
+          estado: it.Estado.estado
+        })
+      });
+      this.setState(update(this.state, {data: {$set: temp}}));
     })
     .catch((error) => {
       if(error.response)
@@ -63,8 +70,8 @@ export default class EquipTable extends React.Component {
     }
 
     let data = [...this.state.data];
-    data.sort( (a,b) => {
-      if (a[sortBy] < b[sortBy])
+    data.sort((a,b) => {
+      if(a[sortBy] < b[sortBy])
         return -1;
       if(a[sortBy] > b[sortBy])
         return 1;
@@ -100,9 +107,9 @@ export default class EquipTable extends React.Component {
             {this.state.data.map( (row) => (
               <TableRow key={row.eq_id}>
                 <TableRowColumn>{row.patrimonio}</TableRowColumn>
-                <TableRowColumn>{row.Tipo.Familia.familia}</TableRowColumn>
-                <TableRowColumn>{row.Tipo.tipo}</TableRowColumn>
-                <TableRowColumn>{row.Estado.estado}</TableRowColumn>
+                <TableRowColumn>{row.familia}</TableRowColumn>
+                <TableRowColumn>{row.tipo}</TableRowColumn>
+                <TableRowColumn>{row.estado}</TableRowColumn>
               </TableRow>
             ))}
           </TableBody>
