@@ -1,43 +1,11 @@
 import update from 'immutability-helper';
+import { pagesList } from './pagesList.jsx'
 
 const initialState =
 {
   isDrawerOpen: false,
-  visibleLinks: [0],
   loadingStatus: 'hide',
-  pagesList: [
-    {
-      info: {
-        link: 'login',
-        linkText: 'Login'
-      },
-      allowedRoles: [
-        'loggedOut'
-      ]
-    },
-    {
-      info: {
-        link: 'equips',
-        linkText: 'Equipamentos'
-      },
-      allowedRoles: [
-        "almoxarife",
-        "professor",
-        "admin"
-      ]
-    },
-    {
-      info: {
-        link: 'logout',
-        linkText: 'Logout'
-      },
-      allowedRoles: [
-        "almoxarife",
-        "professor",
-        "admin"
-      ]
-    }
-  ]
+  pagesList
 }
 
 const appUi = (state = initialState, action) => {

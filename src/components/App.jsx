@@ -30,14 +30,16 @@ export default class App extends React.Component {
             open={this.props.isDrawerOpen}
             onRequestChange={(drawerOpen) => this.props.onDrawerRequestChange(drawerOpen)}
           >
-            {this.props.visibleLinks.map(visibleLink =>
-              <MenuItem
-                key={visibleLink.linkText}
-                containerElement={<Link to={"/"+visibleLink.link} />}
-                onTouchTap={() => this.props.onDrawerLinkClick()}
-                primaryText={visibleLink.linkText}
-              />
-            )}
+            {
+              this.props.visibleLinks.map(visibleLink =>
+                <MenuItem
+                  key={visibleLink.linkText}
+                  containerElement={<Link to={"/"+visibleLink.link} />}
+                  onTouchTap={() => this.props.onDrawerLinkClick()}
+                  primaryText={visibleLink.linkText}
+                />
+              )
+            }
           </Drawer>
         </div>
         <div>

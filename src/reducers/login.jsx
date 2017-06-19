@@ -4,6 +4,7 @@ const initialState = {
   isInputDisabled: false,
   errorLogin: "",
   errorPassword: "",
+  userRole: ""
 }
 
 const login = (state = initialState, action) => {

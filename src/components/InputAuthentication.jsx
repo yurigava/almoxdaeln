@@ -14,6 +14,24 @@ export default class InputAuthentication extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount() {
+    if(this.props.userRole === "")
+    {
+      this.props.getUserRole();
+    }
+    if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
+    {
+      this.props.router.push('/'+this.props.visibleLinks[0]);
+    }
+  }
+
+  componentWillReceiveProps() {
+    if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
+    {
+      this.props.router.push('/'+this.props.visibleLinks[0]);
+    }
+  }
+
   handleChange(event) {
     const name = event.target.name;
     const value = event.target.value;
@@ -24,10 +42,13 @@ export default class InputAuthentication extends React.Component {
     return (
       <div>
         <center>
-          <form onSubmit={e => {
-              e.preventDefault()
-              this.props.onLoginSubmit(this.state.login, this.state.password, this.props.router.push)
-            }}
+          <form onSubmit=
+            {
+              e => {
+                e.preventDefault()
+                this.props.onLoginSubmit(this.state.login, this.state.password)
+              }
+            }
           >
             <TextField
               name="login"
@@ -63,7 +84,10 @@ export default class InputAuthentication extends React.Component {
 
 InputAuthentication.propTypes = {
   onLoginSubmit: PropTypes.func.isRequired,
+  getUserRole: PropTypes.func.isRequired,
   isInputDisabled: PropTypes.bool.isRequired,
   errorTextLogin: PropTypes.string.isRequired,
   errorTextPassword: PropTypes.string.isRequired,
+  userRole: PropTypes.string.isRequired,
+  visibleLinks: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
 }
