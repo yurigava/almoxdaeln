@@ -79,6 +79,22 @@ app.get('/api/equips', function(req, res) {
   });
 });
 
+app.get('/api/getFamilias', function(req, res) {
+  req.models.Familias.find({}, "familia", function (err, familias) {
+    if(err)
+      throw(err);
+    res.send(familias);
+  });
+});
+
+app.get('/api/getTipos', function(req, res) {
+  req.models.Tipos.find({}, "tipo", function (err, tipos) {
+    if(err)
+      throw(err);
+    res.send(tipos);
+  });
+});
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
