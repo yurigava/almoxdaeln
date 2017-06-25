@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 export const changeRole = (role) => {
   return {
     type: 'CHANGE_ROLE',
@@ -23,27 +21,6 @@ export const submitLogin = (serverUrl, login, password) => {
   }
 }
 
-export const getUserRole = (serverUrl) => {
-  return {
-    type: 'GET_USER_ROLE',
-    serverUrl
-  }
-}
-
-export const setDrawerState = (drawerOpen) => {
-  return {
-    type: 'SET_DRAWER',
-    drawerOpen
-  }
-}
-
-export const setLoading = (isLoading) => {
-  return {
-    type: 'SET_LOADING',
-    isLoading
-  }
-}
-
 export const setLoginStatus = (success) => {
   return {
     type: 'SET_LOGIN_STATUS',
@@ -51,8 +28,9 @@ export const setLoginStatus = (success) => {
   }
 }
 
-export const toggleDrawerState = () => {
+export const getUserRole = (serverUrl) => {
   return {
-    type: 'TOGGLE_DRAWER'
+    type: 'GET_USER_ROLE',
+    serverUrl
   }
 }
