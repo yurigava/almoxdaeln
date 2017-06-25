@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import InputAuthentication from '../components/InputAuthentication.jsx'
-import { submitLogin, getUserRole } from '../actions/index.js'
+import { submitLogin, getUserRole } from '../actions/login.js'
 import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
