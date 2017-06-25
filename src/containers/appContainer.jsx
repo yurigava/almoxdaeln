@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import App from '../components/App.jsx'
-import { setDrawerState, toggleDrawerState, checkLogout } from '../actions/index.js'
+import { setDrawerState, toggleDrawerState } from '../actions/appUi.js'
 
 
 const mapStateToProps = (state) => {

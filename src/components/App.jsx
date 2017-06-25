@@ -48,18 +48,16 @@ export default class App extends React.Component {
             onLeftIconButtonTouchTap={() => this.props.onDrawerLinkClick()}
           />
           <center>
-            <div>
-              <div style={style.container}>
-                <RefreshIndicator
-                  size={50}
-                  left={0}
-                  top={40}
-                  status={this.props.loadingStatus}
-                  style={style.refresh}
-                />
-              </div>
-              {this.props.children}
+            <div style={style.container}>
+              <RefreshIndicator
+                size={50}
+                left={0}
+                top={40}
+                status={this.props.loadingStatus}
+                style={style.refresh}
+              />
             </div>
+            {this.props.children}
           </center>
         </div>
       </div>
