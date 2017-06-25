@@ -11,6 +11,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'addEquips',
+      linkText: 'Adicionar Equipamentos'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'equips',
       linkText: 'Equipamentos'
     },
