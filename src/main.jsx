@@ -3,6 +3,7 @@ import axios from 'axios';
 import ReactDOM from 'react-dom';
 import appContainer from './containers/appContainer.jsx';
 import loginContainer from './containers/loginContainer.jsx'
+import addEquipContainer from './containers/addEquipContainer.jsx'
 import EquipTable from './components/EquipTable.jsx';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -13,10 +14,11 @@ import createSagaMiddleware from 'redux-saga'
 import logger from 'redux-logger'
 import { Provider } from 'react-redux'
 import almoxApp from './reducers/index.jsx'
-import { changeRole, setLogout } from './actions/index.js'
+import { changeRole, setLogout } from './actions/login.js'
 import loginSagas from './sagas/login.jsx'
+import addEquipSagas from './sagas/addEquip.jsx'
 
-export const serverUrl = 'http://192.168.0.69:8081';
+export const serverUrl = 'http://192.168.100.104:8081';
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -27,6 +29,7 @@ const store = createStore(
 );
 
 sagaMiddleware.run(loginSagas)
+sagaMiddleware.run(addEquipSagas)
 
 main();
 
@@ -60,6 +63,7 @@ function main() {
             <IndexRedirect to="/login" />
             <Route path="/logout" onEnter={logUserOut}/>
             <Route path="/login" component={loginContainer} />
+            <Route path="/addEquips" component={addEquipContainer} onEnter={verifyPermission}/>
             <Route path="/equips" component={EquipTable} url={serverUrl} onEnter={verifyPermission}/>
           </Route>
         </Router>

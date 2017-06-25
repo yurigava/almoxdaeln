@@ -62,7 +62,7 @@ app.use(orm.express("mysql://"+ username +":"+ password +"@"+ host +"/"+ databas
 }));
 
 app.use(function(req,res,next) {
-  res.header("Access-Control-Allow-Origin", "http://192.168.0.69:8080");
+  res.header("Access-Control-Allow-Origin", "http://192.168.100.104:8080");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Content-Type", "text/plain");
@@ -76,6 +76,22 @@ require('./src/authentication.js')(app, passport);
 app.get('/api/equips', function(req, res) {
   req.models.EquipamentosMonitorados.find({}, function (err, equipamentos) {
     res.send(equipamentos);
+  });
+});
+
+app.get('/api/getFamilias', function(req, res) {
+  req.models.Familias.find({}, "familia", function (err, familias) {
+    if(err)
+      throw(err);
+    res.send(familias);
+  });
+});
+
+app.get('/api/getTipos', function(req, res) {
+  req.models.Tipos.find({}, "tipo", function (err, tipos) {
+    if(err)
+      throw(err);
+    res.send(tipos);
   });
 });
 
