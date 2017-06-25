@@ -1,17 +1,21 @@
 import { connect } from 'react-redux'
 import App from '../components/App.jsx'
-import { setDrawerState, toggleDrawerState, checkLogout } from '../actions/index.js'
+import { setDrawerState, toggleDrawerState } from '../actions/appUi.js'
 
-
-const mapStateToProps = (state) => {
-  return {
-    visibleLinks:
-      state.appUi.pagesList.filter(page =>
-        page.allowedRoles.includes(state.login.userRole)
+const getVisibleLinks = (appUi, login) => {
+  return (
+      appUi.pagesList.filter(page =>
+        page.allowedRoles.includes(login.userRole)
       )
       .map(selectedPage =>
         selectedPage.info
-      ),
+      )
+  )
+}
+
+const mapStateToProps = (state) => {
+  return {
+    visibleLinks: getVisibleLinks(state.appUi, state.login),
     isDrawerOpen: state.appUi.isDrawerOpen,
     loadingStatus: state.appUi.loadingStatus
   }

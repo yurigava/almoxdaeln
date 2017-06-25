@@ -37,7 +37,7 @@ if(TARGET === 'start' || !TARGET) {
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new HtmlwebpackPlugin({
-        title: 'Almox DAELN - Faça login',
+        title: 'Almox DAELN',
         favicon: 'favicon.ico',
         template: 'src/index.html'
       })
