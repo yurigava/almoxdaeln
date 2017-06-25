@@ -79,6 +79,39 @@ app.get('/api/equips', function(req, res) {
   });
 });
 
+app.get('/api/getFamilias', function(req, res) {
+  req.models.Familias.find({}, "familia", function (err, familias) {
+    if(err)
+      throw(err);
+    res.send(familias);
+  });
+});
+
+app.get('/api/getTipos', function(req, res) {
+  req.models.Tipos.find({}, "tipo", function (err, tipos) {
+    if(err)
+      throw(err);
+    res.send(tipos);
+  });
+});
+
+app.post('/api/insertEquips', function(req, res) {
+  var equipsToInsert = [];
+  req.body.patrimonios.forEach(function(pat) {
+    equipsToInsert.push({
+      patrimonio: pat,
+      Tipos_id_tipo: req.body.id_tipo,
+      Estados_id_estado: 0
+    });
+  });
+  req.models.EquipamentosMonitorados.create(equipsToInsert, function(err) {
+    if(err)
+      res.send(err);
+    else
+      res.send('ok');
+  });
+});
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
