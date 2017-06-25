@@ -4,8 +4,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
+import {List, ListItem, makeSelectable} from 'material-ui/List';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import { Link } from 'react-router';
+
+const SelectableList = makeSelectable(List);
 
 const style = {
   container: {
@@ -20,6 +23,18 @@ const style = {
 };
 
 export default class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.onChangeList = this.onChangeList.bind(this);
+  }
+
+  onChangeList(event, value)
+  {
+    this.props.router.push(value);
+    this.props.onDrawerLinkClick();
+  }
+
   render() {
     return (
       <div>
@@ -30,16 +45,20 @@ export default class App extends React.Component {
             open={this.props.isDrawerOpen}
             onRequestChange={(drawerOpen) => this.props.onDrawerRequestChange(drawerOpen)}
           >
-            {
-              this.props.visibleLinks.map(visibleLink =>
-                <MenuItem
-                  key={visibleLink.linkText}
-                  containerElement={<Link to={"/"+visibleLink.link} />}
-                  onTouchTap={() => this.props.onDrawerLinkClick()}
-                  primaryText={visibleLink.linkText}
-                />
-              )
-            }
+            <SelectableList
+              value={this.props.location.pathname}
+              onChange={this.onChangeList}
+            >
+              {
+                this.props.visibleLinks.map(visibleLink =>
+                  <ListItem
+                    key={visibleLink.linkText}
+                    primaryText={visibleLink.linkText}
+                    value={"/"+visibleLink.link}
+                  />
+                )
+              }
+            </SelectableList>
           </Drawer>
         </div>
         <div>
@@ -48,18 +67,16 @@ export default class App extends React.Component {
             onLeftIconButtonTouchTap={() => this.props.onDrawerLinkClick()}
           />
           <center>
-            <div>
-              <div style={style.container}>
-                <RefreshIndicator
-                  size={50}
-                  left={0}
-                  top={40}
-                  status={this.props.loadingStatus}
-                  style={style.refresh}
-                />
-              </div>
-              {this.props.children}
+            <div style={style.container}>
+              <RefreshIndicator
+                size={50}
+                left={0}
+                top={40}
+                status={this.props.loadingStatus}
+                style={style.refresh}
+              />
             </div>
+            {this.props.children}
           </center>
         </div>
       </div>

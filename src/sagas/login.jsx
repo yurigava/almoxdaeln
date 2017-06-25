@@ -32,10 +32,9 @@ function *submitLogin(action) {
 }
 
 function *getUserRole(action) {
-  let response
   yield put({ type: 'SET_LOADING', isLoading: true });
   try {
-    response = yield call(
+    const response = yield call(
       axios.get,
       action.serverUrl + '/getRole',
       {withCredentials:true}
