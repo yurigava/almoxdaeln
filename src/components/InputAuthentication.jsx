@@ -58,6 +58,7 @@ export default class InputAuthentication extends React.Component {
               onChange={this.handleChange}
               disabled={this.props.isInputDisabled}
               errorText={this.props.errorTextLogin}
+              floatingLabelStyle={{color: 'grey'}}
             /><br/>
 
             <TextField
@@ -68,6 +69,7 @@ export default class InputAuthentication extends React.Component {
               onChange={this.handleChange}
               disabled={this.props.isInputDisabled}
               errorText={this.props.errorTextPassword}
+              floatingLabelStyle={{color: 'grey'}}
             /><br/>
             <br/>
             <RaisedButton
