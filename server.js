@@ -101,7 +101,7 @@ app.post('/api/insertEquips', function(req, res) {
     equipsToInsert.push({
       patrimonio: pat,
       Tipos_id_tipo: req.body.id_tipo,
-      Estados_id_estado: 0
+      Estados_id_estado: 4
     });
   });
   req.models.EquipamentosMonitorados.create(equipsToInsert, function(err) {
