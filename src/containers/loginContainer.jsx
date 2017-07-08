@@ -5,7 +5,7 @@ import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
   return {
-    isInputDisabled: state.login.isInputDisabled,
+    isInputDisabled: state.appUi.isInputDisabled,
     errorTextLogin: state.login.errorLogin,
     errorTextPassword: state.login.errorPassword,
     userRole: state.login.userRole,

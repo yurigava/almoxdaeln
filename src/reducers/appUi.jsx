@@ -5,6 +5,8 @@ const initialState =
 {
   isDrawerOpen: false,
   loadingStatus: 'hide',
+  isInputDisabled: false,
+  submissionMessage: "",
   pagesList
 }
 
@@ -15,6 +17,11 @@ const appUi = (state = initialState, action) => {
         update(state, {isDrawerOpen: {$set: !state.isDrawerOpen}})
       )
 
+    case 'SET_SUBMISSION_MESSAGE':
+      return (
+        update(state, {submissionMessage: {$set: action.message}})
+      )
+
     case 'SET_DRAWER':
       return (
         update(state, {isDrawerOpen: {$set: action.drawerOpen}})
@@ -23,12 +30,18 @@ const appUi = (state = initialState, action) => {
     case 'SET_LOADING':
       if (action.isLoading) {
         return (
-          update(state, {loadingStatus: {$set: 'loading'}})
+          update(state, {
+            loadingStatus: {$set: 'loading'},
+            isInputDisabled: {$set: true}
+          })
         )
       }
       else {
         return (
-          update(state, {loadingStatus: {$set: 'hide'}})
+          update(state, {
+            loadingStatus: {$set: 'hide'},
+            isInputDisabled: {$set: false}
+          })
         )
       }
 

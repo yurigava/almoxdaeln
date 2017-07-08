@@ -27,7 +27,6 @@ function *getFamilias(action) {
   }
   catch (e) { }
   yield put({ type: 'SET_LOADING', isLoading: false });
-
 }
 
 function *insertEquips(action) {

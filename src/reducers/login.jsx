@@ -1,7 +1,6 @@
 import update from 'immutability-helper';
 
 const initialState = {
-  isInputDisabled: false,
   errorLogin: "",
   errorPassword: "",
   userRole: ""
@@ -12,11 +11,6 @@ const login = (state = initialState, action) => {
     case 'CHANGE_ROLE':
       return (
         update(state, {userRole: {$set: action.role}})
-      )
-
-    case 'SET_LOADING':
-      return (
-        update(state, {isInputDisabled: {$set: action.isLoading}})
       )
 
     case 'SET_LOGIN_STATUS':

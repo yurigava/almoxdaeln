@@ -17,3 +17,10 @@ export const toggleDrawerState = () => {
     type: 'TOGGLE_DRAWER'
   }
 }
+
+export const setSubmissionMessage = (message) => {
+  return {
+    type: 'SET_SUBMISSION_MESSAGE',
+    message
+  }
+}

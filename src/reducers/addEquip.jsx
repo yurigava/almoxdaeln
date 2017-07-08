@@ -5,7 +5,6 @@ const initialState =
   selectedTipo: null,
   selectedFamilia: null,
   isDataSubmitted: false,
-  submissionMessage: "",
   isMissingTipo: false,
   isMissingFamilia: false,
   errorCauseEquipNumber: "",
@@ -18,11 +17,6 @@ const addEquip = (state = initialState, action) => {
     case 'SET_DATA_SUBMITTED':
       return (
         update(state, {isDataSubmitted: {$set: action.submitted}})
-      )
-
-    case 'SET_SUBMISSION_MESSAGE':
-      return (
-        update(state, {submissionMessage: {$set: action.message}})
       )
 
     case 'SET_INSERT_ERROR_DESCRIPTION':

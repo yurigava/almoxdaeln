@@ -4,18 +4,20 @@ import {
   setSelectedTipo,
   setSelectedFamilia,
   insertEquips,
-  setSubmissionMessage,
   setErrorDescription,
   setMissingFieldsError,
   setInfoText,
 } from '../actions/addEquip.js'
+import {
+  setSubmissionMessage,
+} from '../actions/appUi.js'
 import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
   return {
-    isInputDisabled: state.login.isInputDisabled,
+    isInputDisabled: state.appUi.isInputDisabled,
+    submissionMessage: state.appUi.submissionMessage,
     isDataSubmitted: state.addEquip.isDataSubmitted,
-    submissionMessage: state.addEquip.submissionMessage,
     isMissingTipo: state.addEquip.isMissingTipo,
     isMissingFamilia: state.addEquip.isMissingFamilia,
     tipo: state.addEquip.selectedTipo,
