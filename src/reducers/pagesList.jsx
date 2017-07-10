@@ -12,7 +12,27 @@ export const pagesList = [
   {
     info: {
       link: 'addEquips',
-      linkText: 'Adicionar Equipamentos'
+      linkText: 'Registrar Equipamentos'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'addFamilia',
+      linkText: 'Adicionar Família de Equipamentos'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'addTipo',
+      linkText: 'Adicionar Tipo de Equipamento'
     },
     allowedRoles: [
       "almoxarife",

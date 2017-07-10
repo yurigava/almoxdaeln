@@ -179,7 +179,6 @@ export default class AddEquip extends React.Component {
           {
             e => {
               e.preventDefault()
-              console.log("Submit")
             }
           }
         >

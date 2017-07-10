@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
   return {
     isInputDisabled: state.appUi.isInputDisabled,
     submissionMessage: state.appUi.submissionMessage,
-    isDataSubmitted: state.addEquip.isDataSubmitted,
+    isDataSubmitted: state.appUi.isDataSubmitted,
     isMissingTipo: state.addEquip.isMissingTipo,
     isMissingFamilia: state.addEquip.isMissingFamilia,
     tipo: state.addEquip.selectedTipo,

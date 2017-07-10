@@ -24,3 +24,10 @@ export const setSubmissionMessage = (message) => {
     message
   }
 }
+
+export const setDataSubmitted = (submitted) => {
+  return {
+    type: 'SET_DATA_SUBMITTED',
+    submitted
+  }
+}

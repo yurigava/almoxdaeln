@@ -4,7 +4,6 @@ const initialState =
 {
   selectedTipo: null,
   selectedFamilia: null,
-  isDataSubmitted: false,
   isMissingTipo: false,
   isMissingFamilia: false,
   errorCauseEquipNumber: "",
@@ -14,12 +13,7 @@ const initialState =
 
 const addEquip = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_DATA_SUBMITTED':
-      return (
-        update(state, {isDataSubmitted: {$set: action.submitted}})
-      )
-
-    case 'SET_INSERT_ERROR_DESCRIPTION':
+    case 'SET_INSERT_EQUIP_ERROR_DESCRIPTION':
       return (
         update(state, {
           errorCauseEquipNumber: {$set: action.equipNumber},

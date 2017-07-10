@@ -1,6 +1,6 @@
 export const setErrorDescription = (equipNumber, errorCode) => {
   return {
-    type: 'SET_INSERT_ERROR_DESCRIPTION',
+    type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
     equipNumber,
     errorCode
   }
@@ -11,13 +11,6 @@ export const setMissingFieldsError = (isMissingTipo, isMissingFamilia) => {
     type: 'SET_MISSING_FIELDS_ERROR',
     isMissingTipo,
     isMissingFamilia
-  }
-}
-
-export const setDataSubmitted = (submitted) => {
-  return {
-    type: 'SET_DATA_SUBMITTED',
-    submitted
   }
 }
 
