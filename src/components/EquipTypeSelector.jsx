@@ -32,10 +32,9 @@ export default class EquipTypeSelector extends React.Component {
 
   componentDidMount() {
     if(this.props.familias.length === 0)
-    {
       this.props.getFamilias();
+    if(this.props.tipos.length === 0)
       this.props.getTipos();
-    }
   }
 
   handleFamiliaChange(event, index, familia) {
@@ -67,7 +66,7 @@ export default class EquipTypeSelector extends React.Component {
       <div>
         <SelectField
           style={style}
-          floatingLabelText="Familia"
+          floatingLabelText="Família"
           value={this.props.familia}
           onChange={this.handleFamiliaChange}
           disabled={this.props.isInputDisabled}

@@ -11,7 +11,6 @@ module.exports = function(db, cb) {
   var EquipamentosRequisicao = db.define("EquipamentosRequisicao", {
     id_EquipamentoRequisicao: {
       type: 'integer',
-      required: true,
       unique: true,
       key: true
     },
@@ -25,7 +24,6 @@ module.exports = function(db, cb) {
     id_estado: {
       type: 'integer',
       size: 8,
-      required: true,
       unique: true,
       key: true
     },
@@ -40,7 +38,6 @@ module.exports = function(db, cb) {
     id_estadosReq: {
       type: 'integer',
       size: 8,
-      required: true,
       unique: true,
       key: true
     },
@@ -54,7 +51,6 @@ module.exports = function(db, cb) {
   var Familias = db.define("Familias", {
     id_familia: {
       type: 'integer',
-      required: true,
       unique: true,
       key: true
     },
@@ -68,7 +64,6 @@ module.exports = function(db, cb) {
   var HistoricoEquipamentos = db.define("HistoricoEquipamentos", {
     id_evento: {
       type: 'integer',
-      required: true,
       unique: true,
       key: true
     },
@@ -87,7 +82,6 @@ module.exports = function(db, cb) {
   var Requisicoes = db.define("Requisicoes", {
     id_evento: {
       type: 'integer',
-      required: true,
       unique: true,
       key: true
     },
@@ -106,7 +100,6 @@ module.exports = function(db, cb) {
   var Tipos = db.define("Tipos", {
     id_tipo: {
       type: 'integer',
-      required: true,
       unique: true,
       key: true
     },
