@@ -43,7 +43,7 @@ function *insertEquips(action) {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_INSERT_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -55,7 +55,7 @@ function *insertEquips(action) {
         message: "O código de patrimônio de algum dos equipamentos excedeu o limite de tamanho."
       });
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_INSERT_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -66,7 +66,7 @@ function *insertEquips(action) {
         type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
       });
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_INSERT_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -79,8 +79,8 @@ function *insertEquips(action) {
   yield put({ type: 'SET_LOADING', isLoading: false });
 }
 
-function *addEquipSagas() {
-    yield takeEvery('INSERT_EQUIPS', insertEquips);
+function *AddReserveSagas() {
+    yield takeEvery('INSERT_RESERVE', insertEquips);
 }
 
-export default addEquipSagas;
+export default AddReserveSagas;
