@@ -2,11 +2,12 @@ import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 
 function *insertEquips(action) {
-  if(action.id_tipo === null) {
+  if(action.id_tipo === null || action.date === null) {
     yield put({
       type: 'SET_MISSING_FIELDS_ERROR',
       isMissingTipo: action.id_tipo === null,
       isMissingFamilia: true,
+      //isMissingDate: true,
     });
     return;
   }
@@ -24,10 +25,11 @@ function *insertEquips(action) {
   try {
     response = yield call(
       axios.post,
-      action.serverUrl + '/api/insertEquips',
+      action.serverUrl + '/api/insertReserve',
       {
         patrimonios: patrimonios,
         id_tipo:     action.id_tipo,
+        date:        action.date,
       },
       {withCredentials:true}
     );
@@ -43,7 +45,7 @@ function *insertEquips(action) {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_INSERT_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -55,7 +57,7 @@ function *insertEquips(action) {
         message: "O código de patrimônio de algum dos equipamentos excedeu o limite de tamanho."
       });
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_INSERT_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -66,7 +68,7 @@ function *insertEquips(action) {
         type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
       });
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_INSERT_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -79,8 +81,8 @@ function *insertEquips(action) {
   yield put({ type: 'SET_LOADING', isLoading: false });
 }
 
-function *addEquipSagas() {
-    yield takeEvery('INSERT_EQUIPS', insertEquips);
+function *AddReserveSagas() {
+    yield takeEvery('INSERT_RESERVE', insertEquips);
 }
 
-export default addEquipSagas;
+export default AddReserveSagas;
