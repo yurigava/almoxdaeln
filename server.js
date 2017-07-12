@@ -255,6 +255,24 @@ app.post('/api/insertEquips', function(req, res) {
   });
 });
 
+app.post('/api/insertReserve', function(req, res) {
+  console.log('oi');
+  var reserveToInsert = [];
+  req.body.equipReservado.forEach(function(pat) {
+    reserveToInsert.push({
+      id_EquipamentoRequisicao: req.body.id_requisicao,
+      Estados_id_estado: 3,
+      quantidade: value
+    });
+  });
+  req.models.EquipamentosRequisicao.create(reserveToInsert, function(err) {
+    if(err)
+      res.send(err);
+    else
+      res.send('ok');
+  });
+});
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
