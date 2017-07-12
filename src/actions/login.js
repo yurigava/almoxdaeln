@@ -5,6 +5,13 @@ export const changeRole = (role) => {
   }
 }
 
+export const setUsuario = (usuario) => {
+  return {
+    type: 'SET_USUARIO',
+    usuario
+  }
+}
+
 export const setLogout = (serverUrl) => {
   return {
     type: 'LOG_USER_OUT',
