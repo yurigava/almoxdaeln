@@ -30,6 +30,7 @@ export default class InputAuthentication extends React.Component {
     {
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
+    this.props.setUsuario(this.state.login);
   }
 
   handleChange(event) {
@@ -87,6 +88,7 @@ export default class InputAuthentication extends React.Component {
 InputAuthentication.propTypes = {
   onLoginSubmit: PropTypes.func.isRequired,
   getUserRole: PropTypes.func.isRequired,
+  setUsuario: PropTypes.func,
   isInputDisabled: PropTypes.bool.isRequired,
   errorTextLogin: PropTypes.string.isRequired,
   errorTextPassword: PropTypes.string.isRequired,

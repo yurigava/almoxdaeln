@@ -22,7 +22,10 @@ const infos = [
 const initialState = {
   infoNumber: 0,
   barCodes: [
-    {index: 0, name: "barCode0", value: "", errorText: ""}
+    {
+      value: "",
+      errorText: ""
+    }
   ]
 }
 
@@ -97,15 +100,10 @@ export default class UserEquipControl extends React.Component {
     if(barCodes.length > 1) {
       newInfoNumber = 2;
     }
-    let nextIndex = 0
-    if(barCodes.length > 0)
-      nextIndex = barCodes[barCodes.length-1].index+1
     this.setState(update(this.state, {
       barCodes: {
         $push: [
           {
-            index: nextIndex,
-            name: "barCode"+nextIndex,
             value: "",
             errorText: ""
           }
@@ -117,7 +115,7 @@ export default class UserEquipControl extends React.Component {
 
   handleTextFieldChange(event) {
     const value = event.currentTarget.value;
-    const index = this.findEquipIndex(event.currentTarget.name, this.state.barCodes);
+    const index = Number(event.currentTarget.name);
     const newValue = (value.match("[0-9]+") || []).pop() || '';
     let newErrorText = this.state.barCodes[index].errorText;
     if(newValue != this.state.barCodes[index].value)
@@ -150,7 +148,7 @@ export default class UserEquipControl extends React.Component {
   }
 
   handleRemoveEquipment(event) {
-    const index = this.findEquipIndex(event.currentTarget.name, this.state.barCodes);
+    const index = Number(event.currentTarget.name);
     let newInfoNumber = 2;
     if(this.state.barCodes.length < 3)
       newInfoNumber = 0;
@@ -190,12 +188,6 @@ export default class UserEquipControl extends React.Component {
       return;
     }
     this.props.submitForm(usuario, patrimonios)
-  }
-
-  findEquipIndex(name, barCodes) {
-    return barCodes.findIndex(barCode =>
-      name == barCode.name
-    )
   }
 
   render () {
@@ -254,13 +246,13 @@ export default class UserEquipControl extends React.Component {
             }
           }
         >
-          {this.state.barCodes.map((barCode) => (
-            <div key={barCode.index}>
+          {this.state.barCodes.map((barCode, index) => (
+            <div key={index}>
               <TextField
                 autoFocus
-                name={"barCode"+barCode.index}
-                hintText={barCode.index === 0 ? "Código do Usuário" : "Patrimônio do Equipamento"}
-                floatingLabelText={barCode.index === 0 ? "Usuário" : "Equipamento"}
+                name={index}
+                hintText={index === 0 ? "Código do Usuário" : "Patrimônio do Equipamento"}
+                floatingLabelText={index === 0 ? "Usuário" : "Equipamento"}
                 value={barCode.value}
                 onChange={this.handleTextFieldChange}
                 onKeyPress={this.handleKeyPress}
@@ -271,13 +263,13 @@ export default class UserEquipControl extends React.Component {
               <FloatingActionButton
                 mini={true}
                 type="button"
-                name={"barCode"+barCode.index}
+                name={index}
                 backgroundColor="#ff0000"
-                onTouchTap={barCode.index === 0 ? this.handleClearUsuario :  this.handleRemoveEquipment}
+                onTouchTap={index === 0 ? this.handleClearUsuario :  this.handleRemoveEquipment}
                 zDepth={1}
                 style={style}
               >
-                {barCode.index === 0 ? <NavigationClose/> : <ActionDelete />}
+                {index === 0 ? <NavigationClose/> : <ActionDelete />}
               </FloatingActionButton>
             </div>
           ))}
