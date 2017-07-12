@@ -75,6 +75,7 @@ app.use(orm.express("mysql://"+ username +":"+ password +"@"+ host +"/"+ databas
 }));
 
 app.use(function(req,res,next) {
+
   res.header("Access-Control-Allow-Origin", "http://192.168.0.69:8080");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -95,7 +96,7 @@ app.get('/api/equips', function(req, res) {
 app.get('/api/getFamilias', function(req, res) {
   req.models.Familias.find({}, "familia", function (err, familias) {
     if(err)
-      throw(err);
+      res.send(err);
     res.send(familias);
   });
 });
@@ -103,9 +104,252 @@ app.get('/api/getFamilias', function(req, res) {
 app.get('/api/getTipos', function(req, res) {
   req.models.Tipos.find({}, "tipo", function (err, tipos) {
     if(err)
-      throw(err);
+      res.send(err);
     res.send(tipos);
   });
+});
+
+app.post('/api/quantidadeReserve', function(req, res) {
+  var equipFamilia = req.body.familia;
+  var equipTipo = req.body.tipo;
+  var name = req.body.name;
+  var date = req.body.date;
+  var turno = req.body.turno;
+  var quantidadeReq = [];
+  console.log("familia: " + equipFamilia + " tipo: " + equipTipo + " name: " + name + " date: " + date + " turno: " + turno);
+
+  if (equipTipo === null) {
+    var quantityTotal = 0;
+    req.models.Tipos.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+      if(err)
+        res.send(err);
+
+      tipos.forEach(function (equip) {
+        req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+          if(err)
+            res.send(err);
+          quantityTotal = Number(quantityTotal) + Number(quantidade);
+        });
+      });
+
+      req.models.Requisicoes.find({dataDeUso: date, turno: turno}, function (err, reqs) {
+        if(err)
+          res.send(err);
+        
+        reqs.forEach(function (equips) {
+          quantidadeReq.push(equips.id_requisicao);
+        });
+        console.log("vetorID: " + quantidadeReq );
+
+        if(quantidadeReq.length === 0) {
+          req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: quantidadeReq[0], Familias_id_familia: req.body.familia}, function (err, tipos) {
+            if(err)
+              res.send(err);
+            tipos.forEach(function (equip) {
+              quantityTotal = Number(quantityTotal) - Number(equip.quantidade);
+              console.log("quantidadeReservada: " + equip.quantidade);
+            });
+            console.log("quantityTotal: " + quantityTotal);
+            quantityTotal > 0 ? res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name }) : res.send({ code: "ERROR" , quantidade: 0, name: req.body.name });
+          });
+        }
+        else {
+          var i=0;
+          quantidadeReq.forEach(function (equips) {
+            console.log("vetorquantidadeReq: " + equips);
+            req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: equips, Familias_id_familia: req.body.familia}, function (err, tipos) {
+              if(err)
+                res.send(err);
+              tipos.forEach(function (equips) {
+                quantityTotal = Number(quantityTotal) - Number(equips.quantidade);
+                console.log("quantidadeReservada: " + equips.quantidade);
+              });
+              i++;
+              console.log("quantityTotal: " + quantityTotal);
+              console.log("i: " + i + " quantidadeReq.length" + quantidadeReq.length);
+              if(i>=quantidadeReq.length) {
+                quantityTotal > 0 ? res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name }) : res.send({ code: "ERROR" , quantidade: 0, name: req.body.name });
+              }
+              else {}
+              //res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });
+            });
+          });
+        }
+      });
+    });
+  }
+  else {
+    var familyTotal = 0;
+    var familyReserve = 0;
+    var typeReserve = 0;
+    var quantityTotalTipo = 0;
+    var quantityTotal = 0;
+    req.models.Tipos.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+      if(err)
+        res.send(err);
+
+      tipos.forEach(function (equip) {
+        req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+          if(err)
+            res.send(err);
+          familyTotal = Number(familyTotal) + Number(quantidade);
+          console.log("familyTotal: " + familyTotal);
+        });
+      });
+
+      req.models.EquipamentosMonitorados.count({Tipos_id_tipo: req.body.tipo, Estados_id_estado: 4}, function(err, quantidade) {
+        if(err)
+          res.send(err);
+        quantityTotalTipo = Number(quantityTotal) + Number(quantidade);
+        console.log("quantityTotalTipo: " + quantityTotalTipo);
+
+        req.models.Requisicoes.find({dataDeUso: date, turno: turno}, function (err, reqs) {
+          if(err)
+            res.send(err);
+        
+          reqs.forEach(function (equips) {
+            quantidadeReq.push(equips.id_requisicao);
+          });
+          console.log("vetorID: " + quantidadeReq );
+
+          if(quantidadeReq.length === 0) {
+            req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: quantidadeReq[0], Familias_id_familia: req.body.familia}, function (err, tipos) {
+              if(err)
+                res.send(err);
+              tipos.forEach(function (equip) {
+                familyReserve = Number(familyReserve) + Number(equip.quantidade);
+                console.log("quantidadeReservada: " + equip.quantidade + " familyReserve: " + familyReserve);
+              }); 
+
+              req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: quantidadeReq[0], Familias_id_familia: req.body.familia, Tipos_id_tipo: req.body.tipo}, function (err, tipos) {
+                if(err)
+                  res.send(err);
+                tipos.forEach(function (equip) {
+                  typeReserve = Number(typeReserve) + Number(equip.quantidade);
+                  console.log("typeReserve: " + typeReserve);
+                });
+                quantityTotal = familyTotal - familyReserve - typeReserve;
+                (familyTotal - familyReserve >= quantityTotalTipo - typeReserve) ? quantityTotal = quantityTotalTipo - typeReserve : quantityTotal = familyTotal - familyReserve
+                //res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });
+                console.log("quantityTotal: " + quantityTotal);
+                quantityTotal > 0 ? res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name }) : res.send({ code: "ERROR" , quantidade: 0, name: req.body.name });
+              });             
+            });
+          }
+
+          else {
+            var i=0;
+            quantidadeReq.forEach(function (equips) {
+              console.log("vetorquantidadeReq: " + equips);
+              req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: equips, Familias_id_familia: req.body.familia}, function (err, tipos) {
+                if(err)
+                  res.send(err);
+                tipos.forEach(function (equips) {
+                  familyReserve = Number(familyReserve) + Number(equips.quantidade);
+                  console.log("quantidadeReservada: " + equips.quantidade + " familyReserve: " + familyReserve);
+                });
+
+                req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: equips, Familias_id_familia: req.body.familia, Tipos_id_tipo: req.body.tipo}, function (err, tipos) {
+                  if(err)
+                    res.send(err);
+                  tipos.forEach(function (equips) {
+                    typeReserve = Number(typeReserve) + Number(equips.quantidade);
+                    console.log("typeReserve: " + typeReserve);
+                  });
+                  quantityTotal = familyTotal - familyReserve - typeReserve;
+                  (familyTotal - familyReserve >= quantityTotalTipo - typeReserve) ? quantityTotal = quantityTotalTipo - typeReserve : quantityTotal = familyTotal - familyReserve
+                  i++;
+                  console.log("quantityTotal: " + quantityTotal);
+                  console.log("i: " + i + " quantidadeReq.length" + quantidadeReq.length);
+                  if(i>=quantidadeReq.length) {
+                    quantityTotal > 0 ? res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name }) : res.send({ code: "ERROR" , quantidade: 0, name: req.body.name });
+                  }
+                  else {}
+                });
+              });
+            });
+          }
+        });
+      });
+    });
+  }
+});
+
+app.post('/api/testeProfessorReserve', function(req, res) {
+  var equips = req.body.equips;
+  var date = req.body.date;
+  var turno = req.body.turno;
+  var tamanhoVetor = 0;
+  var quantidadeOK = true;
+  var quantidadeReq = [];
+  console.log("equips.length: " + equips.length);
+
+  for(var i = 0; i < equips.length; i++) {
+    //console.log("i: " + i + " tipo: " + equips[i].tipo);
+    if(equips[i].tipo === undefined || equips[i].tipo === null) {
+      for(var j = 0; j < equips.length; j++) {
+        //console.log("j: " + j);
+        if(equips[i].familia === equips[j].familia) {
+          tamanhoVetor = tamanhoVetor + equips[j].quantidade;
+          //console.log("tamanhoVetor: " + tamanhoVetor + " familia: " + equips[j].familia);
+        }
+        else if(equips[i].familia === equips[j].familia && equips[j].tipo === null){
+          tamanhoVetor = tamanhoVetor + equips[j].quantidade;
+          //console.log("tamanhoVetor: " + tamanhoVetor + " familia: " + equips[j].familia);
+        }
+      }
+      quantidadeReq.push ({
+        familia: equips[i].familia,
+        quantidade: tamanhoVetor,
+      });
+      tamanhoVetor = 0;
+      quantidadeReq.forEach(function (equips) {
+        console.log("quantidadeReq->familia: " + equips.familia + " quantidade: " + equips.quantidade);
+      });
+    }
+  }
+
+  var i = 0;
+  quantidadeReq.forEach(function (equipsfamily) {
+    var quantityTotal = 0;
+    var quantityFamily = 0;
+    //quantityFamily = quantidadeReq[k].quantidade;
+    req.models.Tipos.find({Familias_id_familia: equipsfamily.familia}, function (err, tipos) {
+      if(err)
+        res.send(err);
+      else {
+
+      var vetorTipos = tipos.map(tipo => tipo.id_tipo);
+      //var patrimoniosInRequest = equipsInRequest.map(equip => equip.EquipamentosMonitorados_patrimonio);
+      vetorTipos.forEach(function (equips) {
+        console.log("vetorTipo: " + equips);
+      });
+
+      //tipos.forEach(function (equip) {
+        req.models.EquipamentosMonitorados.count({Tipos_id_tipo: vetorTipos, Estados_id_estado: 4}, function(err, quantidade) {
+          if(err)
+            res.send(err);
+          quantityTotal = Number(quantityTotal) + Number(quantidade);
+          console.log("quantityTotal: " + quantityTotal);
+
+          for(k=i;k<i+1;k++) {
+            console.log("quantidadeReq: " + quantidadeReq[k].quantidade + " quantityTotal: " + quantityTotal);
+            if(quantidadeReq[k].quantidade > quantityTotal && quantidadeOK === true) {
+              res.send({ code: "nok" });
+              //console.log("nok");
+              quantidadeOK = false;
+            }
+            else if(i>=quantidadeReq.length - 1 && quantidadeOK === true) {
+              res.send({ code: "ok" });
+              //console.log("ok");
+            }
+          }
+          i++;
+        });
+      }
+    });
+  });
+  //res.send({ code: "nok" });
 });
 
 app.post('/api/insertFamilia', function(req, res) {
@@ -325,6 +569,53 @@ function changeEquipState(req, res, stateToSet, sendResponse) {
   });
 }
 
+app.post('/api/getRequisicaoProfessorId', function(req,res) {
+  var usuario = req.body.usuario;
+  console.log(usuario);
+  var date = req.body.date;
+  console.log(date);
+  var turno = req.body.turno;
+  console.log(turno);
+  var materia = req.body.materia;
+  console.log(materia);
+  req.models.Requisicoes.find(
+    {
+      usuario: usuario,
+      dataDeUso: date,
+      turno: turno,
+      materia: materia,
+      EstadosReq_id_estadosReq: 1,
+    },
+    function(err, existentRequisicao) {
+      if(err)
+        res.send(err);
+      else if(existentRequisicao.length > 0)
+        res.send({
+          code: "SUCCESS",
+          idRequisicao: existentRequisicao[0].id_requisicao,
+        });
+      else {
+        var requisicao = {
+          usuario: usuario,      
+          dataDeUso: date,
+          turno: turno,
+          materia: materia,
+          EstadosReq_id_estadosReq: 1,
+        };
+        req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
+          if(err)
+            res.send(err);
+          else
+            res.send({
+              code: "SUCCESS",
+              idRequisicao: createdRequisicao.id_requisicao,
+            });
+        });
+      }
+    }
+  );
+});
+
 app.post('/api/studentLend', function(req, res) {
   var patrimonios = req.body.patrimonios;
   var usuario = req.body.usuario;
@@ -496,6 +787,39 @@ app.post('/api/insertEquips', function(req, res) {
         }
       });
     }
+  });
+});
+
+app.post('/api/professorReserve', function(req, res) {
+  var requisicao = req.body.requisicao;
+  var equips = req.body.equips;
+  var reserveToInsert = [];
+  req.body.equips.forEach(function(pat) {
+    console.log("familia: " + pat.familia + " tipo: " + pat.tipo + " quantidade: " + pat.quantidade);
+    if(pat.tipo === null) {
+      reserveToInsert.push({
+        Requisicoes_id_requisicao: requisicao,
+        Familias_id_familia: pat.familia,
+        Tipos_id_tipo: null,
+        quantidade: pat.quantidade
+      });
+    }
+    else {
+      reserveToInsert.push({
+        Requisicoes_id_requisicao: requisicao,
+        Familias_id_familia: pat.familia,
+        Tipos_id_tipo: pat.tipo,
+        quantidade: pat.quantidade
+      });
+    }
+  });
+  console.log(reserveToInsert);
+  req.models.EquipamentosRequisicao.create(reserveToInsert, function(err) {
+    if(err)
+      res.send(err);
+    else
+      res.send('ok');
+      console.log('oi');
   });
 });
 
