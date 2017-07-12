@@ -8,6 +8,13 @@ const style = {
   margin: 5,
 };
 
+const style_inline = {
+  display: "inline-block",
+  //width: '8%',
+  //margin: '0 ',
+  //border: '1px solid #000FFF',
+};
+
 const getAllowedTipos = (familia, tipos) => {
   if(familia !== null && tipos !== undefined)
     return tipos.filter(tipo =>
@@ -63,7 +70,6 @@ export default class EquipTypeSelector extends React.Component {
     return (
       <div>
         <SelectField
-          style={style}
           floatingLabelText="Família"
           value={this.props.familia}
           onChange={this.handleFamiliaChange}
@@ -72,6 +78,7 @@ export default class EquipTypeSelector extends React.Component {
           errorText={(this.props.isMissingFamilia && this.props.familia === null) ?
             "Campo Família não pode ser deixado em branco" : ""}
           floatingLabelStyle={{color: 'grey', left: '0px'}}
+          style={style_inline}
         >
           {this.props.familias.map((familia) => (
             <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
@@ -79,7 +86,6 @@ export default class EquipTypeSelector extends React.Component {
         </SelectField>
         &nbsp;
         <SelectField
-          style={style}
           floatingLabelText="Tipo"
           value={this.props.tipo}
           onChange={this.handleTipoChange}
@@ -88,6 +94,7 @@ export default class EquipTypeSelector extends React.Component {
           errorText={(this.props.isMissingTipo && this.props.tipo === null) ?
             "Campo Tipo não pode ser deixado em branco" : ""}
           floatingLabelStyle={{color: 'grey', left: '0px'}}
+          style={style_inline}
         >
           {this.state.allowedTipos.map((tipo) => (
             <MenuItem key={tipo.id_tipo} value={tipo.id_tipo} primaryText={tipo.tipo} />
