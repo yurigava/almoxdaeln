@@ -215,16 +215,18 @@ export default class AddEquip extends React.Component {
             }
           }
         >
-          <EquipTypeSelectorContainer
-            tipo={this.props.tipo}
-            familia={this.props.familia}
-            setSelectedTipo={this.props.setSelectedTipo}
-            setSelectedFamilia={this.props.setSelectedFamilia}
-            setInfoNumber={this.props.setInfoNumber}
-            isMissingTipo={this.props.isMissingTipo}
-            isMissingFamilia={this.props.isMissingFamilia}
-            isInputDisabled={this.props.isInputDisabled}
-          />
+          <div style={{width:'50%'}}>
+            <EquipTypeSelectorContainer
+              tipo={this.props.tipo}
+              familia={this.props.familia}
+              setSelectedTipo={this.props.setSelectedTipo}
+              setSelectedFamilia={this.props.setSelectedFamilia}
+              setInfoNumber={this.props.setInfoNumber}
+              isMissingTipo={this.props.isMissingTipo}
+              isMissingFamilia={this.props.isMissingFamilia}
+              isInputDisabled={this.props.isInputDisabled}
+            />
+          </div>
           <br/>
           {this.state.patrimonios.map((patrimonio) => (
             <div key={patrimonio.index}>
