@@ -52,6 +52,7 @@ export default class EquipTypeSelector extends React.Component {
       allowedTipos: {$set: allowedTipos }
     }))
     this.props.setInfoText(info)
+    alert(this.props.name + tipo);
     this.props.setSelectedTipo(this.props.name, tipo)
     this.props.setSelectedFamilia(this.props.name, familia)
   }

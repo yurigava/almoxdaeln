@@ -1,33 +1,47 @@
 import React, { PropTypes } from 'react';
+import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import MenuItem from 'material-ui/MenuItem';
+import update from 'immutability-helper';
+import EquipTypeSelectorContainer from '../containers/equipTypeSelectorContainer.jsx';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
-import EquipTypeSelectorContainer from '../containers/equipTypeSelectorContainer.jsx';
-import update from 'immutability-helper';
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
+
+let DateTimeFormat;
 
 const style = {
   verticalAlign: 'bottom',
   margin: 5,
 };
 
+const style_inline = {
+  display: "inline-block",  
+};
+
 const infos = [
+  'Selecione o dia para reservar os Equipamentos',
+  'Selecione o horário para reservar os Equipamentos',
   'Selecione uma Família de Equipamentos',
   'Selecione um Tipo de Equipamento',
-  'Escaneie ou digite o código dos equipamentos a serem registrados'
+  'Digite a quantidade de Equipamento(os) a ser(em) reservado(os)'
 ];
 
-export default class AddEquip extends React.Component {
-
+export default class AddReserve extends React.Component {
+  
   constructor(props) {
     super(props);
     this.state = {
       patrimonios: [
-        {index: 0, name: "equip0", value: "", errorText: ""}
-      ]
+        {index: 0, name: "equip0", value: "", errorText: "", familia: 0, tipo: 0, quantidade: "", isMissingTipo: true, isMissingFamilia: true, isInputDisabled: false}
+      ],
+      timeReserve: null,
+      dateReserve: null,
+      indexInfoText: 0
     }
     this.props.clearMissingFieldsError();
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
@@ -36,6 +50,48 @@ export default class AddEquip extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
+    this.handleChangeDate = this.handleChangeDate.bind(this);
+    this.handleChangeTime = this.handleChangeTime.bind(this);
+  }
+
+  formatDate(date){
+    return (("0" + date.getDate()).slice(-2) + '/' + ("0" + (date.getMonth()+1)).slice(-2) + '/' + date.getFullYear());    
+  }
+
+  handleChangeDate(event, date, value) {    
+    this.setState(update(this.state, {
+      dateReserve: { $set: date }
+      }
+    ));
+    let NewIndexInfoText = this.props.infoText;
+    if(value !== 1) {
+      NewIndexInfoText = this.props.infoText + 1;
+    }
+    else {
+      NewIndexInfoText = this.props.infoText - 1;
+    }
+    this.setState(update(this.state, {
+      indexInfoText: { $set: NewIndexInfoText }
+      }
+    ));
+  }
+
+  handleChangeTime(event, date, value) {        
+    this.setState(update(this.state, {
+      timeReserve: { $set: date }
+      }
+    ));
+    let NewIndexInfoText = this.state.indexInfoText;
+    if(value !== 1) {
+      NewIndexInfoText = this.props.infoText + 1;
+    }
+    else {
+      NewIndexInfoText = this.props.infoText - 1;
+    }
+    this.setState(update(this.state, {
+      indexInfoText: { $set: NewIndexInfoText }
+    }
+    ));
   }
 
   handleCloseDialog() {
@@ -46,7 +102,7 @@ export default class AddEquip extends React.Component {
       this.props.clearMissingFieldsError();
       this.state = {
         patrimonios: [
-          {index: 0, name: "equip0", value: "", errorText: ""}
+          {index: 0, name: "equip0", value: "", errorText: "", familia: 0, tipo: 0, quantidade: "", isMissingTipo: true, isMissingFamilia: true, isInputDisabled: false}
         ]
       }
     }
@@ -139,7 +195,71 @@ export default class AddEquip extends React.Component {
   }
 
   handleFormSubmit(event) {
-    this.props.insertEquips(this.state.patrimonios, this.props.tipo)
+    let sendDateReserve = this.state.dateReserve;
+    let sendTimeReserve = this.state.timeReserve;
+    this.state.timeReserve.setSeconds(0);
+    let timeStamp = new Date();
+    sendDateReserve = (("0" + sendDateReserve.getDate()).slice(-2) + '/' + ("0" + (sendDateReserve.getMonth()+1)).slice(-2) + '/' + sendDateReserve.getFullYear());
+    sendTimeReserve = (("0" + sendTimeReserve.getHours()).slice(-2) + ':' + ("0" + sendTimeReserve.getMinutes()).slice(-2) + ':' + ("0" + sendTimeReserve.getSeconds()).slice(-2) );
+    let dateTimeReserve = (sendDateReserve + ' ' + sendTimeReserve);
+        
+    alert('reserva: ' + dateTimeReserve);
+    alert('atual: ' + timeStamp.toLocaleString());
+    this.props.insertEquips(this.state.patrimonios, this.props.tipo, dateTimeReserve);
+  }
+
+  funcSetSelectedFamilia(event, familia) {
+    const value = event.currentTarget.familia;
+    const index = this.findEquipIndex(event.currentTarget.name, this.state.patrimonios);
+    const newValue = "";
+    let newErrorText = this.state.patrimonios[index].errorText;
+    if(newValue != this.state.patrimonios[index].familia)
+      newErrorText = "";
+    this.setState(update(this.state, {
+      patrimonios: {
+        [index]: {
+          familia: { $set: newValue },
+          errorText: { $set: newErrorText }
+        }
+      }
+    }));
+    //setSelectedFamilia={this.state.patrimonios}
+  }
+
+  funcSetSelectedTipo(event, tipo) {
+    const value = event.currentTarget.tipo;
+    const index = this.findEquipIndex(event.currentTarget.name, this.state.patrimonios);
+    const newValue = "";
+    let newErrorText = this.state.patrimonios[index].errorText;
+    if(newValue != this.state.patrimonios[index].tipo)
+      newErrorText = "";
+    this.setState(update(this.state, {
+      patrimonios: {
+        [index]: {
+          tipo: { $set: newValue },
+          errorText: { $set: newErrorText }
+        }
+      }
+    }));
+    //setSelectedFamilia={this.state.patrimonios}
+  }
+
+  funcSetInfoText(event) {
+    alert(event.currentTarget.value);
+    const value = event.currentTarget.value;
+    const index = this.findEquipIndex(event.currentTarget.name, this.state.patrimonios);
+    const newValue = "";
+    let newErrorText = this.state.patrimonios[index].errorText;
+    if(newValue != this.state.patrimonios[index].value)
+      newErrorText = "";
+    this.setState(update(this.state, {
+      patrimonios: {
+        [index]: {
+          tipo: { $set: newValue },
+          errorText: { $set: newErrorText }
+        }
+      }
+    }));
   }
 
   findEquipIndex(name, patrimonios) {
@@ -156,8 +276,8 @@ export default class AddEquip extends React.Component {
        onTouchTap={this.handleCloseDialog}
      />,
     ];
-
-    const infoText = infos[this.props.infoText];
+    
+    const infoText = infos[this.state.indexInfoText];
 
     return (
       <div>
@@ -181,32 +301,65 @@ export default class AddEquip extends React.Component {
           {
             e => {
               e.preventDefault()
+              console.log("Submit")
             }
           }
         >
-          <EquipTypeSelectorContainer
-            tipo={this.props.tipo}
-            familia={this.props.familia}
-            setSelectedTipo={this.props.setSelectedTipo}
-            setSelectedFamilia={this.props.setSelectedFamilia}
-            setInfoText={this.props.setInfoText}
-            isMissingTipo={this.props.isMissingTipo}
-            isMissingFamilia={this.props.isMissingFamilia}
-            isInputDisabled={this.props.isInputDisabled}
+          <DatePicker
+            hintText="Selecione a data da Reserva"
+            value={this.state.dateReserve}
+            onChange={this.handleChangeDate}
+            autoOk={true}
+            formatDate={this.formatDate}
+            style={style_inline}
+            inputStyle={{ textAlign: 'center' }}
           />
-          <br/>
+          &nbsp;
+          <TimePicker
+            format="24hr"
+            hintText="Selecione o horário da Reserva"
+            value={this.state.timeReserve}
+            onChange={this.handleChangeTime}
+            autoOk={true}
+            style={style_inline}
+            inputStyle={{ textAlign: 'center' }}
+          />
           {this.state.patrimonios.map((patrimonio) => (
             <div key={patrimonio.index}>
+            <EquipTypeSelectorContainer
+              name={"equip"+patrimonio.index}
+              //tipo={this.props.tipo}
+              //familia={this.props.familia}
+              //setSelectedTipo={this.props.setSelectedTipo}
+              //setSelectedFamilia={this.props.setSelectedFamilia}
+              //setInfoText={this.props.setInfoText}
+              //isMissingTipo={this.props.isMissingTipo}
+              //isMissingFamilia={this.props.isMissingFamilia}
+              //isInputDisabled={this.props.isInputDisabled}
+
+              tipo={patrimonio.tipo}
+              familia={patrimonio.familia}
+              setSelectedFamilia={this.funcSetSelectedFamilia}
+              setSelectedTipo={this.funcSetSelectedTipo}
+              //setInfoText={this.funcSetInfoText}
+              setInfoText={this.props.setInfoText}
+              isMissingTipo={patrimonio.isMissingTipo}
+              isMissingFamilia={patrimonio.isMissingFamilia}
+              isInputDisabled={patrimonio.isInputDisabled}
+              style={style_inline}
+            />
+            &nbsp;
               <TextField
                 autoFocus
                 name={"equip"+patrimonio.index}
                 hintText="Patrimônio do Equipamento"
-                floatingLabelText="Equipamento"
+                floatingLabelText={"Equipamento "+patrimonio.index}
                 value={patrimonio.value}
                 onChange={this.handleTextFieldChange}
                 onKeyPress={this.handleKeyPress}
                 errorText={patrimonio.errorText}
                 floatingLabelStyle={{color: 'grey'}}
+                style={style_inline}
               />
               <FloatingActionButton
                 mini={true}
@@ -218,10 +371,10 @@ export default class AddEquip extends React.Component {
                 style={style}
               >
                 <ActionDelete />
-              </FloatingActionButton>
-              <br/>
-            </div>
-          ))}
+                </FloatingActionButton>
+                <br/>
+              </div>
+            ))}
           <br/>
           <RaisedButton
             name="add"
@@ -245,7 +398,7 @@ export default class AddEquip extends React.Component {
   }
 }
 
-AddEquip.propTypes = {
+AddReserve.propTypes = {
   insertEquips: PropTypes.func.isRequired,
   clearSubmissionMessage: PropTypes.func.isRequired,
   clearEquipNumberError: PropTypes.func.isRequired,
