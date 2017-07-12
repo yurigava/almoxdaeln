@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import InputAuthentication from '../components/InputAuthentication.jsx'
-import { submitLogin, getUserRole } from '../actions/login.js'
+import { submitLogin, getUserRole, setUsuario } from '../actions/login.js'
 import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
@@ -26,6 +26,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     getUserRole: () => {
       dispatch(getUserRole(serverUrl))
+    },
+    setUsuario: (usuario) => {
+      dispatch(setUsuario(usuario))
     }
   }
 }
