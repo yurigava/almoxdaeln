@@ -52,13 +52,13 @@ export default class EquipTypeSelector extends React.Component {
       allowedTipos: {$set: allowedTipos }
     }))
     this.props.setInfoText(info)
-    this.props.setSelectedTipo(tipo)
-    this.props.setSelectedFamilia(familia)
+    this.props.setSelectedTipo(this.props.name, tipo)
+    this.props.setSelectedFamilia(this.props.name, familia)
   }
 
   handleTipoChange(event, index, tipo) {
     this.props.setInfoText(2)
-    this.props.setSelectedTipo(tipo)
+    this.props.setSelectedTipo(this.props.name, tipo)
   }
 
   render () {
@@ -104,6 +104,7 @@ EquipTypeSelector.propTypes = {
   setSelectedTipo: PropTypes.func.isRequired,
   setSelectedFamilia: PropTypes.func.isRequired,
   setInfoText: PropTypes.func,
+  name: PropTypes.string,
   tipos: PropTypes.array.isRequired,
   familias: PropTypes.array.isRequired,
   tipo: PropTypes.number,

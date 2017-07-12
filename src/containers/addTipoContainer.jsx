@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(setSubmissionMessage(""))
     },
     insertTipo: (tipo, familia) => {
-      dispatch(insertTipo(tipo, familia, serverUrl))
+      dispatch(insertTipo(serverUrl, tipo, familia))
     }
   }
 }

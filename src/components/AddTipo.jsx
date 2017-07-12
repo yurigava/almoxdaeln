@@ -145,15 +145,15 @@ export default class AddTipo extends React.Component {
               "Campo Tipo não pode ser deixado em branco" : ""}
             floatingLabelStyle={{color: 'grey'}}
           />
-        <br/>
-        <RaisedButton
-          name="submit"
-          type="button"
-          style= {style}
-          label="Enviar"
-          primary={true}
-          onTouchTap={this.handleFormSubmit}
-        />
+          <br/>
+          <RaisedButton
+            name="submit"
+            type="button"
+            style= {style}
+            label="Enviar"
+            primary={true}
+            onTouchTap={this.handleFormSubmit}
+          />
         </form>
       </div>
     )

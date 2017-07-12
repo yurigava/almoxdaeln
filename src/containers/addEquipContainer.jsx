@@ -42,10 +42,10 @@ const mapDispatchToProps = (dispatch) => {
     clearMissingFieldsError: () => {
       dispatch(setMissingFieldsError(false, false))
     },
-    setSelectedTipo: (tipo) => {
+    setSelectedTipo: (name, tipo) => {
       dispatch(setSelectedTipo(tipo))
     },
-    setSelectedFamilia: (familia) => {
+    setSelectedFamilia: (name, familia) => {
       dispatch(setSelectedFamilia(familia))
     },
     setInfoText: (infoText) => {

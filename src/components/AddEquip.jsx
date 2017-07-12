@@ -156,7 +156,9 @@ export default class AddEquip extends React.Component {
        onTouchTap={this.handleCloseDialog}
      />,
     ];
+
     const infoText = infos[this.props.infoText];
+
     return (
       <div>
 				<Dialog
