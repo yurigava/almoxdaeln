@@ -62,6 +62,7 @@ app.use(orm.express("mysql://"+ username +":"+ password +"@"+ host +"/"+ databas
 }));
 
 app.use(function(req,res,next) {
+  
   res.header("Access-Control-Allow-Origin", "http://192.168.0.69:8080");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -93,6 +94,54 @@ app.get('/api/getTipos', function(req, res) {
       throw(err);
     res.send(tipos);
   });
+});
+
+app.post('/api/quantidadeReserve', function(req, res) {
+  var equipFamilia = req.body.familia;
+  var equipTipo = req.body.tipo;
+  var name = req.body.name;
+  console.log("familia: " + equipFamilia + " tipo: " + equipTipo + " name: " + name);
+  var quantityTotal = "";
+
+  if (equipTipo === null) {
+    req.models.Tipos.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+      if(err)
+        throw(err);
+        
+      tipos.forEach(function (equip) {
+        req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+          if(err)
+            throw(err);
+          quantityTotal = Number(quantityTotal) + Number(quantidade);
+        });
+      });
+
+      req.models.EquipamentosRequisicao.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+        if(err)
+          throw(err);
+        tipos.forEach(function (equip) {
+          quantityTotal = Number(quantityTotal) - Number(equip.quantidade);
+        });
+
+        res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });     
+      });   
+    });
+  }
+  else {
+    req.models.EquipamentosMonitorados.count({Tipos_id_tipo: req.body.tipo, Estados_id_estado: 4}, function(err, quantidade) {
+      if(err)
+        throw(err);
+      quantityTotal = Number(quantityTotal) + Number(quantidade);
+    });
+    req.models.EquipamentosRequisicao.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+      if(err)
+        throw(err);
+      tipos.forEach(function (equip) {
+        quantityTotal = Number(quantityTotal) - Number(equip.quantidade);
+      });
+      res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });     
+    });
+  }
 });
 
 app.post('/api/insertFamilia', function(req, res) {
@@ -148,6 +197,48 @@ app.post('/api/getRequisicaoStudentId', function(req,res) {
       else {
         var requisicao = {
           usuario: req.body.usuario,
+          EstadosReq_id_estadosReq: 1,
+        };
+        req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
+          if(err)
+            res.send(err);
+          else
+            res.send({
+              code: "SUCCESS",
+              idRequisicao: createdRequisicao.id_requisicao,
+            });
+        });
+      }
+    }
+  );
+});
+
+app.post('/api/getRequisicaoProfessorId', function(req,res) {
+  var usuario = req.body.usuario;
+  console.log(usuario);
+  var date = req.body.date;
+  var materia = req.body.materia;
+  console.log(materia);
+  req.models.Requisicoes.find(
+    { 
+      usuario: usuario, 
+      timestampDeUso: date, 
+      materia: materia,
+      EstadosReq_id_estadosReq: 1, 
+    },
+    function(err, existentRequisicao) {
+      if(err)
+        res.send(err);
+      else if(existentRequisicao.length > 0)
+        res.send({
+          code: "SUCCESS",
+          idRequisicao: existentRequisicao[0].id_requisicao,
+        });
+      else {
+        var requisicao = {
+          usuario: usuario,
+          timestampDeUso: date, 
+          materia: materia,
           EstadosReq_id_estadosReq: 1,
         };
         req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
@@ -252,6 +343,28 @@ app.post('/api/insertEquips', function(req, res) {
       res.send(err);
     else
       res.send('ok');
+  });
+});
+
+app.post('/api/professorReserve', function(req, res) {
+  var requisicao = req.body.requisicao;
+  var equips = req.body.equips;
+  var reserveToInsert = [];
+  req.body.equips.forEach(function(pat) {
+    reserveToInsert.push({
+      Requisicoes_id_requisicao: requisicao,
+      quantidade: pat.quantidade,
+      Familias_id_familia: pat.familia,
+      Tipos_id_tipo: pat.tipo
+    });
+  }); 
+  console.log(reserveToInsert);
+  req.models.EquipamentosRequisicao.create(reserveToInsert, function(err) {
+    if(err)
+      res.send(err);
+    else
+      res.send('ok');
+      console.log('oi');
   });
 });
 

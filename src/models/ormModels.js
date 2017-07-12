@@ -134,6 +134,12 @@ module.exports = function(db, cb) {
     autoFetch: true
   });
 
+  EquipamentosRequisicao.hasOne("Familias", Requisicoes, {
+    required: true,
+    field: "Familias_id_familia",
+    autoFetch: true
+  });
+
   HistoricoEquipamentos.hasOne("EquipamentoMonitorado", EquipamentosMonitorados, {
     required: true,
     field: "EquipamentosMonitorados_patrimonio"
