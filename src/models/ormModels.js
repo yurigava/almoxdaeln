@@ -130,7 +130,13 @@ module.exports = function(db, cb) {
 
   EquipamentosRequisicao.hasOne("Requisicao", Requisicoes, {
     required: true,
-    field: "Requisicoes_id_requisicao",
+    field: "Requisicoes_id_requisicao"
+    //autoFetch: true
+  });
+
+  EquipamentosRequisicao.hasOne("Familias", Requisicoes, {
+    required: true,
+    field: "Familias_id_familia",
     autoFetch: true
   });
 
