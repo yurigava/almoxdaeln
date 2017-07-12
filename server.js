@@ -62,6 +62,7 @@ app.use(orm.express("mysql://"+ username +":"+ password +"@"+ host +"/"+ databas
 }));
 
 app.use(function(req,res,next) {
+  
   res.header("Access-Control-Allow-Origin", "http://192.168.0.69:8080");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -93,6 +94,187 @@ app.get('/api/getTipos', function(req, res) {
       throw(err);
     res.send(tipos);
   });
+});
+
+app.post('/api/quantidadeReserve', function(req, res) {
+  var equipFamilia = req.body.familia;
+  var equipTipo = req.body.tipo;
+  var name = req.body.name;
+  console.log("familia: " + equipFamilia + " tipo: " + equipTipo + " name: " + name);
+
+  if (equipTipo === null) {
+    var quantityTotal = "";
+    req.models.Tipos.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+      if(err)
+        throw(err);
+        
+      tipos.forEach(function (equip) {
+        req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+          if(err)
+            throw(err);
+          quantityTotal = Number(quantityTotal) + Number(quantidade);
+        });
+      });
+
+      req.models.EquipamentosRequisicao.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+        if(err)
+          throw(err);
+        tipos.forEach(function (equip) {
+          quantityTotal = Number(quantityTotal) - Number(equip.quantidade);
+        });
+        console.log("quantityTotal: " + quantityTotal);
+        quantityTotal > 0 ? res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name }) : res.send({ code: "ERROR" , quantidade: 0, name: req.body.name }); 
+        //res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });     
+      });  
+    });
+  }
+  else {
+    var familyTotal = "";
+    var familyReserve = "";
+    var typeReserve = "";
+    var quantityTotalTipo = "";
+    var quantityTotal = "";  
+    req.models.Tipos.find({Familias_id_familia: req.body.familia}, function (err, tipos) {
+      if(err)
+        throw(err);
+        
+      tipos.forEach(function (equip) {
+        req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+          if(err)
+            throw(err);
+          familyTotal = Number(familyTotal) + Number(quantidade);
+          console.log("familyTotal: " + familyTotal);
+        });
+      });
+      
+      req.models.EquipamentosMonitorados.count({Tipos_id_tipo: req.body.tipo, Estados_id_estado: 4}, function(err, quantidade) {
+        if(err)
+          throw(err);
+        quantityTotalTipo = Number(quantityTotal) + Number(quantidade);
+        console.log("quantityTotalTipo: " + quantityTotalTipo);
+
+        req.models.EquipamentosRequisicao.find({Familias_id_familia: req.body.familia}, function (err, familias) {
+          if(err)
+            throw(err);
+          familias.forEach(function (equip) {
+            familyReserve = Number(familyReserve) + Number(equip.quantidade);
+            console.log("familyReserve: " + familyReserve);
+          });
+          
+          req.models.EquipamentosRequisicao.find({Familias_id_familia: req.body.familia, Tipos_id_tipo: req.body.tipo}, function (err, tipos) {
+            if(err)
+              throw(err);
+            tipos.forEach(function (equip) {
+              typeReserve = Number(typeReserve) + Number(equip.quantidade);
+              console.log("typeReserve: " + typeReserve);
+            });
+            quantityTotal = familyTotal - familyReserve - typeReserve;
+            (familyTotal - familyReserve >= quantityTotalTipo - typeReserve) ? quantityTotal = quantityTotalTipo - typeReserve : quantityTotal = familyTotal - familyReserve
+            //res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });     
+            console.log("quantityTotal: " + quantityTotal);
+            quantityTotal > 0 ? res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name }) : res.send({ code: "ERROR" , quantidade: 0, name: req.body.name }); 
+          });
+        });
+      });
+    });
+  }
+});
+
+app.post('/api/testeProfessorReserve', function(req, res) {
+  var equips = req.body.equips;
+  var quant = "";
+  var quantityTotal = "";
+  var quantidadeOK = false;
+  equips.forEach(function (equip) {
+    console.log(equip.familia+"/"+equip.tipo+"/"+equip.quantidade);//1
+
+    if (equip.tipo === null) {
+      console.log("passou");//2
+      req.models.Tipos.find({Familias_id_familia: equip.familia}, function (err, tipos) {
+        if(err)
+          throw(err);
+        else {
+          tipos.forEach(function (equip) {
+            console.log(" tipo: " + equip.tipo);//6
+            req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+              if(err)
+                throw(err);
+              else {
+              quantityTotal = Number(quantityTotal) + Number(quantidade);
+              console.log("quantityTotal: " + quantityTotal + " quantidade:" + quantidade + " tipo: " + equip.id_tipo);//7
+              }
+            });
+          });
+        }
+        req.models.EquipamentosRequisicao.find({Familias_id_familia: equip.familia}, function (err, tipos) {
+          if(err)
+            throw(err);
+          else {
+            tipos.forEach(function (equip) {
+              quantityTotal = Number(quantityTotal) - Number(equip.quantidade);
+              quant = quantityTotal;
+              console.log("quantityTotal: " + quantityTotal + " quantidade:" + equip.quantidade + " tipo: " + equip.tipo);//8
+            });
+             
+            if(quant <= equip.quantidade) {
+              quantidadeOK = false;
+              res.send({ code: "nok" });
+              return;
+            }
+            else { quantidadeOK = true; console.log("passou aqui"); }
+            quantidadeOK === true ? res.send({ code: "ok" }) : res.send({ code: "nok" })
+          }
+          //res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });     
+        });   
+      });
+      console.log("quantidadeOK: " + quantidadeOK);//3
+      //quantidadeOK === true ? res.send({ code: "ok" }) : res.send({ code: "nok" })
+    }
+    else {
+      req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.tipo, Estados_id_estado: 4}, function(err, quantidade) {
+        if(err)
+          throw(err);
+        else {
+          quantityTotal = Number(quantityTotal) + Number(quantidade);
+          console.log("quantityTotal: " + quantityTotal + " quantidade:" + quantidade + " tipo: " + equip.tipo);//7
+        }
+      });
+      req.models.EquipamentosRequisicao.find({Tipos_id_tipo: equip.tipo}, function (err, tipos) {
+        if(err)
+          throw(err);
+        else {
+          console.log("entra");
+          console.log(tipos);
+          tipos.forEach(function (equip) {
+            quantityTotal = Number(quantityTotal) - Number(equip.quantidade);
+            quant = quantityTotal;
+            console.log("1quantityTotal: " + quantityTotal + " quant:" + quant);
+          });
+
+          if(quant <= equip.quantidade) {
+            console.log("2quantityTotal: " + quantityTotal + " quant:" + quant);
+            quantidadeOK = false;
+            res.send({ code: "nok" });
+            return;
+          }
+          else { quantidadeOK = true; console.log("passou aqui"); }
+          quantidadeOK === true ? res.send({ code: "ok" }) : res.send({ code: "nok" })
+        }
+        //res.send({ code: "SUCCESS" , quantidade: quantityTotal, name: req.body.name });     
+      });
+      console.log("quantidadeOK: " + quantidadeOK);
+      //quantidadeOK === true ? res.send({ code: "ok" }) : res.send({ code: "nok" })
+    }
+    console.log("quantidade pedida: " + equip.quantidade + " - disponivel: " + quant);//4
+    //if(equip.quantidade > quant) { 
+    //  quantidadeOK = false;
+    //  return;
+    //}
+    //else { quantidadeOK = true; console.log("passou aqui"); }
+    
+  });
+  console.log("quantidade: " + quantityTotal + " - disponivel: " + quant);//5
+  //quantidadeOK === true ? res.send({ code: "ok" }) : res.send({ code: "nok" })
 });
 
 app.post('/api/insertFamilia', function(req, res) {
@@ -148,6 +330,48 @@ app.post('/api/getRequisicaoStudentId', function(req,res) {
       else {
         var requisicao = {
           usuario: req.body.usuario,
+          EstadosReq_id_estadosReq: 1,
+        };
+        req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
+          if(err)
+            res.send(err);
+          else
+            res.send({
+              code: "SUCCESS",
+              idRequisicao: createdRequisicao.id_requisicao,
+            });
+        });
+      }
+    }
+  );
+});
+
+app.post('/api/getRequisicaoProfessorId', function(req,res) {
+  var usuario = req.body.usuario;
+  console.log(usuario);
+  var date = req.body.date;
+  var materia = req.body.materia;
+  console.log(materia);
+  req.models.Requisicoes.find(
+    { 
+      usuario: usuario, 
+      timestampDeUso: date, 
+      materia: materia,
+      EstadosReq_id_estadosReq: 1, 
+    },
+    function(err, existentRequisicao) {
+      if(err)
+        res.send(err);
+      else if(existentRequisicao.length > 0)
+        res.send({
+          code: "SUCCESS",
+          idRequisicao: existentRequisicao[0].id_requisicao,
+        });
+      else {
+        var requisicao = {
+          usuario: usuario,
+          timestampDeUso: date, 
+          materia: materia,
           EstadosReq_id_estadosReq: 1,
         };
         req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
@@ -252,6 +476,39 @@ app.post('/api/insertEquips', function(req, res) {
       res.send(err);
     else
       res.send('ok');
+  });
+});
+
+app.post('/api/professorReserve', function(req, res) {
+  var requisicao = req.body.requisicao;
+  var equips = req.body.equips;
+  var reserveToInsert = [];
+  req.body.equips.forEach(function(pat) {
+    console.log("familia: " + pat.familia + " tipo: " + pat.tipo + " quantidade: " + pat.quantidade);
+    if(pat.tipo === null) {
+      reserveToInsert.push({
+        Requisicoes_id_requisicao: requisicao,
+        Familias_id_familia: pat.familia,
+        Tipos_id_tipo: null,
+        quantidade: pat.quantidade
+      });
+    }
+    else {
+      reserveToInsert.push({
+        Requisicoes_id_requisicao: requisicao,
+        Familias_id_familia: pat.familia,
+        Tipos_id_tipo: pat.tipo,
+        quantidade: pat.quantidade
+      });
+    }
+  }); 
+  console.log(reserveToInsert);
+  req.models.EquipamentosRequisicao.create(reserveToInsert, function(err) {
+    if(err)
+      res.send(err);
+    else
+      res.send('ok');
+      console.log('oi');
   });
 });
 
