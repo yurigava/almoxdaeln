@@ -95,6 +95,17 @@ app.get('/api/getTipos', function(req, res) {
   });
 });
 
+app.get('/api/quantidadeReserve', function(req, res) {
+  var equips = req.body.familia;
+  console.log(equips);
+  req.models.EquipamentosMonitorados.count({Estados_id_estado: 4}, function(err, quantidade) {
+    console.log(quantidade);
+    if(err)
+      throw(err);
+    res.send({ code: "SUCCESS" , quantidade: quantidade });
+  });
+});
+
 app.post('/api/insertFamilia', function(req, res) {
   req.models.Familias.exists(req.body, function(errExists, doesFamiliaExists) {
     if(!doesFamiliaExists) {
@@ -148,6 +159,47 @@ app.post('/api/getRequisicaoStudentId', function(req,res) {
       else {
         var requisicao = {
           usuario: req.body.usuario,
+          EstadosReq_id_estadosReq: 1,
+        };
+        req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
+          if(err)
+            res.send(err);
+          else
+            res.send({
+              code: "SUCCESS",
+              idRequisicao: createdRequisicao.id_requisicao,
+            });
+        });
+      }
+    }
+  );
+});
+
+app.post('/api/getRequisicaoProfessorId', function(req,res) {
+  var usuario = req.body.usuario;
+  var date = req.body.date;
+  var materia = req.body.materia;
+  console.log(materia);
+  req.models.Requisicoes.find(
+    { 
+      usuario: usuario, 
+      timestampDeUso: date, 
+      materia: materia,
+      EstadosReq_id_estadosReq: 1, 
+    },
+    function(err, existentRequisicao) {
+      if(err)
+        res.send(err);
+      else if(existentRequisicao.length > 0)
+        res.send({
+          code: "SUCCESS",
+          idRequisicao: existentRequisicao[0].id_requisicao,
+        });
+      else {
+        var requisicao = {
+          usuario: 24,
+          timestampDeUso: date, 
+          materia: materia,
           EstadosReq_id_estadosReq: 1,
         };
         req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
@@ -252,6 +304,28 @@ app.post('/api/insertEquips', function(req, res) {
       res.send(err);
     else
       res.send('ok');
+  });
+});
+
+app.post('/api/professorReserve', function(req, res) {
+  var requisicao = req.body.requisicao;
+  var equips = req.body.equips;
+  var reserveToInsert = [];
+  req.body.equips.forEach(function(pat) {
+    reserveToInsert.push({
+      Requisicoes_id_requisicao: requisicao,
+      quantidade: pat.quantidade,
+      Familias_id_familia: pat.familia,
+      Tipos_id_tipo: pat.tipo
+    });
+  }); 
+  console.log(reserveToInsert);
+  req.models.EquipamentosRequisicao.create(reserveToInsert, function(err) {
+    if(err)
+      res.send(err);
+    else
+      res.send('ok');
+      console.log('oi');
   });
 });
 
