@@ -1,12 +1,8 @@
 import React, { PropTypes } from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import { Row, Col } from 'react-flexbox-grid';
 import update from 'immutability-helper';
-
-const style = {
-  verticalAlign: 'bottom',
-  margin: 5,
-};
 
 const getAllowedTipos = (familia, tipos) => {
   if(familia !== null && tipos !== undefined)
@@ -61,39 +57,42 @@ export default class EquipTypeSelector extends React.Component {
 
   render () {
     return (
-      <div>
-        <SelectField
-          style={style}
-          floatingLabelText="Família"
-          value={this.props.familia}
-          onChange={this.handleFamiliaChange}
-          disabled={this.props.isInputDisabled}
-          autoWidth={true}
-          errorText={(this.props.isMissingFamilia && this.props.familia === null) ?
-            "Campo Família não pode ser deixado em branco" : ""}
-          floatingLabelStyle={{color: 'grey', left: '0px'}}
-        >
-          {this.props.familias.map((familia) => (
-            <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
-          ))}
-        </SelectField>
-        &nbsp;
-        <SelectField
-          style={style}
-          floatingLabelText="Tipo"
-          value={this.props.tipo}
-          onChange={this.handleTipoChange}
-          disabled={this.props.familia === null || this.props.isInputDisabled}
-          autoWidth={true}
-          errorText={(this.props.isMissingTipo && this.props.tipo === null) ?
-            "Campo Tipo não pode ser deixado em branco" : ""}
-          floatingLabelStyle={{color: 'grey', left: '0px'}}
-        >
-          {this.state.allowedTipos.map((tipo) => (
-            <MenuItem key={tipo.id_tipo} value={tipo.id_tipo} primaryText={tipo.tipo} />
-          ))}
-        </SelectField>
-      </div>
+      <Row>
+        <Col xs={12} sm={6}>
+          <SelectField
+            floatingLabelText="Família"
+            value={this.props.familia}
+            onChange={this.handleFamiliaChange}
+            disabled={this.props.isInputDisabled}
+            autoWidth={true}
+            errorText={(this.props.isMissingFamilia && this.props.familia === null) ?
+              "Campo Família não pode ser deixado em branco" : ""}
+            floatingLabelStyle={{color: 'grey', left: '0px'}}
+            fullWidth={true}
+          >
+            {this.props.familias.map((familia) => (
+              <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
+            ))}
+          </SelectField>
+        </Col>
+        <Col xs={12} sm={6}>
+          <SelectField
+            floatingLabelText="Tipo"
+            value={this.props.tipo}
+            onChange={this.handleTipoChange}
+            disabled={this.props.familia === null || this.props.isInputDisabled}
+            autoWidth={true}
+            errorText={(this.props.isMissingTipo && this.props.tipo === null) ?
+              "Campo Tipo não pode ser deixado em branco" : ""}
+            floatingLabelStyle={{color: 'grey', left: '0px'}}
+            fullWidth={true}
+          >
+            {this.state.allowedTipos.map((tipo) => (
+              <MenuItem key={tipo.id_tipo} value={tipo.id_tipo} primaryText={tipo.tipo} />
+            ))}
+          </SelectField>
+        </Col>
+      </Row>
     )
   }
 }
