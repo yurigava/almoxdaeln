@@ -132,7 +132,7 @@ module.exports = function(db, cb) {
   });
 
   EquipamentosRequisicao.hasOne("Tipo", Tipos, {
-    required: true,
+    required: false,
     field: "Tipos_id_tipo",
     autoFetch: true
   });
@@ -140,6 +140,12 @@ module.exports = function(db, cb) {
   EquipamentosRequisicao.hasOne("Requisicao", Requisicoes, {
     required: true,
     field: "Requisicoes_id_requisicao",
+    autoFetch: true
+  });
+
+  EquipamentosRequisicao.hasOne("Familias", Requisicoes, {
+    required: true,
+    field: "Familias_id_familia",
     autoFetch: true
   });
 

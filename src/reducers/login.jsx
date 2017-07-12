@@ -3,7 +3,8 @@ import update from 'immutability-helper';
 const initialState = {
   errorLogin: "",
   errorPassword: "",
-  userRole: ""
+  userRole: "",
+  usuario: ""
 }
 
 const login = (state = initialState, action) => {
@@ -11,6 +12,11 @@ const login = (state = initialState, action) => {
     case 'CHANGE_ROLE':
       return (
         update(state, {userRole: {$set: action.role}})
+      )
+
+    case 'SET_USUARIO':
+      return (
+        update(state, {usuario: {$set: action.usuario}})
       )
 
     case 'SET_LOGIN_STATUS':
