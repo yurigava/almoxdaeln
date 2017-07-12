@@ -4,6 +4,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
+export var usuario = 'oi';
+
 export default class InputAuthentication extends React.Component {
 
   constructor(props) {
@@ -30,6 +32,7 @@ export default class InputAuthentication extends React.Component {
     {
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
+    this.props.setUsuario(this.state.login);
   }
 
   handleChange(event) {
@@ -87,9 +90,11 @@ export default class InputAuthentication extends React.Component {
 InputAuthentication.propTypes = {
   onLoginSubmit: PropTypes.func.isRequired,
   getUserRole: PropTypes.func.isRequired,
+  setUsuario: PropTypes.func,
   isInputDisabled: PropTypes.bool.isRequired,
   errorTextLogin: PropTypes.string.isRequired,
   errorTextPassword: PropTypes.string.isRequired,
   userRole: PropTypes.string.isRequired,
+  usuario: PropTypes.string,
   visibleLinks: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
 }
