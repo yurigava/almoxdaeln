@@ -4,6 +4,8 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
+export var usuario = 'oi';
+
 export default class InputAuthentication extends React.Component {
 
   constructor(props) {
@@ -30,6 +32,7 @@ export default class InputAuthentication extends React.Component {
     {
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
+    usuario = this.state.login;
   }
 
   handleChange(event) {
