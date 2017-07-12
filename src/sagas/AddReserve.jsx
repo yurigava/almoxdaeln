@@ -1,12 +1,13 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 
-function *insertEquips(action) {
-  if(action.id_tipo === null) {
+function *insertReserve(action) {
+  if(action.id_tipo === null || action.date === null) {
     yield put({
-      type: 'SET_MISSING_FIELDS_ERROR',
+      type: 'SET_MISSING_FIELDS_ERROR_RESERVE',
       isMissingTipo: action.id_tipo === null,
       isMissingFamilia: true,
+      //isMissingDate: true,
     });
     return;
   }
@@ -25,26 +26,27 @@ function *insertEquips(action) {
   try {
     response = yield call(
       axios.post,
-      action.serverUrl + '/api/insertEquips',
+      action.serverUrl + '/api/insertReserve',
       {
         patrimonios: patrimonios,
         id_tipo:     action.id_tipo,
+        date:        action.date,
       },
       {withCredentials:true}
     );
     if(response.data === "ok") {
-      let singular = "O equipamento foi registrado com sucesso.";
-      let plural = "Os equipamentos foram registrados com sucesso.";
+      let singular = "O equipamento foi reservado com sucesso.";
+      let plural = "Os equipamentos foram reservados com sucesso.";
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
     }
     else if(response.data.code === "ER_DUP_ENTRY") {
-      let singular = "O equipamento já está registrado.";
-      let plural = "Algum dos equipamentos já está registrado.";
+      let singular = "O equipamento já está reservado.";
+      let plural = "Algum dos equipamentos já está reservado.";
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_RESERVE_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -53,10 +55,10 @@ function *insertEquips(action) {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({
         type: 'SET_SUBMISSION_MESSAGE',
-        message: "O código de patrimônio de algum dos equipamentos excedeu o limite de tamanho."
+        message: "Alguma das reservas dos equipamentos excederam o limite de quantidade."
       });
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_RESERVE_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -67,7 +69,7 @@ function *insertEquips(action) {
         type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
       });
       yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+        type: 'SET_RESERVE_ERROR_DESCRIPTION',
         equipNumber: response.data.instance.patrimonio,
         errorCode: response.data.code
       });
@@ -80,8 +82,8 @@ function *insertEquips(action) {
   yield put({ type: 'SET_LOADING', isLoading: false });
 }
 
-function *addEquipSagas() {
-    yield takeEvery('INSERT_EQUIPS', insertEquips);
+function *AddReserveSagas() {
+    yield takeEvery('INSERT_RESERVE', insertReserve);
 }
 
-export default addEquipSagas;
+export default AddReserveSagas;
