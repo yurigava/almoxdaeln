@@ -87,6 +87,18 @@ export const pagesList = [
     },
     allowedRoles: [
       "almoxarife",
+      "professor",
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'addReserve',
+      linkText: 'Adicionar Reservas'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "professor",
       "admin"
     ]
   },
