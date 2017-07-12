@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.18, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.19, for Linux (x86_64)
 --
 -- Host: localhost    Database: almoxdaeln_db
 -- ------------------------------------------------------
--- Server version	5.7.18-0ubuntu0.16.04.1
+-- Server version	5.7.19-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `EquipamentosMonitorados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `EquipamentosMonitorados` (
   `patrimonio` bigint(20) NOT NULL,
   `Estados_id_estado` int(8) NOT NULL,
@@ -41,6 +41,7 @@ CREATE TABLE `EquipamentosMonitorados` (
 
 LOCK TABLES `EquipamentosMonitorados` WRITE;
 /*!40000 ALTER TABLE `EquipamentosMonitorados` DISABLE KEYS */;
+INSERT INTO `EquipamentosMonitorados` VALUES (1,4,2),(2,4,2),(3,4,2),(4,4,2),(5,4,2),(6,4,3),(7,4,3),(8,4,3),(9,4,3),(10,4,3),(11,4,40),(12,4,40),(13,4,40),(14,4,40),(15,4,40),(16,4,1);
 /*!40000 ALTER TABLE `EquipamentosMonitorados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -50,22 +51,22 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EquipamentosRequisicao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `EquipamentosRequisicao` (
-  `id_EquipamentoRequisicao` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_EquipamentoRequisicao` int(32) NOT NULL AUTO_INCREMENT,
   `quantidade` int(8) NOT NULL,
-  `Tipos_id_tipo` int(32) DEFAULT NULL,
-  `Familias_id_familia` int(32) NOT NULL,
-  `Requisicoes_id_requisicao` bigint(20) NOT NULL,
+  `Tipos_Id_tipo` int(32) DEFAULT NULL,
+  `Familias_Id_familia` int(32) NOT NULL,
+  `Requisicoes_id_requisicao` int(32) NOT NULL,
   PRIMARY KEY (`id_EquipamentoRequisicao`),
   UNIQUE KEY `id_EquipamentoRequisicao_UNIQUE` (`id_EquipamentoRequisicao`),
-  KEY `fk_EquipamentosRequisicao_Tipos1_idx` (`Tipos_id_tipo`),
-  KEY `fk_EquipamentosRequisicao_Familias1_idx` (`Familias_id_familia`),
   KEY `fk_EquipamentosRequisicao_Requisicoes1_idx` (`Requisicoes_id_requisicao`),
-  CONSTRAINT `fk_EquipamentosRequisicao_Familias1` FOREIGN KEY (`Familias_id_familia`) REFERENCES `Familias` (`id_familia`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `fk_EquipamentosRequisicao_Tipos1_idx` (`Tipos_Id_tipo`),
+  KEY `fk_EquipamentosRequisicao_Familias1_idx` (`Familias_Id_familia`),
+  CONSTRAINT `fk_EquipamentosRequisicao_Familias1` FOREIGN KEY (`Familias_Id_familia`) REFERENCES `Familias` (`id_familia`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_EquipamentosRequisicao_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_EquipamentosRequisicao_Tipos1` FOREIGN KEY (`Tipos_id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+  CONSTRAINT `fk_EquipamentosRequisicao_Tipos1` FOREIGN KEY (`Tipos_Id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,6 +75,7 @@ CREATE TABLE `EquipamentosRequisicao` (
 
 LOCK TABLES `EquipamentosRequisicao` WRITE;
 /*!40000 ALTER TABLE `EquipamentosRequisicao` DISABLE KEYS */;
+INSERT INTO `EquipamentosRequisicao` VALUES (3,3,NULL,21,3),(4,4,NULL,21,4);
 /*!40000 ALTER TABLE `EquipamentosRequisicao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,7 +85,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Estados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Estados` (
   `id_estado` int(8) NOT NULL AUTO_INCREMENT,
   `estado` varchar(30) COLLATE latin1_general_cs NOT NULL,
@@ -108,7 +110,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EstadosReq`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `EstadosReq` (
   `id_estadosReq` int(8) NOT NULL AUTO_INCREMENT,
   `estadoReq` varchar(30) COLLATE latin1_general_cs NOT NULL,
@@ -133,7 +135,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Familias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Familias` (
   `id_familia` int(32) NOT NULL AUTO_INCREMENT,
   `familia` varchar(50) COLLATE latin1_general_cs NOT NULL,
@@ -158,9 +160,9 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `HistoricoEquipamentos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `HistoricoEquipamentos` (
-  `id_evento` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_evento` int(32) NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `observacao` varchar(45) COLLATE latin1_general_cs DEFAULT NULL,
   `usuario` varchar(45) CHARACTER SET latin1 NOT NULL,
@@ -172,7 +174,7 @@ CREATE TABLE `HistoricoEquipamentos` (
   KEY `fk_HistoricoEquipamentos_Estados1_idx` (`Estados_id_estado`),
   CONSTRAINT `fk_HistoricoEquipamentos_EquipamentosMonitorados1` FOREIGN KEY (`EquipamentosMonitorados_patrimonio`) REFERENCES `EquipamentosMonitorados` (`patrimonio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_HistoricoEquipamentos_Estados1` FOREIGN KEY (`Estados_id_estado`) REFERENCES `Estados` (`id_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,6 +183,7 @@ CREATE TABLE `HistoricoEquipamentos` (
 
 LOCK TABLES `HistoricoEquipamentos` WRITE;
 /*!40000 ALTER TABLE `HistoricoEquipamentos` DISABLE KEYS */;
+INSERT INTO `HistoricoEquipamentos` VALUES (1,'2017-08-09 03:12:35','Criação','almoxarife',1,4),(2,'2017-08-09 03:12:35','Criação','almoxarife',2,4),(3,'2017-08-09 03:12:35','Criação','almoxarife',3,4),(4,'2017-08-09 03:12:35','Criação','almoxarife',4,4),(5,'2017-08-09 03:12:35','Criação','almoxarife',5,4),(6,'2017-08-09 03:12:48','Criação','almoxarife',6,4),(7,'2017-08-09 03:12:49','Criação','almoxarife',7,4),(8,'2017-08-09 03:12:49','Criação','almoxarife',8,4),(9,'2017-08-09 03:12:49','Criação','almoxarife',9,4),(10,'2017-08-09 03:12:49','Criação','almoxarife',10,4),(11,'2017-08-09 03:13:02','Criação','almoxarife',11,4),(12,'2017-08-09 03:13:03','Criação','almoxarife',12,4),(13,'2017-08-09 03:13:03','Criação','almoxarife',14,4),(14,'2017-08-09 03:13:03','Criação','almoxarife',13,4),(15,'2017-08-09 03:13:03','Criação','almoxarife',15,4),(16,'2017-08-09 03:13:15','Criação','almoxarife',16,4);
 /*!40000 ALTER TABLE `HistoricoEquipamentos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -190,18 +193,19 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Requisicoes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Requisicoes` (
-  `id_requisicao` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_requisicao` int(32) NOT NULL AUTO_INCREMENT,
   `materia` varchar(45) COLLATE latin1_general_cs DEFAULT NULL,
   `usuario` varchar(45) COLLATE latin1_general_cs NOT NULL,
-  `timestampDeUso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `dataDeUso` date NOT NULL,
+  `turno` int(8) NOT NULL,
   `EstadosReq_id_estadosReq` int(8) NOT NULL,
   PRIMARY KEY (`id_requisicao`),
   UNIQUE KEY `id_evento_UNIQUE` (`id_requisicao`),
   KEY `fk_Requisicoes_EstadosReq1_idx` (`EstadosReq_id_estadosReq`),
   CONSTRAINT `fk_Requisicoes_EstadosReq1` FOREIGN KEY (`EstadosReq_id_estadosReq`) REFERENCES `EstadosReq` (`id_estadosReq`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,6 +214,7 @@ CREATE TABLE `Requisicoes` (
 
 LOCK TABLES `Requisicoes` WRITE;
 /*!40000 ALTER TABLE `Requisicoes` DISABLE KEYS */;
+INSERT INTO `Requisicoes` VALUES (1,'1','yuri','2017-08-13',0,1),(3,'Caraca','yuri','2017-08-13',0,1),(4,'Fio','yuri','2017-08-18',2,1);
 /*!40000 ALTER TABLE `Requisicoes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -219,7 +224,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Tipos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = latin1 */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Tipos` (
   `id_tipo` int(32) NOT NULL AUTO_INCREMENT,
   `tipo` varchar(50) COLLATE latin1_general_cs NOT NULL,
@@ -250,4 +255,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-08-05 16:07:46
+-- Dump completed on 2017-08-13 18:12:57
