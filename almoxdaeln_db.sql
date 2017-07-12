@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.18, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.19, for Linux (x86_64)
 --
 -- Host: localhost    Database: almoxdaeln_db
 -- ------------------------------------------------------
--- Server version	5.7.18-0ubuntu0.16.04.1
+-- Server version	5.7.19-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -41,6 +41,7 @@ CREATE TABLE `EquipamentosMonitorados` (
 
 LOCK TABLES `EquipamentosMonitorados` WRITE;
 /*!40000 ALTER TABLE `EquipamentosMonitorados` DISABLE KEYS */;
+INSERT INTO `EquipamentosMonitorados` VALUES (1,1,32),(2,1,41),(3,1,6),(4,1,32),(5,1,21),(6,1,36),(12,4,24),(23,4,24),(32,4,24);
 /*!40000 ALTER TABLE `EquipamentosMonitorados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -54,15 +55,18 @@ DROP TABLE IF EXISTS `EquipamentosRequisicao`;
 CREATE TABLE `EquipamentosRequisicao` (
   `id_EquipamentoRequisicao` int(32) NOT NULL AUTO_INCREMENT,
   `quantidade` int(8) NOT NULL,
-  `Tipos_Id_tipo` int(32) NOT NULL,
+  `Tipos_id_tipo` int(32) DEFAULT NULL,
+  `Familias_id_familia` int(32) NOT NULL,
   `Requisicoes_id_requisicao` int(32) NOT NULL,
   PRIMARY KEY (`id_EquipamentoRequisicao`),
   UNIQUE KEY `id_EquipamentoRequisicao_UNIQUE` (`id_EquipamentoRequisicao`),
   KEY `fk_EquipamentosRequisicao_Requisicoes1_idx` (`Requisicoes_id_requisicao`),
-  KEY `fk_EquipamentosRequisicao_Tipos1_idx` (`Tipos_Id_tipo`),
+  KEY `fk_EquipamentosRequisicao_Tipos1_idx` (`Tipos_id_tipo`),
+  KEY `fk_EquipamentosRequisicao_Familias1_idx` (`Familias_id_familia`),
+  CONSTRAINT `fk_EquipamentosRequisicao_Familias1` FOREIGN KEY (`Familias_id_familia`) REFERENCES `Familias` (`id_familia`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_EquipamentosRequisicao_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_EquipamentosRequisicao_Tipos1` FOREIGN KEY (`Tipos_Id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_EquipamentosRequisicao_Tipos1` FOREIGN KEY (`Tipos_id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +75,7 @@ CREATE TABLE `EquipamentosRequisicao` (
 
 LOCK TABLES `EquipamentosRequisicao` WRITE;
 /*!40000 ALTER TABLE `EquipamentosRequisicao` DISABLE KEYS */;
+INSERT INTO `EquipamentosRequisicao` VALUES (27,32,28,12,76),(28,44,10,4,76);
 /*!40000 ALTER TABLE `EquipamentosRequisicao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,7 +141,7 @@ CREATE TABLE `Familias` (
   `familia` varchar(50) NOT NULL,
   PRIMARY KEY (`id_familia`),
   UNIQUE KEY `id_familia_UNIQUE` (`id_familia`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,7 +150,7 @@ CREATE TABLE `Familias` (
 
 LOCK TABLES `Familias` WRITE;
 /*!40000 ALTER TABLE `Familias` DISABLE KEYS */;
-INSERT INTO `Familias` VALUES (1,'Mesa Digital'),(2,'Gerador'),(3,'Frequencímetro'),(4,'Multímetro'),(5,'Voltímetro'),(6,'Testador'),(7,'Fonte'),(8,'Década'),(9,'Microcomputador Didático'),(10,'Matriz de montagem'),(11,'Conversor'),(12,'Kit'),(13,'Transformador'),(14,'Analisador'),(15,'Ponte'),(16,'Modem'),(17,'Softstart'),(18,'Tacômetro'),(19,'Luxímetro'),(20,'Retroprojetor'),(21,'Osciloscópio');
+INSERT INTO `Familias` VALUES (1,'Mesa Digital'),(2,'Gerador'),(3,'Frequencímetro'),(4,'Multímetro'),(5,'Voltímetro'),(6,'Testador'),(7,'Fonte'),(8,'Década'),(9,'Microcomputador Didático'),(10,'Matriz de montagem'),(11,'Conversor'),(12,'Kit'),(13,'Transformador'),(14,'Analisador'),(15,'Ponte'),(16,'Modem'),(17,'Softstart'),(18,'Tacômetro'),(19,'Luxímetro'),(20,'Retroprojetor'),(21,'Osciloscópio'),(22,'oi');
 /*!40000 ALTER TABLE `Familias` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,7 +172,7 @@ CREATE TABLE `HistoricoEquipamentos` (
   KEY `fk_HistoricoEquipamentos_EquipamentosMonitorados1_idx` (`EquipamentosMonitorados_patrimonio`),
   CONSTRAINT `fk_HistoricoEquipamentos_EquipamentosMonitorados1` FOREIGN KEY (`EquipamentosMonitorados_patrimonio`) REFERENCES `EquipamentosMonitorados` (`patrimonio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_HistoricoEquipamentos_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,6 +181,7 @@ CREATE TABLE `HistoricoEquipamentos` (
 
 LOCK TABLES `HistoricoEquipamentos` WRITE;
 /*!40000 ALTER TABLE `HistoricoEquipamentos` DISABLE KEYS */;
+INSERT INTO `HistoricoEquipamentos` VALUES (1,'2017-07-20 20:21:06',1,1),(2,'2017-07-20 20:21:06',2,1),(3,'2017-07-21 23:04:32',3,2),(4,'2017-07-21 23:04:32',5,2);
 /*!40000 ALTER TABLE `HistoricoEquipamentos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,7 +202,7 @@ CREATE TABLE `Requisicoes` (
   UNIQUE KEY `id_evento_UNIQUE` (`id_requisicao`),
   KEY `fk_Requisicoes_EstadosReq1_idx` (`EstadosReq_id_estadosReq`),
   CONSTRAINT `fk_Requisicoes_EstadosReq1` FOREIGN KEY (`EstadosReq_id_estadosReq`) REFERENCES `EstadosReq` (`id_estadosReq`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,6 +211,7 @@ CREATE TABLE `Requisicoes` (
 
 LOCK TABLES `Requisicoes` WRITE;
 /*!40000 ALTER TABLE `Requisicoes` DISABLE KEYS */;
+INSERT INTO `Requisicoes` VALUES (1,NULL,'121112','2017-07-20 20:21:06',1),(2,NULL,'22','2017-07-21 23:04:31',1),(27,NULL,'24','2017-07-23 19:52:18',1),(28,NULL,'24','2017-07-05 17:02:00',1),(66,NULL,'24','2017-07-05 02:52:00',1),(67,NULL,'24','2017-07-05 02:52:00',1),(68,'ramones','24','2017-07-12 02:48:00',1),(69,'ramoioioik','24','2017-07-12 02:48:00',1),(70,'23','24','2017-07-05 14:55:00',1),(71,'ttt','24','2017-07-04 15:00:00',1),(72,'ramon','24','2017-07-04 14:02:00',1),(73,'Amplificadores','24','2017-07-27 20:20:00',1),(74,'Eletrônica Analógica','24','2017-07-25 18:00:00',1),(75,'Eletrônica Analógica','24','2017-07-25 18:00:00',1),(76,'Amp OP','24','2017-07-27 01:50:00',1);
 /*!40000 ALTER TABLE `Requisicoes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -223,7 +230,7 @@ CREATE TABLE `Tipos` (
   UNIQUE KEY `id_tipo_UNIQUE` (`id_tipo`),
   KEY `fk_Tipos_Familias1_idx` (`Familias_id_familia`),
   CONSTRAINT `fk_Tipos_Familia1` FOREIGN KEY (`Familias_id_familia`) REFERENCES `Familias` (`id_familia`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,7 +239,7 @@ CREATE TABLE `Tipos` (
 
 LOCK TABLES `Tipos` WRITE;
 /*!40000 ALTER TABLE `Tipos` DISABLE KEYS */;
-INSERT INTO `Tipos` VALUES (1,'Digital Duplo Traço',21),(2,'Analógico 3 canais',21),(3,'Analógico 4 canais',21),(4,'de Montagem',1),(5,'de Função/Formas de Onda',2),(6,'de Audiofreqüência',2),(7,'de Radiofreqüência',2),(8,'Digital',3),(9,'Analógico',4),(10,'Digital',4),(11,'de Áudio',5),(12,'de Circuito Integrado',6),(13,'de Alimentação Regulada',7),(14,'Resistiva',8),(15,'Capacitiva',8),(16,'Z80',9),(17,'80C31',9),(18,'de Circuitos',10),(19,'de Freqüência',11),(20,'CA/CC',11),(21,'Didático Para Eletrônica Industrial',12),(22,'Para Experiências Eletricidade/Eletrônica Básica',12),(23,'Z8',12),(24,'CLPs S7 200',12),(25,'CLP S7 300',12),(26,'de Rede de CLP S7 300',12),(27,'Placa de Avaliação ARM',12),(28,'Microcontrolador MSP430F169',12),(29,'Motorola HC908Q',12),(30,'30+30V 110/220V',13),(31,'trifásico 220/30V',13),(32,'de Espectro',14),(33,'LC',15),(34,'RLC',15),(35,'Padrão',16),(36,'Padrão',17),(37,'Padrão',18),(38,'Padrão',19),(39,'Padrão',20),(40,'Analógico Duplo Traço',21);
+INSERT INTO `Tipos` VALUES (1,'Digital Duplo Traço',21),(2,'Analógico 3 canais',21),(3,'Analógico 4 canais',21),(4,'de Montagem',1),(5,'de Função/Formas de Onda',2),(6,'de Audiofreqüência',2),(7,'de Radiofreqüência',2),(8,'Digital',3),(9,'Analógico',4),(10,'Digital',4),(11,'de Áudio',5),(12,'de Circuito Integrado',6),(13,'de Alimentação Regulada',7),(14,'Resistiva',8),(15,'Capacitiva',8),(16,'Z80',9),(17,'80C31',9),(18,'de Circuitos',10),(19,'de Freqüência',11),(20,'CA/CC',11),(21,'Didático Para Eletrônica Industrial',12),(22,'Para Experiências Eletricidade/Eletrônica Básica',12),(23,'Z8',12),(24,'CLPs S7 200',12),(25,'CLP S7 300',12),(26,'de Rede de CLP S7 300',12),(27,'Placa de Avaliação ARM',12),(28,'Microcontrolador MSP430F169',12),(29,'Motorola HC908Q',12),(30,'30+30V 110/220V',13),(31,'trifásico 220/30V',13),(32,'de Espectro',14),(33,'LC',15),(34,'RLC',15),(35,'Padrão',16),(36,'Padrão',17),(37,'Padrão',18),(38,'Padrão',19),(39,'Padrão',20),(40,'Analógico Duplo Traço',21),(41,'ava',22);
 /*!40000 ALTER TABLE `Tipos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -245,4 +252,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-18 22:09:20
+-- Dump completed on 2017-07-24 19:47:49
