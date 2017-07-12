@@ -100,9 +100,13 @@ module.exports = function(db, cb) {
       size: 45,
       required: true
     },
-    timestampDeUso: {
+    dataDeUso: {
       type: 'date',
-      time: true,
+      time: false,
+    },
+    turno: {
+      type: 'integer',
+      required: true
     }
   });
 
@@ -132,7 +136,7 @@ module.exports = function(db, cb) {
   });
 
   EquipamentosRequisicao.hasOne("Tipo", Tipos, {
-    required: true,
+    required: false,
     field: "Tipos_id_tipo",
     autoFetch: true
   });
@@ -140,6 +144,12 @@ module.exports = function(db, cb) {
   EquipamentosRequisicao.hasOne("Requisicao", Requisicoes, {
     required: true,
     field: "Requisicoes_id_requisicao",
+    autoFetch: true
+  });
+
+  EquipamentosRequisicao.hasOne("Familias", Requisicoes, {
+    required: true,
+    field: "Familias_id_familia",
     autoFetch: true
   });
 
