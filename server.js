@@ -96,11 +96,24 @@ app.get('/api/getTipos', function(req, res) {
 });
 
 app.post('/api/insertFamilia', function(req, res) {
-  req.models.Familias.create(req.body, function(err) {
-    if(err)
-      res.send(err);
-    else
-      res.send('ok');
+  req.models.Familias.exists(req.body, function(errExists, doesFamiliaExists) {
+    if(!doesFamiliaExists) {
+      req.models.Familias.create(req.body, function(errCreate) {
+        if(errCreate)
+          res.send(errCreate);
+        else {
+          req.models.Familias.find(req.body, function(errFind, familia) {
+            res.send({
+              id_familia: familia[0].id_familia,
+              code: "SUCCESS"
+            });
+          });
+        }
+      });
+    }
+    else { //Familia Exists
+      res.send({ code: "ER_DUP_ENTRY" });
+    }
   });
 });
 
