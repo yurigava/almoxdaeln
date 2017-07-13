@@ -1,25 +1,26 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 
-function *insertTipo(action) {
+function *insertFamilia(action) {
   yield put({ type: 'SET_LOADING', isLoading: true });
   try {
     const response = yield call(
       axios.post,
-      action.serverUrl + '/api/insertTipo',
+      action.serverUrl + '/api/insertFamilia',
       {
-        tipo: action.tipo,
-        Familias_id_familia: action.familia
+        familia: action.familia,
       },
       {withCredentials:true}
     );
-    if(response.data === "ok") {
-      yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
-      yield put({ type:'SET_SUBMISSION_MESSAGE', message: "Novo tipo '" + action.tipo + "' foi adicionado com sucesso." });
+    if(response.data.code === "SUCCESS") {
+      yield put({ type: 'SET_CREATED_FAMILIA_NUMBER', familiaNumber: response.data.id_familia });
     }
     else if(response.data.code === "ER_DUP_ENTRY") {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-      yield put({ type:'SET_SUBMISSION_MESSAGE', message: "ERRO: O Tipo '" + action.tipo + "' já existe no banco de dados" });
+      yield put({
+        type:'SET_SUBMISSION_MESSAGE',
+        message: "ERRO: A Família '" + action.familia + "' já existe no banco de dados"
+      });
     }
     else {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
@@ -29,12 +30,13 @@ function *insertTipo(action) {
     }
   }
   catch (e) {
+    console.log(e);
   }
   yield put({ type: 'SET_LOADING', isLoading: false });
 }
 
-function *addTipoSagas() {
-    yield takeEvery('INSERT_TIPO', insertTipo);
+function *addFamiliaSagas() {
+    yield takeEvery('INSERT_FAMILIA', insertFamilia);
 }
 
-export default addTipoSagas;
+export default addFamiliaSagas;
