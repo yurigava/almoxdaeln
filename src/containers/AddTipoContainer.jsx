@@ -34,9 +34,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const addTipoContainer = connect(
+const AddTipoContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AddTipo)
 
-export default addTipoContainer
+export default AddTipoContainer

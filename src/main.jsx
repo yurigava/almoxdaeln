@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
-import appContainer from './containers/appContainer.jsx';
-import loginContainer from './containers/loginContainer.jsx'
-import addEquipContainer from './containers/addEquipContainer.jsx'
-import addTipoContainer from './containers/addTipoContainer.jsx'
-import addFamiliaContainer from './containers/addFamiliaContainer.jsx'
+import AppContainer from './containers/AppContainer.jsx';
+import LoginContainer from './containers/LoginContainer.jsx'
+import AddEquipContainer from './containers/AddEquipContainer.jsx'
+import AddTipoContainer from './containers/AddTipoContainer.jsx'
+import AddFamiliaContainer from './containers/AddFamiliaContainer.jsx'
 import EquipTable from './components/EquipTable.jsx';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -65,13 +65,13 @@ function main() {
     <MuiThemeProvider>
       <Provider store={store}>
         <Router history={hashHistory}>
-          <Route path="/" component={appContainer}>
+          <Route path="/" component={AppContainer}>
             <IndexRedirect to="/login" />
             <Route path="/logout" onEnter={logUserOut}/>
-            <Route path="/login" component={loginContainer}/>
-            <Route path="/addFamilia" component={addFamiliaContainer} onEnter={verifyPermission}/>
-            <Route path="/addTipo" component={addTipoContainer} onEnter={verifyPermission}/>
-            <Route path="/addEquips" component={addEquipContainer} onEnter={verifyPermission}/>
+            <Route path="/login" component={LoginContainer}/>
+            <Route path="/addFamilia" component={AddFamiliaContainer} onEnter={verifyPermission}/>
+            <Route path="/addTipo" component={AddTipoContainer} onEnter={verifyPermission}/>
+            <Route path="/addEquips" component={AddEquipContainer} onEnter={verifyPermission}/>
             <Route path="/equips" component={EquipTable} url={serverUrl} onEnter={verifyPermission}/>
           </Route>
         </Router>

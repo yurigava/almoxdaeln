@@ -4,13 +4,13 @@ then
   echo "Passe o nome da nova página como argumento"
   exit 1
 else
-  newPage=$1
+  newPage=$(echo $1 | sed 's#\<.#\L&#')
 fi
 
 capNewPage=$(echo $newPage | sed 's#\<.#\U&#')
 
 cp components/Template.jsx components/"$capNewPage".jsx
-cp containers/template.jsx containers/"$newPage"Container.jsx
+cp containers/Template.jsx containers/"$capNewPage"Container.jsx
 cp reducers/template.jsx reducers/"$newPage".jsx
 cp sagas/template.jsx sagas/"$newPage".jsx
 

@@ -6,7 +6,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
-import EquipTypeSelectorContainer from '../containers/equipTypeSelectorContainer.jsx';
+import EquipTypeSelectorContainer from '../containers/EquipTypeSelectorContainer.jsx';
 import update from 'immutability-helper';
 
 const style = {

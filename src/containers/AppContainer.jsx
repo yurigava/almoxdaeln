@@ -32,9 +32,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const appContainer = connect(
+const AppContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(App)
 
-export default appContainer
+export default AppContainer

@@ -54,9 +54,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const addEquipContainer = connect(
+const AddEquipContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AddEquip)
 
-export default addEquipContainer
+export default AddEquipContainer

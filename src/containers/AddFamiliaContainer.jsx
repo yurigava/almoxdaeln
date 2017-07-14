@@ -44,9 +44,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const addFamiliaContainer = connect(
+const AddFamiliaContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AddFamilia)
 
-export default addFamiliaContainer
+export default AddFamiliaContainer

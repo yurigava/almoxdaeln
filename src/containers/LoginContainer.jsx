@@ -30,9 +30,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const loginContainer = connect(
+const LoginContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(InputAuthentication)
 
-export default loginContainer
+export default LoginContainer
