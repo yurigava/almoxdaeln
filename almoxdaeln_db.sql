@@ -107,11 +107,11 @@ DROP TABLE IF EXISTS `EstadosReq`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `EstadosReq` (
-  `id_estadosReq` int(8) NOT NULL,
+  `id_estadosReq` int(8) NOT NULL AUTO_INCREMENT,
   `estadoReq` varchar(30) NOT NULL,
   PRIMARY KEY (`id_estadosReq`),
   UNIQUE KEY `id_estados_Req_UNIQUE` (`id_estadosReq`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,7 +120,7 @@ CREATE TABLE `EstadosReq` (
 
 LOCK TABLES `EstadosReq` WRITE;
 /*!40000 ALTER TABLE `EstadosReq` DISABLE KEYS */;
-INSERT INTO `EstadosReq` VALUES (0,'Reservado'),(1,'Em Uso'),(2,'Devolvido');
+INSERT INTO `EstadosReq` VALUES (1,'Em Uso'),(2,'Devolvido'),(3,'Reservado');
 /*!40000 ALTER TABLE `EstadosReq` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,8 +194,8 @@ CREATE TABLE `Requisicoes` (
   `EstadosReq_id_estadosReq` int(8) NOT NULL,
   PRIMARY KEY (`id_requisicao`),
   UNIQUE KEY `id_evento_UNIQUE` (`id_requisicao`),
-  KEY `fk_Requisicao_EstadosReq1_idx` (`EstadosReq_id_estadosReq`),
-  CONSTRAINT `fk_Requisicoes_EstadosReq1` FOREIGN KEY (`EstadosReq_id_estadosReq`) REFERENCES `EstadosReq` (`id_estadosReq`) ON DELETE NO ACTION ON UPDATE CASCADE
+  KEY `fk_Requisicoes_EstadosReq1_idx` (`EstadosReq_id_estadosReq`),
+  CONSTRAINT `fk_Requisicoes_EstadosReq1` FOREIGN KEY (`EstadosReq_id_estadosReq`) REFERENCES `EstadosReq` (`id_estadosReq`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -245,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-07 18:41:55
+-- Dump completed on 2017-07-15 15:13:36
