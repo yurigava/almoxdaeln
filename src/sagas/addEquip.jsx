@@ -38,7 +38,7 @@ function *insertEquips(action) {
     });
     return;
   }
-  if(action.patrimonios.length == 0 || action.patrimonios[0].value === "") {
+  if(action.patrimonios.length == 0 || (action.patrimonios.length === 1 && action.patrimonios[0].value === "")) {
     yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
     yield put({
       type: 'SET_SUBMISSION_MESSAGE',
