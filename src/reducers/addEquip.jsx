@@ -8,7 +8,7 @@ const initialState =
   isMissingFamilia: false,
   errorCauseEquipNumber: "",
   errorCode: "",
-  infoText: 0
+  infoNumber: 0
 }
 
 const addEquip = (state = initialState, action) => {
@@ -43,10 +43,10 @@ const addEquip = (state = initialState, action) => {
           })
       )
 
-    case 'ADD_EQUIP_SET_INFO_TEXT':
+    case 'ADD_EQUIP_SET_INFO_NUMBER':
       return (
           update(state, {
-            infoText: {$set: action.infoText}
+            infoNumber: {$set: action.infoNumber}
           })
       )
 
