@@ -37,9 +37,9 @@ export const setSelectedFamilia = (familia) => {
   }
 }
 
-export const setInfoText = (infoText) => {
+export const setInfoNumber = (infoNumber) => {
   return {
     type: 'ADD_EQUIP_SET_INFO_TEXT',
-    infoText
+    infoNumber
   }
 }

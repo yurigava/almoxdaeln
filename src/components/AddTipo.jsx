@@ -83,7 +83,7 @@ export default class AddTipo extends React.Component {
   }
 
   render () {
-    const infoText = infos[this.state.info];
+    const infoNumber = infos[this.state.info];
 
     const actions = [
      <FlatButton
@@ -109,7 +109,7 @@ export default class AddTipo extends React.Component {
             'fontFamily': 'Roboto,sans-serif'
           }}
         >
-          {infoText}
+          {infoNumber}
         </div>
         <form onSubmit=
           {
