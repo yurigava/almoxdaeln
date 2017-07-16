@@ -6,7 +6,7 @@ import {
   insertEquips,
   setErrorDescription,
   setMissingFieldsError,
-  setInfoText,
+  setInfoNumber,
 } from '../actions/addEquip.js'
 import {
   setSubmissionMessage,
@@ -24,7 +24,7 @@ const mapStateToProps = (state) => {
     familia: state.addEquip.selectedFamilia,
     errorCauseEquipNumber: state.addEquip.errorCauseEquipNumber,
     errorCode: state.addEquip.errorCode,
-    infoText: state.addEquip.infoText,
+    infoNumber: state.addEquip.infoNumber,
   }
 }
 
@@ -48,8 +48,8 @@ const mapDispatchToProps = (dispatch) => {
     setSelectedFamilia: (name, familia) => {
       dispatch(setSelectedFamilia(familia))
     },
-    setInfoText: (infoText) => {
-      dispatch(setInfoText(infoText))
+    setInfoNumber: (infoNumber) => {
+      dispatch(setInfoNumber(infoNumber))
     }
   }
 }
