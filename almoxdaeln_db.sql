@@ -159,7 +159,7 @@ DROP TABLE IF EXISTS `HistoricoEquipamentos`;
 CREATE TABLE `HistoricoEquipamentos` (
   `id_evento` int(32) NOT NULL AUTO_INCREMENT,
   `usuario` varchar(45) NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `EquipamentosMonitorados_patrimonio` int(32) NOT NULL,
   `Requisicoes_id_requisicao` int(32) DEFAULT NULL,
   PRIMARY KEY (`id_evento`),
@@ -245,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-15 15:13:36
+-- Dump completed on 2017-07-17 17:55:19

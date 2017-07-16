@@ -26,7 +26,6 @@ export default class EquipTypeSelector extends React.Component {
     this.handleTipoChange = this.handleTipoChange.bind(this);
     this.state = {
       allowedTipos: getAllowedTipos(this.props.familia, this.props.tipos),
-      tipoDisabled: this.props.familia === null,
     }
   }
 
@@ -48,16 +47,15 @@ export default class EquipTypeSelector extends React.Component {
       tipo = allowedTipos[0].id_tipo;
     }
     this.setState(update(this.state, {
-      tipoDisabled: {$set: false},
       allowedTipos: {$set: allowedTipos }
     }))
-    this.props.setInfoText(info)
+    this.props.setInfoNumber(info)
     this.props.setSelectedTipo(this.props.name, tipo)
     this.props.setSelectedFamilia(this.props.name, familia)
   }
 
   handleTipoChange(event, index, tipo) {
-    this.props.setInfoText(2)
+    this.props.setInfoNumber(2)
     this.props.setSelectedTipo(this.props.name, tipo)
   }
 
@@ -84,7 +82,7 @@ export default class EquipTypeSelector extends React.Component {
           floatingLabelText="Tipo"
           value={this.props.tipo}
           onChange={this.handleTipoChange}
-          disabled={this.state.tipoDisabled || this.props.isInputDisabled}
+          disabled={this.props.familia === null || this.props.isInputDisabled}
           errorText={(this.props.isMissingTipo && this.props.tipo === null) ?
             "Campo Tipo não pode ser deixado em branco" : ""}
           floatingLabelStyle={{color: 'grey'}}
@@ -103,7 +101,7 @@ EquipTypeSelector.propTypes = {
   getFamilias: PropTypes.func.isRequired,
   setSelectedTipo: PropTypes.func.isRequired,
   setSelectedFamilia: PropTypes.func.isRequired,
-  setInfoText: PropTypes.func,
+  setInfoNumber: PropTypes.func,
   name: PropTypes.string,
   tipos: PropTypes.array.isRequired,
   familias: PropTypes.array.isRequired,
