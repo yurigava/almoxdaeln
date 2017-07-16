@@ -46,7 +46,7 @@ function *insertEquips(action) {
     });
     return;
   }
-  let patrimonios = action.patrimonios.filter(pat => pat.value !== "").map(pat => pat.value)
+  let patrimonios = Array.from(new Set(action.patrimonios));
   yield put({ type: 'SET_LOADING', isLoading: true });
   let response = null
   try {
@@ -72,7 +72,7 @@ function *insertEquips(action) {
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
       yield put({
         type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
-        equipNumber: response.data.instance.patrimonio,
+        equipNumber: response.data.instance.patrimonio.toString(),
         errorCode: response.data.code
       });
     }

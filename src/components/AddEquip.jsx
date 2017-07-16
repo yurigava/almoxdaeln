@@ -40,9 +40,9 @@ export default class AddEquip extends React.Component {
 
   handleCloseDialog() {
     if(this.props.isDataSubmitted) {
-      this.props.setSelectedTipo(null);
-      this.props.setSelectedFamilia(null);
-      this.props.setInfoText(0);
+      this.props.setSelectedTipo("", null);
+      this.props.setSelectedFamilia("", null);
+      this.props.setInfoNumber(0);
       this.props.clearMissingFieldsError();
       this.state = {
         patrimonios: [
@@ -94,23 +94,23 @@ export default class AddEquip extends React.Component {
   }
 
   handleNewEquipment(event) {
-    let hasEmptyFields = false
+    let hasEmptyFields = false;
+    let newState = this.state;
     for (var i = 0; i < this.state.patrimonios.length; i++) {
       if(this.state.patrimonios[i].value === "") {
         hasEmptyFields = true;
-        this.setState(update(this.state, {
+        newState = update(newState, {
           patrimonios: { [i]: { errorText: {
                $set: "Preencha este campo antes de criar um novo"
-          }}}}));
-      }
-      else if(this.state.patrimonios[i].errorText !== "") {
-        this.setState(update(this.state, {
-          patrimonios: { [i]: { errorText: { $set: "" } } }
-        }));
+          }}}
+        });
       }
     }
     if(hasEmptyFields)
+    {
+      this.setState(newState);
       return;
+    }
     const patrimonios = this.state.patrimonios
     let nextIndex = 0
     if(patrimonios.length > 0)
@@ -139,7 +139,8 @@ export default class AddEquip extends React.Component {
   }
 
   handleFormSubmit(event) {
-    this.props.insertEquips(this.state.patrimonios, this.props.tipo)
+    let patrimonios = this.state.patrimonios.filter(pat => pat.value !== "").map(pat => Number(pat.value));
+    this.props.insertEquips(patrimonios, this.props.tipo)
   }
 
   findEquipIndex(name, patrimonios) {
@@ -157,7 +158,7 @@ export default class AddEquip extends React.Component {
      />,
     ];
 
-    const infoText = infos[this.props.infoText];
+    const infoNumber = infos[this.props.infoNumber];
 
     return (
       <div>
@@ -175,7 +176,7 @@ export default class AddEquip extends React.Component {
             'fontFamily': 'Roboto,sans-serif'
           }}
         >
-          {infoText}
+          {infoNumber}
         </div>
         <form onSubmit=
           {
@@ -189,7 +190,7 @@ export default class AddEquip extends React.Component {
             familia={this.props.familia}
             setSelectedTipo={this.props.setSelectedTipo}
             setSelectedFamilia={this.props.setSelectedFamilia}
-            setInfoText={this.props.setInfoText}
+            setInfoNumber={this.props.setInfoNumber}
             isMissingTipo={this.props.isMissingTipo}
             isMissingFamilia={this.props.isMissingFamilia}
             isInputDisabled={this.props.isInputDisabled}
@@ -252,7 +253,7 @@ AddEquip.propTypes = {
   clearMissingFieldsError: PropTypes.func.isRequired,
   setSelectedTipo: PropTypes.func.isRequired,
   setSelectedFamilia: PropTypes.func.isRequired,
-  setInfoText: PropTypes.func.isRequired,
+  setInfoNumber: PropTypes.func.isRequired,
   isInputDisabled: PropTypes.bool.isRequired,
   tipo: PropTypes.number,
   familia: PropTypes.number,
@@ -262,5 +263,5 @@ AddEquip.propTypes = {
   submissionMessage: PropTypes.string.isRequired,
   errorCauseEquipNumber: PropTypes.string.isRequired,
   errorCode: PropTypes.string.isRequired,
-  infoText: PropTypes.number.isRequired,
+  infoNumber: PropTypes.number.isRequired,
 };
