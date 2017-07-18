@@ -52,6 +52,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'studentLend',
+      linkText: 'Empréstimo Para Aluno'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'logout',
       linkText: 'Logout'
     },

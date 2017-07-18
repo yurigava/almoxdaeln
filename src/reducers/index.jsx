@@ -4,6 +4,7 @@ import appUi from './appUi.jsx'
 import addEquip from './addEquip.jsx'
 import equipTypeSelect from './equipTypeSelect.jsx'
 import addFamilia from './addFamilia.jsx'
+import studentLend from './studentLend.jsx'
 //import visibilityFilter from './visibilityFilter'
 
 const almoxApp = combineReducers({
@@ -12,6 +13,7 @@ const almoxApp = combineReducers({
   addEquip,
   equipTypeSelect,
   addFamilia,
+  studentLend,
 })
 
 export default almoxApp
