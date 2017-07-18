@@ -98,15 +98,13 @@ app.get('/api/getTipos', function(req, res) {
 app.post('/api/insertFamilia', function(req, res) {
   req.models.Familias.exists(req.body, function(errExists, doesFamiliaExists) {
     if(!doesFamiliaExists) {
-      req.models.Familias.create(req.body, function(errCreate) {
+      req.models.Familias.create(req.body, function(errCreate, familia) {
         if(errCreate)
           res.send(errCreate);
         else {
-          req.models.Familias.find(req.body, function(errFind, familia) {
-            res.send({
-              id_familia: familia[0].id_familia,
-              code: "SUCCESS"
-            });
+          res.send({
+            id_familia: familia.id_familia,
+            code: "SUCCESS"
           });
         }
       });
@@ -134,6 +132,111 @@ app.post('/api/insertTipo', function(req, res) {
     }
   });
 });
+
+app.post('/api/getRequisicaoStudentId', function(req,res) {
+  var usuario = req.body.usuario;
+  req.models.Requisicoes.find(
+    { usuario: usuario, EstadosReq_id_estadosReq: 1 },
+    function(err, existentRequisicao) {
+      if(err)
+        res.send(err);
+      else if(existentRequisicao.length > 0)
+        res.send({
+          code: "SUCCESS",
+          idRequisicao: existentRequisicao[0].id_requisicao,
+        });
+      else {
+        var requisicao = {
+          usuario: req.body.usuario,
+          EstadosReq_id_estadosReq: 1,
+        };
+        req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
+          if(err)
+            res.send(err);
+          else
+            res.send({
+              code: "SUCCESS",
+              idRequisicao: createdRequisicao.id_requisicao,
+            });
+        });
+      }
+    }
+  );
+});
+
+app.post('/api/studentLend', function(req, res) {
+  var patrimonios = req.body.patrimonios;
+  req.models.EquipamentosMonitorados.find(
+    { patrimonio: patrimonios },
+    function (err, equips) {
+      if(err)
+        res.send(err);
+      else {
+        var foundEquipsNumber = equips.map(function (equip) {
+          return equip.patrimonio;
+        });
+        var missing = findMissingElements(patrimonios, foundEquipsNumber)
+        if(missing.length > 0)
+          res.send({code: "ER_NOT_FOUND", notFound: missing});
+        else {
+          notAvailableEquips = [];
+          var foundEquipsState = equips.forEach(function (equip) {
+            if(equip.Estado.estado !== "Disponível")
+              notAvailableEquips.push(equip.patrimonio);
+          });
+          if(notAvailableEquips.length > 0)
+            res.send({code: "ER_NOT_AVAILABLE", notAvailable: notAvailableEquips});
+          else
+            registerHistoricoEvent(req, res);
+        }
+      }
+    }
+  );
+});
+
+function findMissingElements(all, part) {
+  var missingElements = [];
+  all.forEach(function(elem) {
+    if(!part.includes(elem))
+      missingElements.push(elem);
+  });
+  return missingElements;
+}
+
+function registerHistoricoEvent(req, res) {
+  var patrimonios = req.body.patrimonios;
+  var equipsToInsert = [];
+  patrimonios.forEach(function(pat) {
+    equipsToInsert.push({
+      Requisicoes_id_requisicao: req.body.requisicao,
+      EquipamentosMonitorados_patrimonio: pat,
+    });
+  });
+  req.models.HistoricoEquipamentos.create(equipsToInsert, function(err) {
+    if(err)
+      res.send(err);
+    else {
+      var lentEquips = [];
+      var estadoEmprestado
+      req.models.Estados.find({estado: "Emprestado"}, function(err, emprestado) {
+        estadoEmprestado = emprestado[0];
+      });
+      req.models.EquipamentosMonitorados.find(
+        { patrimonio: patrimonios },
+        function(err, equips) {
+          for(var i = 0; i < equips.length; i++) {
+            lentEquips.push({
+              familia: equips[i].Tipo.Familia.familia,
+              tipo: equips[i].Tipo.tipo,
+            });
+            equips[i].setEstado(estadoEmprestado, function(err) {});
+          }
+          res.send({code: "SUCCESS", lentEquips: lentEquips});
+        }
+      );
+    }
+  });
+}
 
 app.post('/api/insertEquips', function(req, res) {
   var equipsToInsert = [];

@@ -65,22 +65,18 @@ module.exports = function(db, cb) {
     id_evento: {
       type: 'integer',
       unique: true,
+      serial: true,
       key: true
-    },
-    usuario: {
-      type: 'text',
-      size: 45,
-      required: true
     },
     timestamp: {
       type: 'date',
       time: true,
-      required: true
+      required: false
     }
   });
 
   var Requisicoes = db.define("Requisicoes", {
-    id_evento: {
+    id_requisicao: {
       type: 'integer',
       unique: true,
       key: true
@@ -90,10 +86,14 @@ module.exports = function(db, cb) {
       size: 45,
       required: false
     },
+    usuario: {
+      type: 'text',
+      size: 45,
+      required: true
+    },
     timestampDeUso: {
       type: 'date',
       time: true,
-      required: true
     }
   });
 
