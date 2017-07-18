@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `EquipamentosMonitorados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `EquipamentosMonitorados` (
-  `patrimonio` int(32) NOT NULL,
+  `patrimonio` bigint(20) NOT NULL,
   `Estados_id_estado` int(8) NOT NULL,
   `Tipos_id_tipo` int(32) NOT NULL,
   PRIMARY KEY (`patrimonio`),
@@ -160,12 +160,12 @@ CREATE TABLE `HistoricoEquipamentos` (
   `id_evento` int(32) NOT NULL AUTO_INCREMENT,
   `usuario` varchar(45) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `EquipamentosMonitorados_patrimonio` int(32) NOT NULL,
+  `EquipamentosMonitorados_patrimonio` bigint(20) NOT NULL,
   `Requisicoes_id_requisicao` int(32) DEFAULT NULL,
   PRIMARY KEY (`id_evento`),
   UNIQUE KEY `id_evento_UNIQUE` (`id_evento`),
-  KEY `fk_HistoricoEquipamentos_EquipamentosMonitorados1_idx` (`EquipamentosMonitorados_patrimonio`),
   KEY `fk_HistoricoEquipamentos_Requisicoes1_idx` (`Requisicoes_id_requisicao`),
+  KEY `fk_HistoricoEquipamentos_EquipamentosMonitorados1_idx` (`EquipamentosMonitorados_patrimonio`),
   CONSTRAINT `fk_HistoricoEquipamentos_EquipamentosMonitorados1` FOREIGN KEY (`EquipamentosMonitorados_patrimonio`) REFERENCES `EquipamentosMonitorados` (`patrimonio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_HistoricoEquipamentos_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -245,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-17 17:55:19
+-- Dump completed on 2017-07-18  0:46:09
