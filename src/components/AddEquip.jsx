@@ -208,6 +208,7 @@ export default class AddEquip extends React.Component {
                 onKeyPress={this.handleKeyPress}
                 errorText={patrimonio.errorText}
                 floatingLabelStyle={{color: 'grey'}}
+                disabled={this.props.isInputDisabled}
               />
               <FloatingActionButton
                 mini={true}
