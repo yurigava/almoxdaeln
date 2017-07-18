@@ -65,6 +65,7 @@ module.exports = function(db, cb) {
     id_evento: {
       type: 'integer',
       unique: true,
+      serial: true,
       key: true
     },
     usuario: {
@@ -75,7 +76,7 @@ module.exports = function(db, cb) {
     timestamp: {
       type: 'date',
       time: true,
-      required: true
+      required: false
     }
   });
 
