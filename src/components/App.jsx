@@ -36,6 +36,8 @@ export default class App extends React.Component {
   }
 
   render() {
+    const index = this.props.visibleLinks.findIndex(page => "/"+page.link == this.props.location.pathname);
+    const title = index >= 0 ? "Almoxarifado DAELN - " + this.props.visibleLinks[index].linkText : "Almoxarifado DAELN";
     return (
       <div>
         <div>
@@ -63,7 +65,7 @@ export default class App extends React.Component {
         </div>
         <div>
           <AppBar
-            title="Almoxarifado DAELN"
+            title={title}
             onLeftIconButtonTouchTap={() => this.props.onDrawerLinkClick()}
           />
           <center>
