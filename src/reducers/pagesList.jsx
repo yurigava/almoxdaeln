@@ -62,6 +62,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'studentReturn',
+      linkText: 'Devolução de Aluno'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'logout',
       linkText: 'Logout'
     },
