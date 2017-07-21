@@ -1,7 +1,7 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 
-function *insertOrGetRequisicao(serverUrl, usuario) {
+function *getRequisicao(serverUrl, usuario) {
   try {
     const response = yield call(
       axios.post,
@@ -16,6 +16,11 @@ function *insertOrGetRequisicao(serverUrl, usuario) {
       case "SUCCESS":
         return response.data.idRequisicao;
 
+      case "ER_NOT_FOUND":
+        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "ERRO: O usuário " + usuario + " não tem nenhum pedido ativo."});
+        return -404;
+
       default:
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro desconhecido: "+ response.data.code});
@@ -29,10 +34,10 @@ function *insertOrGetRequisicao(serverUrl, usuario) {
   }
 }
 
-function *insertStudentLend(action) {
+function *insertStudentReturn(action) {
   yield put({ type: 'SET_LOADING', isLoading: true });
   const idRequisicao = yield call(
-    insertOrGetRequisicao,
+    getRequisicao,
     action.serverUrl,
     action.usuario
   );
@@ -44,7 +49,7 @@ function *insertStudentLend(action) {
     const patrioniosUnique = Array.from(new Set(action.patrimonios));
     const response = yield call(
       axios.post,
-      action.serverUrl + '/api/studentLend',
+      action.serverUrl + '/api/studentReturn',
       {
         requisicao: idRequisicao,
         patrimonios: patrioniosUnique
@@ -53,40 +58,34 @@ function *insertStudentLend(action) {
     );
     let singular
     let plural
+    let message
     switch(response.data.code) {
       case "SUCCESS":
-        let message
-        if(response.data.registeredEquips.length > 1)
-          message = "Empréstimo efetuado com sucesso.\\nOs seguintes equipamentos foram emprestados:\\n";
+        message = "Devolução efetuada com sucesso."
+        yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
+        break;
+
+      case "WAR_MISSING_EQUIPS":
+        if(response.data.missingEquips.length > 1)
+          message = "ATENÇÃO: Devolução incompleta!!\\nOs seguintes equipamentos foram emprestados e não devolvidos:\\n";
         else
-          message = "Empréstimo efetuado com sucesso.\\nO seguinte equipamento foi emprestado:\\n";
-        response.data.registeredEquips.forEach(equip => {
-          message = message + equip.familia + " " + equip.tipo + "\\n";
+          message = "ATENÇÃO: Devolução incompleta!!\\nO seguinte equipamento foi emprestado e não devolvido:\\n";
+        response.data.missingEquips.forEach(equip => {
+          message = message + equip.familia + " " + equip.tipo + ", Patrimônio: " + equip.pat + "\\n";
         });
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
         break;
 
       case "ER_NOT_FOUND":
-        singular = "ERRO: O Equipamento pedido não está registrado.";
-        plural = "ERRO: O pedido contém Equipamentos não registrados." ;
+        singular = "ERRO: Existem Equipamentos que não fazem parte do pedido deste usuário." ;
+        plural = "ERRO: Existe um Equipamento que não faz parte do pedido deste usuário.";
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrioniosUnique.length > 1 ? plural : singular});
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: response.data.notFound > 1 ? plural : singular});
         yield put({
-          type: 'SET_STUDENT_LEND_ERROR_DESCRIPTION',
+          type: 'SET_STUDENT_RETURN_ERROR_DESCRIPTION',
           equipNumbers: response.data.notFound,
-          errorCode: response.data.code
-        });
-        break;
-
-      case "ER_NOT_AVAILABLE":
-        singular = "ERRO: O Equipamento pedido não está disponível.";
-        plural = "ERRO: O pedido contém Equipamentos não disponíveis.";
-        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrioniosUnique.length > 1 ? plural : singular});
-        yield put({
-          type: 'SET_STUDENT_LEND_ERROR_DESCRIPTION',
-          equipNumbers: response.data.notAvailable,
           errorCode: response.data.code
         });
         break;
@@ -104,8 +103,8 @@ function *insertStudentLend(action) {
   yield put({ type: 'SET_LOADING', isLoading: false });
 }
 
-function *studentLendSagas() {
-    yield takeEvery('INSERT_STUDENT_LEND', insertStudentLend);
+function *studentReturnSagas() {
+    yield takeEvery('INSERT_STUDENT_RETURN', insertStudentReturn);
 }
 
-export default studentLendSagas;
+export default studentReturnSagas;

@@ -133,19 +133,19 @@ app.post('/api/insertTipo', function(req, res) {
   });
 });
 
-app.post('/api/getRequisicaoStudentId', function(req,res) {
+app.post('/api/getOrInsertRequisicaoStudentId', function(req,res) {
   var usuario = req.body.usuario;
-  req.models.Requisicoes.find(
+  req.models.Requisicoes.one(
     { usuario: usuario, EstadosReq_id_estadosReq: 1 },
     function(err, existentRequisicao) {
       if(err)
         res.send(err);
-      else if(existentRequisicao.length > 0)
+      else if(existentRequisicao)
         res.send({
           code: "SUCCESS",
-          idRequisicao: existentRequisicao[0].id_requisicao,
+          idRequisicao: existentRequisicao.id_requisicao,
         });
-      else {
+      else if(req.body.shouldCreate) {
         var requisicao = {
           usuario: req.body.usuario,
           EstadosReq_id_estadosReq: 1,
@@ -160,9 +160,65 @@ app.post('/api/getRequisicaoStudentId', function(req,res) {
             });
         });
       }
+      else {
+        res.send({
+          code: "ER_NOT_FOUND"
+        });
+      }
     }
   );
 });
+
+
+function findNotContainedAInB(A, B) {
+  var missingElements = [];
+  A.forEach(function(elem) {
+    if(!B.includes(elem))
+      missingElements.push(elem);
+  });
+  return missingElements;
+}
+
+function registerHistoricoEvent(req, res, stateToSet, sendResponse) {
+  var patrimonios = req.body.patrimonios;
+  var equipsToInsert = [];
+  patrimonios.forEach(function(pat) {
+    equipsToInsert.push({
+      Requisicoes_id_requisicao: req.body.requisicao,
+      EquipamentosMonitorados_patrimonio: pat,
+    });
+  });
+
+  req.models.HistoricoEquipamentos.create(equipsToInsert, function(err) {
+    if(err) {
+      if(sendResponse)
+        res.send(err);
+      else
+        return -1;
+    }
+    else {
+      req.models.Estados.one({estado: stateToSet}, function(err, state) {
+        req.models.EquipamentosMonitorados.find(
+          { patrimonio: patrimonios },
+          function(err, equips) {
+            var registeredEquips = [];
+            equips.forEach(function (equip) {
+              registeredEquips.push({
+                familia: equip.Tipo.Familia.familia,
+                tipo: equip.Tipo.tipo,
+              });
+              equip.setEstado(state, function(err) {});
+            });
+            if(sendResponse)
+              res.send({code: "SUCCESS", registeredEquips: registeredEquips});
+            else
+              return 1;
+          }
+        );
+      });
+    }
+  });
+}
 
 app.post('/api/studentLend', function(req, res) {
   var patrimonios = req.body.patrimonios;
@@ -175,9 +231,9 @@ app.post('/api/studentLend', function(req, res) {
         var foundEquipsNumber = equips.map(function (equip) {
           return equip.patrimonio;
         });
-        var missing = findMissingElements(patrimonios, foundEquipsNumber)
-        if(missing.length > 0)
-          res.send({code: "ER_NOT_FOUND", notFound: missing});
+        var missingInDB = findNotContainedAInB(patrimonios, foundEquipsNumber)
+        if(missingInDB.length > 0)
+          res.send({code: "ER_NOT_FOUND", notFound: missingInDB});
         else {
           notAvailableEquips = [];
           var foundEquipsState = equips.forEach(function (equip) {
@@ -187,56 +243,81 @@ app.post('/api/studentLend', function(req, res) {
           if(notAvailableEquips.length > 0)
             res.send({code: "ER_NOT_AVAILABLE", notAvailable: notAvailableEquips});
           else
-            registerHistoricoEvent(req, res);
+            registerHistoricoEvent(req, res, "Emprestado", true);
         }
       }
     }
   );
 });
 
-function findMissingElements(all, part) {
-  var missingElements = [];
-  all.forEach(function(elem) {
-    if(!part.includes(elem))
-      missingElements.push(elem);
-  });
-  return missingElements;
-}
-
-function registerHistoricoEvent(req, res) {
+app.post('/api/studentReturn', function(req, res) {
   var patrimonios = req.body.patrimonios;
-  var equipsToInsert = [];
-  patrimonios.forEach(function(pat) {
-    equipsToInsert.push({
-      Requisicoes_id_requisicao: req.body.requisicao,
-      EquipamentosMonitorados_patrimonio: pat,
-    });
-  });
-  req.models.HistoricoEquipamentos.create(equipsToInsert, function(err) {
-    if(err)
-      res.send(err);
-    else {
-      var lentEquips = [];
-      var estadoEmprestado
-      req.models.Estados.find({estado: "Emprestado"}, function(err, emprestado) {
-        estadoEmprestado = emprestado[0];
-      });
-      req.models.EquipamentosMonitorados.find(
-        { patrimonio: patrimonios },
-        function(err, equips) {
-          for(var i = 0; i < equips.length; i++) {
-            lentEquips.push({
-              familia: equips[i].Tipo.Familia.familia,
-              tipo: equips[i].Tipo.tipo,
-            });
-            equips[i].setEstado(estadoEmprestado, function(err) {});
-          }
-          res.send({code: "SUCCESS", lentEquips: lentEquips});
+  var requisicao = req.body.requisicao;
+  req.models.HistoricoEquipamentos.find(
+    { Requisicoes_id_requisicao: requisicao },
+    function (err, equipsInRequest) {
+      if(err)
+        res.send(err);
+      else {
+        var patsInRequest = equipsInRequest.map(function (equip) {
+          return equip.EquipamentosMonitorados_patrimonio;
+        });
+
+        var patsWithCount = {};
+        for(var i=0; i < patsInRequest.length; i++) {
+          if(!patsWithCount[patsInRequest[i]])
+            patsWithCount[patsInRequest[i]] = 0;
+          ++patsWithCount[patsInRequest[i]];
         }
-      );
+
+        var uniquePats = Object.keys(patsWithCount);
+        var uniquePatsNumber = uniquePats.map(function (pat) {
+          return Number(pat);
+        });
+        var notInRequisicao = findNotContainedAInB(patrimonios, uniquePatsNumber);
+        if(notInRequisicao.length > 0) {
+          res.send({code: "ER_NOT_FOUND", notFound: notInRequisicao});
+        }
+        else {
+          var inUse = uniquePatsNumber.filter(function(pat) {
+            return (patsWithCount[pat] % 2) === 1; //Odd number of occurences = still in use
+          });
+          var notReturned = findNotContainedAInB(inUse, patrimonios);
+
+          registerHistoricoEvent(req, res, "Disponível", false);
+
+          req.models.EstadosReq.one({estadoReq: "Devolvido"}, function(err, state) {
+            req.models.Requisicoes.get(Number(requisicao), function (err, requisicaoNode) {
+              if(err)
+                res.send(err);
+              else {
+                if(notReturned.length > 0) {
+                  req.models.EquipamentosMonitorados.find({patrimonio: notReturned}, function(err, equips) {
+                    if(err)
+                      res.send(err);
+                    var notReturnedInfo = [];
+                    equips.forEach(function (equip) {
+                      notReturnedInfo.push({
+                        pat: equip.patrimonio,
+                        familia: equip.Tipo.Familia.familia,
+                        tipo: equip.Tipo.tipo,
+                      });
+                    });
+                    res.send({code: "WAR_MISSING_EQUIPS", missingEquips: notReturnedInfo});
+                  });
+                }
+                else {
+                  requisicaoNode.setEstadoReq(state, function(err) {});
+                  res.send({code: "SUCCESS"})
+                }
+              }
+            });
+          });
+        }
+      }
     }
-  });
-}
+  );
+});
 
 app.post('/api/insertEquips', function(req, res) {
   var equipsToInsert = [];

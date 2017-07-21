@@ -7,6 +7,7 @@ import AddEquipContainer from './containers/AddEquipContainer.jsx'
 import AddTipoContainer from './containers/AddTipoContainer.jsx'
 import AddFamiliaContainer from './containers/AddFamiliaContainer.jsx'
 import StudentLendContainer from './containers/StudentLendContainer.jsx'
+import StudentReturnContainer from './containers/StudentReturnContainer.jsx'
 import EquipTable from './components/EquipTable.jsx';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -23,6 +24,7 @@ import addEquipSagas from './sagas/addEquip.jsx'
 import addTipoSagas from './sagas/addTipo.jsx'
 import addFamiliaSagas from './sagas/addFamilia.jsx'
 import studentLendSagas from './sagas/studentLend.jsx'
+import studentReturnSagas from './sagas/studentReturn.jsx'
 
 export const serverUrl = 'http://192.168.0.69:8081';
 
@@ -39,6 +41,7 @@ sagaMiddleware.run(addEquipSagas)
 sagaMiddleware.run(addTipoSagas)
 sagaMiddleware.run(addFamiliaSagas)
 sagaMiddleware.run(studentLendSagas)
+sagaMiddleware.run(studentReturnSagas)
 
 main();
 
@@ -72,6 +75,7 @@ function main() {
             <IndexRedirect to="/login" />
             <Route path="/logout" onEnter={logUserOut}/>
             <Route path="/login" component={LoginContainer}/>
+            <Route path="/studentReturn" component={StudentReturnContainer} onEnter={verifyPermission}/>
             <Route path="/studentLend" component={StudentLendContainer} onEnter={verifyPermission}/>
             <Route path="/addFamilia" component={AddFamiliaContainer} onEnter={verifyPermission}/>
             <Route path="/addTipo" component={AddTipoContainer} onEnter={verifyPermission}/>
