@@ -16,11 +16,16 @@ export default class StudentReturn extends React.Component {
       return "Equipamento Não Disponível";
   }
 
+  setIsYesNoMessage(isYesNoMessage) {
+  }
+
   render () {
     return (
       <div>
         <UserEquipControlContainer
           selectEquipErrorMessage={this.selectEquipErrorMessage}
+          isYesNoMessage={false}
+          setIsYesNoMessage={this.setIsYesNoMessage}
           submitForm={this.props.insertStudentReturn}
           clearErrorDescription={this.props.clearErrorDescription}
           errorCauseEquipNumbers={this.props.errorCauseEquipNumbers}

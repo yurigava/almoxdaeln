@@ -1,7 +1,7 @@
-export const setErrorDescription = (equipNumber, errorCode) => {
+export const setErrorDescription = (equipNumbers, errorCode) => {
   return {
     type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
-    equipNumber,
+    equipNumbers,
     errorCode
   }
 }
@@ -14,10 +14,11 @@ export const setMissingFieldsError = (isMissingTipo, isMissingFamilia) => {
   }
 }
 
-export const insertEquips = (serverUrl, patrimonios, id_tipo) => {
+export const insertEquips = (serverUrl, usuario, patrimonios, id_tipo) => {
   return {
     type: 'INSERT_EQUIPS',
     serverUrl,
+    usuario,
     patrimonios,
     id_tipo,
   }

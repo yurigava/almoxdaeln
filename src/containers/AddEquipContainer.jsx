@@ -18,11 +18,12 @@ const mapStateToProps = (state) => {
     isInputDisabled: state.appUi.isInputDisabled,
     submissionMessage: state.appUi.submissionMessage,
     isDataSubmitted: state.appUi.isDataSubmitted,
+    usuario: state.login.userRole,
     isMissingTipo: state.addEquip.isMissingTipo,
     isMissingFamilia: state.addEquip.isMissingFamilia,
     tipo: state.addEquip.selectedTipo,
     familia: state.addEquip.selectedFamilia,
-    errorCauseEquipNumber: state.addEquip.errorCauseEquipNumber,
+    errorCauseEquipNumbers: state.addEquip.errorCauseEquipNumbers,
     errorCode: state.addEquip.errorCode,
     infoNumber: state.addEquip.infoNumber,
   }
@@ -30,8 +31,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    insertEquips: (patrimonios, id_tipo) => {
-      dispatch(insertEquips(serverUrl, patrimonios, id_tipo))
+    insertEquips: (usuario, patrimonios, id_tipo) => {
+      dispatch(insertEquips(serverUrl, usuario, patrimonios, id_tipo))
     },
     clearSubmissionMessage: () => {
       dispatch(setSubmissionMessage(""))

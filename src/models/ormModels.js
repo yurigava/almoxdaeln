@@ -72,7 +72,16 @@ module.exports = function(db, cb) {
       type: 'date',
       time: true,
       required: false
-    }
+    },
+    observacao: {
+      type: 'text',
+      size: 45,
+    },
+    usuario: {
+      type: 'text',
+      size: 45,
+      required: true
+    },
   });
 
   var Requisicoes = db.define("Requisicoes", {
@@ -139,9 +148,9 @@ module.exports = function(db, cb) {
     field: "EquipamentosMonitorados_patrimonio"
   });
 
-  HistoricoEquipamentos.hasOne("Requisicao", Requisicoes, {
-    required: false,
-    field: "Requisicoes_id_requisicao"
+  HistoricoEquipamentos.hasOne("Estado", Estados, {
+    required: true,
+    field: "Estados_id_estado"
   });
 
   Requisicoes.hasOne("EstadoReq", EstadosReq, {

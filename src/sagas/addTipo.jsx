@@ -13,6 +13,15 @@ function *insertTipo(action) {
       },
       {withCredentials:true}
     );
+    if(!response) {
+      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+      yield put({
+        type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor."
+      });
+      yield put({ type: 'SET_LOADING', isLoading: false });
+      return;
+    }
+
     if(response.data === "ok") {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
       yield put({ type:'SET_SUBMISSION_MESSAGE', message: "Novo tipo '" + action.tipo + "' foi adicionado com sucesso." });

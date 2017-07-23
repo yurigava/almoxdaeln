@@ -4,6 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
@@ -33,9 +34,11 @@ export default class UserEquipControl extends React.Component {
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
     this.handleNewBarCode = this.handleNewBarCode.bind(this);
     this.handleRemoveEquipment = this.handleRemoveEquipment.bind(this);
+    this.handleClearUsuario = this.handleClearUsuario.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
+    this.handleForcedSubmit = this.handleForcedSubmit.bind(this);
   }
 
   handleCloseDialog() {
@@ -135,12 +138,19 @@ export default class UserEquipControl extends React.Component {
     }
   }
 
+  handleClearUsuario(event) {
+    this.setState(update(this.state, {
+      barCodes: {
+        [0]: {
+          value: { $set: "" },
+          errorText: { $set: "" }
+        }
+      }
+    }));
+  }
+
   handleRemoveEquipment(event) {
     const index = this.findEquipIndex(event.currentTarget.name, this.state.barCodes);
-    if(index === 0) {
-      this.props.setSubmissionMessage("Para modificar o usuário do pedido, edite o campo do usuário.");
-      return;
-    }
     let newInfoNumber = 2;
     if(this.state.barCodes.length < 3)
       newInfoNumber = 0;
@@ -152,9 +162,19 @@ export default class UserEquipControl extends React.Component {
     }));
   }
 
+  handleForcedSubmit() {
+    let usuario = Number(this.state.barCodes[0].value);
+    let patrimonios = this.state.barCodes.filter(code => code.value !== "").map(code => Number(code.value));
+    if(patrimonios[0] == patrimonios[patrimonios.length - 1])
+      patrimonios.pop();
+    patrimonios.shift();
+    this.props.submitFormAfterConfirm(usuario, patrimonios)
+  }
+
   handleFormSubmit(event) {
     if(this.state.barCodes.length < 2 || this.state.barCodes[0].value === "") {
       this.props.setSubmissionMessage("Erro: Adicione o código do usuário e ao menos um equipamento.");
+      this.props.setIsYesNoMessage(false);
       this.props.clearDataSent();
       return;
     }
@@ -165,6 +185,7 @@ export default class UserEquipControl extends React.Component {
     patrimonios.shift();
     if(patrimonios.length < 1) {
       this.props.setSubmissionMessage("Erro: Adicione ao menos um equipamento.");
+      this.props.setIsYesNoMessage(false);
       this.props.clearDataSent();
       return;
     }
@@ -178,13 +199,30 @@ export default class UserEquipControl extends React.Component {
   }
 
   render () {
-    const actions = [
-     <FlatButton
-       label="OK"
-       primary={true}
-       onTouchTap={this.handleCloseDialog}
-     />,
-    ];
+    let actions
+    if(this.props.isYesNoMessage) {
+      actions = [
+        <FlatButton
+          label="SIM"
+          primary={false}
+          onTouchTap={this.handleForcedSubmit}
+        />,
+        <FlatButton
+          label="NÃO"
+          primary={true}
+          onTouchTap={this.handleCloseDialog}
+        />,
+      ];
+    }
+    else {
+      actions = [
+        <FlatButton
+          label="OK"
+          primary={true}
+          onTouchTap={this.handleCloseDialog}
+        />,
+      ];
+    }
 
     const infoText = infos[this.state.infoNumber];
 
@@ -235,11 +273,11 @@ export default class UserEquipControl extends React.Component {
                 type="button"
                 name={"barCode"+barCode.index}
                 backgroundColor="#ff0000"
-                onTouchTap={this.handleRemoveEquipment}
+                onTouchTap={barCode.index === 0 ? this.handleClearUsuario :  this.handleRemoveEquipment}
                 zDepth={1}
                 style={style}
               >
-                <ActionDelete />
+                {barCode.index === 0 ? <NavigationClose/> : <ActionDelete />}
               </FloatingActionButton>
             </div>
           ))}
@@ -270,8 +308,11 @@ UserEquipControl.propTypes = {
   clearErrorDescription: PropTypes.func.isRequired,
   selectEquipErrorMessage: PropTypes.func.isRequired,
   submitForm: PropTypes.func.isRequired,
+  submitFormAfterConfirm: PropTypes.func,
   setSubmissionMessage: PropTypes.func.isRequired,
   clearDataSent: PropTypes.func.isRequired,
+  setIsYesNoMessage: PropTypes.func.isRequired,
+  isYesNoMessage: PropTypes.bool,
   submissionMessage: PropTypes.string.isRequired,
   isDataSubmitted: PropTypes.bool.isRequired,
   isInputDisabled: PropTypes.bool.isRequired,

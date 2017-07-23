@@ -21,6 +21,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'changeEquipState',
+      linkText: 'Controle de Equipamentos'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'addFamilia',
       linkText: 'Adicionar Família de Equipamentos'
     },

@@ -6,6 +6,7 @@ import equipTypeSelect from './equipTypeSelect.jsx'
 import addFamilia from './addFamilia.jsx'
 import studentLend from './studentLend.jsx'
 import studentReturn from './studentReturn.jsx'
+import changeEquipState from './changeEquipState.jsx'
 //import visibilityFilter from './visibilityFilter'
 
 const almoxApp = combineReducers({
@@ -16,6 +17,7 @@ const almoxApp = combineReducers({
   addFamilia,
   studentLend,
   studentReturn,
+  changeEquipState,
 })
 
 export default almoxApp

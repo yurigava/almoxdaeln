@@ -86,7 +86,7 @@ CREATE TABLE `Estados` (
   `estado` varchar(30) NOT NULL,
   PRIMARY KEY (`id_estado`),
   UNIQUE KEY `id_estado_UNIQUE` (`id_estado`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +95,7 @@ CREATE TABLE `Estados` (
 
 LOCK TABLES `Estados` WRITE;
 /*!40000 ALTER TABLE `Estados` DISABLE KEYS */;
-INSERT INTO `Estados` VALUES (1,'Emprestado'),(2,'Em Manutenção'),(3,'Reservado'),(4,'Disponível');
+INSERT INTO `Estados` VALUES (1,'Emprestado'),(2,'Em Manutenção'),(3,'Reservado'),(4,'Disponível'),(5,'Fora de Serviço');
 /*!40000 ALTER TABLE `Estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,15 +159,17 @@ DROP TABLE IF EXISTS `HistoricoEquipamentos`;
 CREATE TABLE `HistoricoEquipamentos` (
   `id_evento` int(32) NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `observacao` varchar(45) COLLATE latin1_general_cs DEFAULT NULL,
+  `usuario` varchar(45) CHARACTER SET latin1 NOT NULL,
   `EquipamentosMonitorados_patrimonio` bigint(20) NOT NULL,
-  `Requisicoes_id_requisicao` int(32) NOT NULL,
+  `Estados_id_estado` int(8) NOT NULL,
   PRIMARY KEY (`id_evento`),
   UNIQUE KEY `id_evento_UNIQUE` (`id_evento`),
-  KEY `fk_HistoricoEquipamentos_Requisicoes1_idx` (`Requisicoes_id_requisicao`),
   KEY `fk_HistoricoEquipamentos_EquipamentosMonitorados1_idx` (`EquipamentosMonitorados_patrimonio`),
+  KEY `fk_HistoricoEquipamentos_Estados1_idx` (`Estados_id_estado`),
   CONSTRAINT `fk_HistoricoEquipamentos_EquipamentosMonitorados1` FOREIGN KEY (`EquipamentosMonitorados_patrimonio`) REFERENCES `EquipamentosMonitorados` (`patrimonio`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_HistoricoEquipamentos_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_HistoricoEquipamentos_Estados1` FOREIGN KEY (`Estados_id_estado`) REFERENCES `Estados` (`id_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,4 +247,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-18 22:09:20
+-- Dump completed on 2017-07-26 22:32:47

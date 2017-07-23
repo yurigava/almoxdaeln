@@ -54,55 +54,73 @@ function *insertEquips(action) {
       axios.post,
       action.serverUrl + '/api/insertEquips',
       {
+        usuario: action.usuario,
         patrimonios: patrimonios,
         id_tipo:     action.id_tipo,
       },
       {withCredentials:true}
     );
-    if(response.data === "ok") {
-      let singular = "O equipamento foi registrado com sucesso.";
-      let plural = "Os equipamentos foram registrados com sucesso.";
-      yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
-      yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
-    }
-    else if(response.data.code === "ER_DUP_ENTRY") {
-      let singular = "O equipamento já está registrado.";
-      let plural = "Algum dos equipamentos já está registrado.";
-      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-      yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
-      yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
-        equipNumber: response.data.instance.patrimonio.toString(),
-        errorCode: response.data.code
-      });
-    }
-    else if(response.data.code === "ER_WARN_DATA_OUT_OF_RANGE") {
+    if(!response) {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({
-        type: 'SET_SUBMISSION_MESSAGE',
-        message: "O código de patrimônio de algum dos equipamentos excedeu o limite de tamanho."
+        type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor."
       });
-      yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
-        equipNumber: response.data.instance.patrimonio,
-        errorCode: response.data.code
-      });
+      yield put({ type: 'SET_LOADING', isLoading: false });
+      return;
     }
-    else {
-      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-      yield put({
-        type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
-      });
-      yield put({
-        type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
-        equipNumber: response.data.instance.patrimonio,
-        errorCode: response.data.code
-      });
+
+    let singular;
+    let plural;
+    switch(response.data.code) {
+      case "SUCCESS":
+        singular = "O equipamento foi registrado com sucesso.";
+        plural = "Os equipamentos foram registrados com sucesso.";
+        yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
+        break;
+
+      case "ER_DUP_ENTRY":
+        singular = "Um equipamento já está registrado.";
+        plural = "Alguns dos equipamentos já estão registrados.";
+        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: response.data.notFound.length > 1 ? plural : singular});
+        yield put({
+          type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+          equipNumbers: response.data.notFound.map(nf => nf.toString()),
+          errorCode: response.data.code
+        });
+        break;
+
+      case "ER_WARN_DATA_OUT_OF_RANGE":
+        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+        yield put({
+          type: 'SET_SUBMISSION_MESSAGE',
+          message: "O código de patrimônio de algum dos equipamentos excedeu o limite de tamanho."
+        });
+        yield put({
+          type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+          equipNumbers: Array.from(response.data.instance.patrimonio),
+          errorCode: response.data.code
+        });
+        break;
+
+      default:
+        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+        yield put({
+          type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
+        });
+        if(response.data.instance.patrimonio)
+          yield put({
+            type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
+            equipNumber: Array.from(response.data.instance.patrimonio),
+            errorCode: response.data.code
+          });
+        break;
     }
   }
   catch (e) {
     yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-    yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
+    yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor: " + e.toString()});
   }
   yield put({ type: 'SET_LOADING', isLoading: false });
 }

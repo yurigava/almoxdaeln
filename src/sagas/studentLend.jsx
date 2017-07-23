@@ -1,56 +1,30 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 
-function *insertOrGetRequisicao(serverUrl, usuario) {
-  try {
-    const response = yield call(
-      axios.post,
-      serverUrl + '/api/getOrInsertRequisicaoStudentId',
-      {
-        shouldCreate: true,
-        usuario: usuario,
-      },
-      {withCredentials:true}
-    );
-    switch(response.data.code) {
-      case "SUCCESS":
-        return response.data.idRequisicao;
-
-      default:
-        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro desconhecido: "+ response.data.code});
-        return -1;
-    }
-  }
-  catch(e) {
-    yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-    yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
-    return -1;
-  }
-}
-
 function *insertStudentLend(action) {
   yield put({ type: 'SET_LOADING', isLoading: true });
-  const idRequisicao = yield call(
-    insertOrGetRequisicao,
-    action.serverUrl,
-    action.usuario
-  );
-  if(idRequisicao < 1) {
-    yield put({ type: 'SET_LOADING', isLoading: false });
-    return;
-  }
   try {
     const patrioniosUnique = Array.from(new Set(action.patrimonios));
     const response = yield call(
       axios.post,
       action.serverUrl + '/api/studentLend',
       {
-        requisicao: idRequisicao,
-        patrimonios: patrioniosUnique
+        observacao: null,
+        usuario: action.usuario,
+        patrimonios: patrioniosUnique,
+        shouldAddToRequest: action.shouldAddToRequest,
       },
       {withCredentials:true}
     );
+    if(!response) {
+      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+      yield put({
+        type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor."
+      });
+      yield put({ type: 'SET_LOADING', isLoading: false });
+      return;
+    }
+
     let singular
     let plural
     switch(response.data.code) {
@@ -61,10 +35,25 @@ function *insertStudentLend(action) {
         else
           message = "Empréstimo efetuado com sucesso.\\nO seguinte equipamento foi emprestado:\\n";
         response.data.registeredEquips.forEach(equip => {
-          message = message + equip.familia + " " + equip.tipo + "\\n";
+          message = message + equip.pat + " - " + equip.familia + " " + equip.tipo + "\\n";
         });
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
+        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
+        break;
+
+      case "WAR_ALREADY_LENT":
+        if(response.data.alreadyLentEquips.length > 1)
+          message = "AVISO: Este usuário ainda não devolveu os seguintes equipamentos:\\n" ;
+        else
+          message = "AVISO: Este usuário ainda não devolveu o seguinte equipamento:\\n";
+        response.data.alreadyLentEquips.forEach(equip => {
+          message = message + equip.pat + " - " + equip.familia + " " + equip.tipo + "\\n";
+        });
+        message = message + "Deseja emprestar mesmo assim?";
+        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
+        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: true });
         break;
 
       case "ER_NOT_FOUND":
@@ -77,6 +66,7 @@ function *insertStudentLend(action) {
           equipNumbers: response.data.notFound,
           errorCode: response.data.code
         });
+        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
         break;
 
       case "ER_NOT_AVAILABLE":
@@ -89,17 +79,20 @@ function *insertStudentLend(action) {
           equipNumbers: response.data.notAvailable,
           errorCode: response.data.code
         });
+        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
         break;
 
       default:
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro deconhecido, código: " + response.data.code });
+        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
         break;
     }
   }
   catch(e) {
     yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
     yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
+    yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
   }
   yield put({ type: 'SET_LOADING', isLoading: false });
 }

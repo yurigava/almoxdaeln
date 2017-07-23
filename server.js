@@ -20,6 +20,20 @@ var database = "almoxdaeln_db";
 var username = "jquery";
 var password = "Test123!.";
 
+var sqlQueryGetLentEquips = `SELECT EquipamentosMonitorados_patrimonio FROM
+    (SELECT t1.EquipamentosMonitorados_patrimonio, t1.Estados_id_estado, t1.usuario FROM HistoricoEquipamentos t1
+      JOIN (
+        SELECT EquipamentosMonitorados_patrimonio, usuario, MAX(timestamp) timestamp
+        FROM HistoricoEquipamentos
+        WHERE usuario = ?
+        GROUP BY EquipamentosMonitorados_patrimonio
+      ) t2
+    ON t1.EquipamentosMonitorados_patrimonio = t2.EquipamentosMonitorados_patrimonio
+    AND t1.timestamp = t2.timestamp
+    AND t1.usuario = t2.usuario) LastStates
+  WHERE
+    Estados_id_estado = 1`;
+
 require('./config/passport')(passport); // pass passport for configuration
 
 // set up our express application
@@ -97,7 +111,9 @@ app.get('/api/getTipos', function(req, res) {
 
 app.post('/api/insertFamilia', function(req, res) {
   req.models.Familias.exists(req.body, function(errExists, doesFamiliaExists) {
-    if(!doesFamiliaExists) {
+    if(errExists)
+      res.send(errExists);
+    else if(!doesFamiliaExists) {
       req.models.Familias.create(req.body, function(errCreate, familia) {
         if(errCreate)
           res.send(errCreate);
@@ -111,6 +127,34 @@ app.post('/api/insertFamilia', function(req, res) {
     }
     else { //Familia Exists
       res.send({ code: "ER_DUP_ENTRY" });
+    }
+  });
+});
+
+app.post('/api/updateFamilia', function(req, res) {
+  var familiaNewName = req.body.familiaNewName;
+  var familia = req.body.familia;
+  req.models.Familias.exists({familia: familiaNewName}, function(errExists, doesFamiliaExists) {
+    if(errExists)
+      res.send(errExists);
+    else if(!doesFamiliaExists) {
+      req.models.Familias.get(familia, function(errGet, oldFamilia) {
+        if(errGet)
+          res.send(errGet);
+        else {
+          var oldName = oldFamilia.familia;
+          oldFamilia.familia = familiaNewName;
+          oldFamilia.save(function(err) {
+            if(err)
+              res.send(err);
+            else
+              res.send({code: "SUCCESS", oldName: oldName})
+          });
+        }
+      });
+    }
+    else {
+      res.send({code: "ER_DUP_ENTRY"})
     }
   });
 });
@@ -133,42 +177,70 @@ app.post('/api/insertTipo', function(req, res) {
   });
 });
 
-app.post('/api/getOrInsertRequisicaoStudentId', function(req,res) {
+app.get('/api/getEstados', function(req, res) {
+  req.models.Estados.find({}, function(err, estados) {
+    if(err)
+      res.send(err);
+    else
+      res.send(estados);
+  });
+});
+
+app.post('/api/updateEquipState', function(req, res) {
   var usuario = req.body.usuario;
-  req.models.Requisicoes.one(
-    { usuario: usuario, EstadosReq_id_estadosReq: 1 },
-    function(err, existentRequisicao) {
-      if(err)
-        res.send(err);
-      else if(existentRequisicao)
-        res.send({
-          code: "SUCCESS",
-          idRequisicao: existentRequisicao.id_requisicao,
-        });
-      else if(req.body.shouldCreate) {
-        var requisicao = {
-          usuario: req.body.usuario,
-          EstadosReq_id_estadosReq: 1,
-        };
-        req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
-          if(err)
-            res.send(err);
-          else
-            res.send({
-              code: "SUCCESS",
-              idRequisicao: createdRequisicao.id_requisicao,
-            });
-        });
-      }
+  var patrimonio = req.body.patrimonio;
+  var reqEstado = req.body.estado;
+  var observacao = req.body.observacao;
+  req.models.EquipamentosMonitorados.get(patrimonio, function(err, equip) {
+    if(!equip)
+      res.send({code: "ER_NOT_FOUND"});
+    else if(err)
+      res.send(err);
+    else {
+      if(equip.Estados_id_estado === reqEstado)
+        res.send({code: "ER_SAME_STATE"});
       else {
-        res.send({
-          code: "ER_NOT_FOUND"
+        req.models.Estados.get(reqEstado, function(err, estado) {
+          equip.setEstado(estado, function(e) {});
+          var eventsToCreate = [{
+            observacao: observacao,
+            usuario: usuario,
+            EquipamentosMonitorados_patrimonio: patrimonio,
+            Estados_id_estado: estado.id_estado
+          }];
+          req.models.HistoricoEquipamentos.one( //If equip is lent, fix user pendency
+            {
+              EquipamentosMonitorados_patrimonio: patrimonio,
+              Estados_id_estado: 1
+            },
+            ["timestamp", "Z"],
+            1,
+            function (err, lastEvent) {
+              if(lastEvent.length !== null)
+                eventsToCreate.unshift({
+                  observacao: "Situação Regularizada",
+                  usuario: lastEvent.usuario,
+                  EquipamentosMonitorados_patrimonio: patrimonio,
+                  Estados_id_estado: 4
+                });
+              req.models.HistoricoEquipamentos.create(eventsToCreate, function(err) {
+                if(err)
+                  res.send(err);
+                else
+                  res.send({
+                    code: "SUCCESS",
+                    estado: estado.estado,
+                    familia: equip.Tipo.Familia.familia,
+                    tipo: equip.Tipo.tipo,
+                  });
+              });
+            }
+          );
         });
       }
     }
-  );
+  });
 });
-
 
 function findNotContainedAInB(A, B) {
   var missingElements = [];
@@ -179,31 +251,36 @@ function findNotContainedAInB(A, B) {
   return missingElements;
 }
 
-function registerHistoricoEvent(req, res, stateToSet, sendResponse) {
+function changeEquipState(req, res, stateToSet, sendResponse) {
   var patrimonios = req.body.patrimonios;
-  var equipsToInsert = [];
-  patrimonios.forEach(function(pat) {
-    equipsToInsert.push({
-      Requisicoes_id_requisicao: req.body.requisicao,
-      EquipamentosMonitorados_patrimonio: pat,
-    });
-  });
+  var observacao = req.body.observacao;
+  var usuario = req.body.usuario;
+  var equipsToRegister = [];
 
-  req.models.HistoricoEquipamentos.create(equipsToInsert, function(err) {
-    if(err) {
-      if(sendResponse)
-        res.send(err);
-      else
-        return -1;
-    }
-    else {
-      req.models.Estados.one({estado: stateToSet}, function(err, state) {
+  req.models.Estados.one({estado: stateToSet}, function(err, state) {
+    patrimonios.forEach(function(pat) {
+      equipsToRegister.push({
+        observacao: observacao,
+        usuario: usuario,
+        Estados_id_estado: state.id_estado,
+        EquipamentosMonitorados_patrimonio: pat,
+      });
+    });
+    req.models.HistoricoEquipamentos.create(equipsToRegister, function(err) {
+      if(err) {
+        if(sendResponse)
+          res.send(err);
+        else
+          return -1;
+      }
+      else {
         req.models.EquipamentosMonitorados.find(
           { patrimonio: patrimonios },
           function(err, equips) {
             var registeredEquips = [];
             equips.forEach(function (equip) {
               registeredEquips.push({
+                pat: equip.patrimonio,
                 familia: equip.Tipo.Familia.familia,
                 tipo: equip.Tipo.tipo,
               });
@@ -215,13 +292,15 @@ function registerHistoricoEvent(req, res, stateToSet, sendResponse) {
               return 1;
           }
         );
-      });
-    }
+      }
+    });
   });
 }
 
 app.post('/api/studentLend', function(req, res) {
   var patrimonios = req.body.patrimonios;
+  var usuario = req.body.usuario;
+  var shouldAddToRequest = req.body.shouldAddToRequest;
   req.models.EquipamentosMonitorados.find(
     { patrimonio: patrimonios },
     function (err, equips) {
@@ -242,8 +321,34 @@ app.post('/api/studentLend', function(req, res) {
           });
           if(notAvailableEquips.length > 0)
             res.send({code: "ER_NOT_AVAILABLE", notAvailable: notAvailableEquips});
-          else
-            registerHistoricoEvent(req, res, "Emprestado", true);
+          else {
+            req.db.driver.execQuery(sqlQueryGetLentEquips, [usuario], function (err, equipsInRequest) {
+              if(err)
+                res.send(err);
+              else if(!shouldAddToRequest && equipsInRequest.length > 0) {
+                var alreadyLentPats = equipsInRequest.map(equip => equip.EquipamentosMonitorados_patrimonio);
+                req.models.EquipamentosMonitorados.find({patrimonio: alreadyLentPats}, function(err, equips) {
+                  if(err)
+                    res.send(err);
+                  var alreadyLentInfo = [];
+                  equips.forEach(function (equip) {
+                    if(equip.Estado.estado === "Emprestado")
+                      alreadyLentInfo.push({
+                        pat: equip.patrimonio,
+                        familia: equip.Tipo.Familia.familia,
+                        tipo: equip.Tipo.tipo,
+                      });
+                  });
+                  if(alreadyLentInfo.length > 0)
+                    res.send({code: "WAR_ALREADY_LENT", alreadyLentEquips: alreadyLentInfo});
+                  else
+                    changeEquipState(req, res, "Emprestado", true);
+                });
+              }
+              else
+                changeEquipState(req, res, "Emprestado", true);
+            });
+          }
         }
       }
     }
@@ -251,68 +356,42 @@ app.post('/api/studentLend', function(req, res) {
 });
 
 app.post('/api/studentReturn', function(req, res) {
-  var patrimonios = req.body.patrimonios;
-  var requisicao = req.body.requisicao;
-  req.models.HistoricoEquipamentos.find(
-    { Requisicoes_id_requisicao: requisicao },
+  var patrimoniosReturning = req.body.patrimonios;
+  var usuario = req.body.usuario;
+  req.db.driver.execQuery(
+    sqlQueryGetLentEquips,
+    [usuario],
     function (err, equipsInRequest) {
       if(err)
         res.send(err);
       else {
-        var patsInRequest = equipsInRequest.map(function (equip) {
-          return equip.EquipamentosMonitorados_patrimonio;
-        });
-
-        var patsWithCount = {};
-        for(var i=0; i < patsInRequest.length; i++) {
-          if(!patsWithCount[patsInRequest[i]])
-            patsWithCount[patsInRequest[i]] = 0;
-          ++patsWithCount[patsInRequest[i]];
-        }
-
-        var uniquePats = Object.keys(patsWithCount);
-        var uniquePatsNumber = uniquePats.map(function (pat) {
-          return Number(pat);
-        });
-        var notInRequisicao = findNotContainedAInB(patrimonios, uniquePatsNumber);
-        if(notInRequisicao.length > 0) {
+        var patrimoniosInRequest = equipsInRequest.map(equip => equip.EquipamentosMonitorados_patrimonio);
+        var notInRequisicao = findNotContainedAInB(patrimoniosReturning, patrimoniosInRequest);
+        if(notInRequisicao.length > 0)
           res.send({code: "ER_NOT_FOUND", notFound: notInRequisicao});
-        }
         else {
-          var inUse = uniquePatsNumber.filter(function(pat) {
-            return (patsWithCount[pat] % 2) === 1; //Odd number of occurences = still in use
-          });
-          var notReturned = findNotContainedAInB(inUse, patrimonios);
+          var notReturned = findNotContainedAInB(patrimoniosInRequest, patrimoniosReturning);
 
-          registerHistoricoEvent(req, res, "Disponível", false);
+          changeEquipState(req, res, "Disponível", false);
 
-          req.models.EstadosReq.one({estadoReq: "Devolvido"}, function(err, state) {
-            req.models.Requisicoes.get(Number(requisicao), function (err, requisicaoNode) {
+          if(notReturned.length > 0) {
+            req.models.EquipamentosMonitorados.find({patrimonio: notReturned}, function(err, equips) {
               if(err)
                 res.send(err);
-              else {
-                if(notReturned.length > 0) {
-                  req.models.EquipamentosMonitorados.find({patrimonio: notReturned}, function(err, equips) {
-                    if(err)
-                      res.send(err);
-                    var notReturnedInfo = [];
-                    equips.forEach(function (equip) {
-                      notReturnedInfo.push({
-                        pat: equip.patrimonio,
-                        familia: equip.Tipo.Familia.familia,
-                        tipo: equip.Tipo.tipo,
-                      });
-                    });
-                    res.send({code: "WAR_MISSING_EQUIPS", missingEquips: notReturnedInfo});
-                  });
-                }
-                else {
-                  requisicaoNode.setEstadoReq(state, function(err) {});
-                  res.send({code: "SUCCESS"})
-                }
-              }
+              var notReturnedInfo = [];
+              equips.forEach(function (equip) {
+                notReturnedInfo.push({
+                  pat: equip.patrimonio,
+                  familia: equip.Tipo.Familia.familia,
+                  tipo: equip.Tipo.tipo,
+                });
+              });
+              res.send({code: "WAR_MISSING_EQUIPS", missingEquips: notReturnedInfo});
             });
-          });
+          }
+          else {
+            res.send({code: "SUCCESS"})
+          }
         }
       }
     }
@@ -320,19 +399,48 @@ app.post('/api/studentReturn', function(req, res) {
 });
 
 app.post('/api/insertEquips', function(req, res) {
-  var equipsToInsert = [];
-  req.body.patrimonios.forEach(function(pat) {
-    equipsToInsert.push({
-      patrimonio: pat,
-      Tipos_id_tipo: req.body.id_tipo,
-      Estados_id_estado: 4
-    });
-  });
-  req.models.EquipamentosMonitorados.create(equipsToInsert, function(err) {
+  var patrimonios = req.body.patrimonios;
+  req.models.EquipamentosMonitorados.find({patrimonio: patrimonios}, function(err, existentPats) {
     if(err)
-      res.send(err);
-    else
-      res.send('ok');
+      res.send(err)
+    else if (existentPats.length > 0) {
+      var existentEquipsNumber = existentPats.map(function (equip) {
+        return equip.patrimonio;
+      });
+      res.send({
+        code: "ER_DUP_ENTRY",
+        notFound: existentEquipsNumber
+      });
+    }
+    else {
+      var equipsToInsert = [];
+      var historyEntries = [];
+      patrimonios.forEach(function(pat) {
+        equipsToInsert.push({
+          patrimonio: pat,
+          Tipos_id_tipo: req.body.id_tipo,
+          Estados_id_estado: 4
+        });
+        historyEntries.push({
+          observacao: "Criação",
+          usuario: req.body.usuario,
+          EquipamentosMonitorados_patrimonio: pat,
+          Estados_id_estado: 4
+        });
+      });
+      req.models.EquipamentosMonitorados.create(equipsToInsert, function(err) {
+        if(err)
+          res.send(err);
+        else {
+          req.models.HistoricoEquipamentos.create(historyEntries, function(err) {
+            if(err)
+              res.send(err);
+            else
+              res.send({code: "SUCCESS"});
+          });
+        }
+      });
+    }
   });
 });
 
