@@ -133,6 +133,39 @@ app.post('/api/insertTipo', function(req, res) {
   });
 });
 
+app.get('/api/getEstados', function(req, res) {
+  req.models.Estados.find({}, function(err, estados) {
+    if(err)
+      res.send(err);
+    else
+      res.send(estados);
+  });
+});
+
+app.post('/api/updateEquipState', function(req, res) {
+  req.models.EquipamentosMonitorados.get(req.body.patrimonio, function(err, equip) {
+    if(err)
+      res.send(err);
+    else if(equip === null)
+      res.send({code: "ER_NOT_FOUND"});
+    else {
+      if(equip.Estados_id_estado === req.body.estado)
+        res.send({code: "ER_SAME_STATE"});
+      else {
+        req.models.Estados.get(req.body.estado, function(err, estado) {
+          equip.setEstado(estado, function(e) {});
+          res.send({
+            code: "SUCCESS",
+            estado: estado.estado,
+            familia: equip.Tipo.Familia.familia,
+            tipo: equip.Tipo.tipo,
+          });
+        });
+      }
+    }
+  });
+});
+
 app.post('/api/getOrInsertRequisicaoStudentId', function(req,res) {
   var usuario = req.body.usuario;
   req.models.Requisicoes.one(

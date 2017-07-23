@@ -86,7 +86,7 @@ CREATE TABLE `Estados` (
   `estado` varchar(30) NOT NULL,
   PRIMARY KEY (`id_estado`),
   UNIQUE KEY `id_estado_UNIQUE` (`id_estado`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +95,7 @@ CREATE TABLE `Estados` (
 
 LOCK TABLES `Estados` WRITE;
 /*!40000 ALTER TABLE `Estados` DISABLE KEYS */;
-INSERT INTO `Estados` VALUES (1,'Emprestado'),(2,'Em Manutenção'),(3,'Reservado'),(4,'Disponível');
+INSERT INTO `Estados` VALUES (1,'Emprestado'),(2,'Em Manutenção'),(3,'Reservado'),(4,'Disponível'),(5,'Fora de Serviço');
 /*!40000 ALTER TABLE `Estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -245,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-18 22:09:20
+-- Dump completed on 2017-07-21 21:05:04
