@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `ControlePatrimonio`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `ControlePatrimonio` (
   `id_ControlePatrimonio` int(32) NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -33,7 +33,7 @@ CREATE TABLE `ControlePatrimonio` (
   KEY `fk_ControlePatrimonio_Estados1_idx` (`Estados_id_estado`),
   CONSTRAINT `fk_ControlePatrimonio_EquipamentosMonitorados1` FOREIGN KEY (`EquipamentosMonitorados_patrimonio`) REFERENCES `EquipamentosMonitorados` (`patrimonio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ControlePatrimonio_Estados1` FOREIGN KEY (`Estados_id_estado`) REFERENCES `Estados` (`id_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,7 +51,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EquipamentosMonitorados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EquipamentosMonitorados` (
   `patrimonio` bigint(20) NOT NULL,
   `Estados_id_estado` int(8) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE `EquipamentosMonitorados` (
   KEY `fk_EquipamentosMonitorados_Estados1_idx` (`Estados_id_estado`),
   CONSTRAINT `fk_EquipamentosMonitorados_Estados1` FOREIGN KEY (`Estados_id_estado`) REFERENCES `Estados` (`id_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_EquipamentosMonitorados_Tipos1` FOREIGN KEY (`Tipos_id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +80,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EquipamentosRequisicao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EquipamentosRequisicao` (
   `id_EquipamentoRequisicao` int(32) NOT NULL AUTO_INCREMENT,
   `quantidade` int(8) NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE `EquipamentosRequisicao` (
   KEY `fk_EquipamentosRequisicao_Tipos1_idx` (`Tipos_Id_tipo`),
   CONSTRAINT `fk_EquipamentosRequisicao_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_EquipamentosRequisicao_Tipos1` FOREIGN KEY (`Tipos_Id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -110,13 +110,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Estados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Estados` (
   `id_estado` int(8) NOT NULL AUTO_INCREMENT,
   `estado` varchar(30) NOT NULL,
   PRIMARY KEY (`id_estado`),
   UNIQUE KEY `id_estado_UNIQUE` (`id_estado`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,13 +135,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EstadosReq`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EstadosReq` (
   `id_estadosReq` int(8) NOT NULL AUTO_INCREMENT,
   `estadoReq` varchar(30) NOT NULL,
   PRIMARY KEY (`id_estadosReq`),
   UNIQUE KEY `id_estados_Req_UNIQUE` (`id_estadosReq`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,13 +160,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Familias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Familias` (
   `id_familia` int(32) NOT NULL AUTO_INCREMENT,
   `familia` varchar(50) NOT NULL,
   PRIMARY KEY (`id_familia`),
   UNIQUE KEY `id_familia_UNIQUE` (`id_familia`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +185,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `HistoricoEquipamentos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `HistoricoEquipamentos` (
   `id_evento` int(32) NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -197,7 +197,7 @@ CREATE TABLE `HistoricoEquipamentos` (
   KEY `fk_HistoricoEquipamentos_EquipamentosMonitorados1_idx` (`EquipamentosMonitorados_patrimonio`),
   CONSTRAINT `fk_HistoricoEquipamentos_EquipamentosMonitorados1` FOREIGN KEY (`EquipamentosMonitorados_patrimonio`) REFERENCES `EquipamentosMonitorados` (`patrimonio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_HistoricoEquipamentos_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +215,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Requisicoes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Requisicoes` (
   `id_requisicao` int(32) NOT NULL AUTO_INCREMENT,
   `materia` varchar(45) DEFAULT NULL,
@@ -226,7 +226,7 @@ CREATE TABLE `Requisicoes` (
   UNIQUE KEY `id_evento_UNIQUE` (`id_requisicao`),
   KEY `fk_Requisicoes_EstadosReq1_idx` (`EstadosReq_id_estadosReq`),
   CONSTRAINT `fk_Requisicoes_EstadosReq1` FOREIGN KEY (`EstadosReq_id_estadosReq`) REFERENCES `EstadosReq` (`id_estadosReq`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +244,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Tipos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Tipos` (
   `id_tipo` int(32) NOT NULL AUTO_INCREMENT,
   `tipo` varchar(50) NOT NULL,
@@ -253,7 +253,7 @@ CREATE TABLE `Tipos` (
   UNIQUE KEY `id_tipo_UNIQUE` (`id_tipo`),
   KEY `fk_Tipos_Familias1_idx` (`Familias_id_familia`),
   CONSTRAINT `fk_Tipos_Familia1` FOREIGN KEY (`Familias_id_familia`) REFERENCES `Familias` (`id_familia`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
