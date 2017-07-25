@@ -6,7 +6,7 @@ const initialState =
   selectedFamilia: null,
   isMissingTipo: false,
   isMissingFamilia: false,
-  errorCauseEquipNumber: "",
+  errorCauseEquipNumbers: [],
   errorCode: "",
   infoNumber: 0
 }
@@ -16,7 +16,7 @@ const addEquip = (state = initialState, action) => {
     case 'SET_INSERT_EQUIP_ERROR_DESCRIPTION':
       return (
         update(state, {
-          errorCauseEquipNumber: {$set: action.equipNumber},
+          errorCauseEquipNumbers: {$set: action.equipNumbers},
           errorCode: {$set: action.errorCode},
         })
       )

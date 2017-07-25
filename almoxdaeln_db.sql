@@ -16,6 +16,36 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `ControlePatrimonio`
+--
+
+DROP TABLE IF EXISTS `ControlePatrimonio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ControlePatrimonio` (
+  `id_ControlePatrimonio` int(32) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `EquipamentosMonitorados_patrimonio` bigint(20) NOT NULL,
+  `Estados_id_estado` int(8) NOT NULL,
+  PRIMARY KEY (`id_ControlePatrimonio`),
+  UNIQUE KEY `id_ControlePatrimonio_UNIQUE` (`id_ControlePatrimonio`),
+  KEY `fk_ControlePatrimonio_EquipamentosMonitorados1_idx` (`EquipamentosMonitorados_patrimonio`),
+  KEY `fk_ControlePatrimonio_Estados1_idx` (`Estados_id_estado`),
+  CONSTRAINT `fk_ControlePatrimonio_EquipamentosMonitorados1` FOREIGN KEY (`EquipamentosMonitorados_patrimonio`) REFERENCES `EquipamentosMonitorados` (`patrimonio`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_ControlePatrimonio_Estados1` FOREIGN KEY (`Estados_id_estado`) REFERENCES `Estados` (`id_estado`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ControlePatrimonio`
+--
+
+LOCK TABLES `ControlePatrimonio` WRITE;
+/*!40000 ALTER TABLE `ControlePatrimonio` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ControlePatrimonio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `EquipamentosMonitorados`
 --
 
@@ -245,4 +275,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-21 21:05:04
+-- Dump completed on 2017-07-25  0:30:40

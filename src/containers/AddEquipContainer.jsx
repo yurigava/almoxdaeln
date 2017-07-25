@@ -22,7 +22,7 @@ const mapStateToProps = (state) => {
     isMissingFamilia: state.addEquip.isMissingFamilia,
     tipo: state.addEquip.selectedTipo,
     familia: state.addEquip.selectedFamilia,
-    errorCauseEquipNumber: state.addEquip.errorCauseEquipNumber,
+    errorCauseEquipNumbers: state.addEquip.errorCauseEquipNumbers,
     errorCode: state.addEquip.errorCode,
     infoNumber: state.addEquip.infoNumber,
   }
@@ -36,9 +36,6 @@ const mapDispatchToProps = (dispatch) => {
     clearSubmissionMessage: () => {
       dispatch(setSubmissionMessage(""))
     },
-    clearEquipNumberError: () => {
-      dispatch(setErrorDescription("", ""))
-    },
     clearMissingFieldsError: () => {
       dispatch(setMissingFieldsError(false, false))
     },
@@ -50,6 +47,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setInfoNumber: (infoNumber) => {
       dispatch(setInfoNumber(infoNumber))
+    },
+    clearErrorDescription: () => {
+      dispatch(setErrorDescription([], ""))
     }
   }
 }

@@ -1,7 +1,7 @@
-export const setErrorDescription = (equipNumber, errorCode) => {
+export const setErrorDescription = (equipNumbers, errorCode) => {
   return {
     type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
-    equipNumber,
+    equipNumbers,
     errorCode
   }
 }

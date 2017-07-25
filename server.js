@@ -143,22 +143,33 @@ app.get('/api/getEstados', function(req, res) {
 });
 
 app.post('/api/updateEquipState', function(req, res) {
-  req.models.EquipamentosMonitorados.get(req.body.patrimonio, function(err, equip) {
-    if(err)
-      res.send(err);
-    else if(equip === null)
+  var patrimonio = req.body.patrimonio;
+  var reqEstado = req.body.estado
+  req.models.EquipamentosMonitorados.get(patrimonio, function(err, equip) {
+    if(!equip)
       res.send({code: "ER_NOT_FOUND"});
+    else if(err)
+      res.send(err);
     else {
-      if(equip.Estados_id_estado === req.body.estado)
+      if(equip.Estados_id_estado === reqEstado)
         res.send({code: "ER_SAME_STATE"});
       else {
-        req.models.Estados.get(req.body.estado, function(err, estado) {
+        req.models.Estados.get(reqEstado, function(err, estado) {
           equip.setEstado(estado, function(e) {});
-          res.send({
-            code: "SUCCESS",
-            estado: estado.estado,
-            familia: equip.Tipo.Familia.familia,
-            tipo: equip.Tipo.tipo,
+          req.models.ControlePatrimonio.create(
+            {
+              EquipamentosMonitorados_patrimonio: patrimonio,
+              Estados_id_estado: estado.id_estado
+            }, function(err) {
+              if(err)
+                res.send(err);
+              else
+                res.send({
+                  code: "SUCCESS",
+                  estado: estado.estado,
+                  familia: equip.Tipo.Familia.familia,
+                  tipo: equip.Tipo.tipo,
+                });
           });
         });
       }
@@ -353,19 +364,46 @@ app.post('/api/studentReturn', function(req, res) {
 });
 
 app.post('/api/insertEquips', function(req, res) {
-  var equipsToInsert = [];
-  req.body.patrimonios.forEach(function(pat) {
-    equipsToInsert.push({
-      patrimonio: pat,
-      Tipos_id_tipo: req.body.id_tipo,
-      Estados_id_estado: 4
-    });
-  });
-  req.models.EquipamentosMonitorados.create(equipsToInsert, function(err) {
+  var patrimonios = req.body.patrimonios;
+  req.models.EquipamentosMonitorados.find({patrimonio: patrimonios}, function(err, existentPats) {
     if(err)
-      res.send(err);
-    else
-      res.send('ok');
+      res.send(err)
+    else if (existentPats.length > 0) {
+      var existentEquipsNumber = existentPats.map(function (equip) {
+        return equip.patrimonio;
+      });
+      res.send({
+        code: "ER_DUP_ENTRY",
+        notFound: existentEquipsNumber
+      });
+    }
+    else {
+      var equipsToInsert = [];
+      var equipsToControl = [];
+      patrimonios.forEach(function(pat) {
+        equipsToInsert.push({
+          patrimonio: pat,
+          Tipos_id_tipo: req.body.id_tipo,
+          Estados_id_estado: 4
+        });
+        equipsToControl.push({
+          EquipamentosMonitorados_patrimonio: pat,
+          Estados_id_estado: 4
+        });
+      });
+      req.models.EquipamentosMonitorados.create(equipsToInsert, function(err) {
+        if(err)
+          res.send(err);
+        else {
+          req.models.ControlePatrimonio.create(equipsToControl, function(err) {
+            if(err)
+              res.send(err);
+            else
+              res.send({code: "SUCCESS"});
+          });
+        }
+      });
+    }
   });
 });
 

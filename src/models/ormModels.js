@@ -1,4 +1,17 @@
 module.exports = function(db, cb) {
+  var ControlePatrimonio = db.define("ControlePatrimonio", {
+    id_ControlePatrimonio: {
+      type: 'integer',
+      unique: true,
+      key: true
+    },
+    timestamp: {
+      type: 'date',
+      time: true,
+      required: false
+    }
+  });
+
   var EquipamentosMonitorados = db.define("EquipamentosMonitorados", {
     patrimonio: {
       type: 'integer',
@@ -108,6 +121,16 @@ module.exports = function(db, cb) {
       size: 50,
       required: true
     }
+  });
+
+  ControlePatrimonio.hasOne("EquipamentoMonitorado", EquipamentosMonitorados, {
+    required: true,
+    field: "EquipamentosMonitorados_patrimonio",
+  });
+
+  ControlePatrimonio.hasOne("Estado", Estados, {
+    required: true,
+    field: "Estados_id_estado",
   });
 
   EquipamentosMonitorados.hasOne("Estado", Estados, {
