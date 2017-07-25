@@ -39,7 +39,6 @@ export default class AddTipo extends React.Component {
   componentDidMount() {
     if(this.props.familias.length === 0)
       this.props.getFamilias();
-      this.props.getTipos();
   }
 
   handleCloseDialog() {
@@ -145,6 +144,7 @@ export default class AddTipo extends React.Component {
               "Campo Tipo não pode ser deixado em branco" : ""}
             floatingLabelStyle={{color: 'grey'}}
           />
+          <br/>
           <br/>
           <RaisedButton
             name="submit"
