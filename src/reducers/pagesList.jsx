@@ -11,6 +11,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'changeFamiliaName',
+      linkText: 'Alterar nome de Família'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'addEquips',
       linkText: 'Registrar Equipamentos'
     },
