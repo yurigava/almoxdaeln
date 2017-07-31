@@ -131,9 +131,10 @@ export default class ChangeEquipState extends React.Component {
             value={this.state.estado}
             onChange={this.handleEstadoChange}
             disabled={this.props.isInputDisabled}
+            autoWidth={true}
             errorText={(this.state.isMissingEstado && this.state.estado === null) ?
               "Campo Estado não pode ser deixado em branco" : ""}
-            floatingLabelStyle={{color: 'grey'}}
+            floatingLabelStyle={{left: '0px', color: 'grey'}}
           >
             {this.props.estados.map((estado) => (
               <MenuItem key={estado.id_estado} value={estado.id_estado} primaryText={estado.estado} />
@@ -147,7 +148,7 @@ export default class ChangeEquipState extends React.Component {
             floatingLabelText={"Observação"}
             value={this.state.observacao}
             onChange={this.handleTextFieldChange}
-            floatingLabelStyle={{color: 'grey'}}
+            floatingLabelStyle={{left: '0px', color: 'grey'}}
             multiLine={true}
             disabled={this.props.isInputDisabled}
           />

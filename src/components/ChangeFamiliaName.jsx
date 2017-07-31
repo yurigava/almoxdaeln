@@ -14,18 +14,18 @@ const style = {
 
 const infos = [
   'Selecione uma Família de Equipamentos',
-  'Digite o nome do novo Tipo de Equipamento'
+  'Digite o novo nome da Família'
 ];
 
 const initialState = {
-  isMissingTipo: false,
+  isMissingFamiliaNewName: false,
   isMissingFamilia: false,
-  tipo: "",
+  familiaNewName: "",
   familia: null,
   info: 0
 }
 
-export default class AddTipo extends React.Component {
+export default class ChangeFamiliaName extends React.Component {
 
   constructor(props) {
     super(props);
@@ -44,7 +44,7 @@ export default class AddTipo extends React.Component {
   handleCloseDialog() {
     if(this.props.isDataSubmitted) {
       this.state = initialState;
-      this.props.getTipos();
+      this.props.getFamilias();
     }
     this.props.clearSubmissionMessage();
   }
@@ -61,7 +61,7 @@ export default class AddTipo extends React.Component {
   handleTextFieldChange(event) {
     const value = event.currentTarget.value;
     this.setState(update(this.state, {
-      tipo: {$set: value},
+      familiaNewName: {$set: value},
     }))
   }
 
@@ -72,13 +72,13 @@ export default class AddTipo extends React.Component {
       }))
       return;
     }
-    if(this.state.tipo === "") {
+    if(this.state.familiaNewName === "") {
       this.setState(update(this.state, {
-        isMissingTipo: {$set: true},
+        isMissingFamiliaNewName: {$set: true},
       }))
       return;
     }
-    this.props.insertTipo(this.state.tipo, this.state.familia)
+    this.props.updateFamiliaName(this.state.familia, this.state.familiaNewName)
   }
 
   render () {
@@ -119,7 +119,7 @@ export default class AddTipo extends React.Component {
         >
           <SelectField
             style={style}
-            floatingLabelText="Família"
+            floatingLabelText="Família a ser alterada"
             value={this.state.familia}
             onChange={this.handleFamiliaChange}
             disabled={this.props.isInputDisabled}
@@ -135,14 +135,14 @@ export default class AddTipo extends React.Component {
           &nbsp;
           <TextField
             style={style}
-            name="tipo"
-            hintText="Nome do Novo Tipo"
-            floatingLabelText="Tipo"
-            value={this.state.tipo}
+            name="familia"
+            hintText="Novo nome para a Família"
+            floatingLabelText="Família"
+            value={this.state.familiaNewName}
             disabled={this.props.isInputDisabled}
             onChange={this.handleTextFieldChange}
-            errorText={(this.state.isMissingTipo && this.state.tipo === "") ?
-              "Campo Tipo não pode ser deixado em branco" : ""}
+            errorText={(this.state.isMissingFamiliaNewName && this.state.familiaNewName === "") ?
+              "Campo Família não pode ser deixado em branco" : ""}
             floatingLabelStyle={{color: 'grey'}}
           />
           <br/>
@@ -161,10 +161,9 @@ export default class AddTipo extends React.Component {
   }
 }
 
-AddTipo.propTypes = {
+ChangeFamiliaName.propTypes = {
   getFamilias: PropTypes.func.isRequired,
-  getTipos: PropTypes.func.isRequired,
-  insertTipo: PropTypes.func.isRequired,
+  updateFamiliaName: PropTypes.func.isRequired,
   clearSubmissionMessage: PropTypes.func.isRequired,
   familias: PropTypes.array.isRequired,
   isInputDisabled: PropTypes.bool.isRequired,
