@@ -10,6 +10,7 @@ import StudentLendContainer from './containers/StudentLendContainer.jsx'
 import StudentReturnContainer from './containers/StudentReturnContainer.jsx'
 import ChangeEquipStateContainer from './containers/ChangeEquipStateContainer.jsx'
 import ChangeFamiliaNameContainer from './containers/ChangeFamiliaNameContainer.jsx'
+import ChangeTipoNameContainer from './containers/ChangeTipoNameContainer.jsx'
 import EquipTable from './components/EquipTable.jsx';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -29,6 +30,7 @@ import studentLendSagas from './sagas/studentLend.jsx'
 import studentReturnSagas from './sagas/studentReturn.jsx'
 import changeEquipStateSagas from './sagas/changeEquipState.jsx'
 import changeFamiliaNameSagas from './sagas/changeFamiliaName.jsx'
+import changeTipoNameSagas from './sagas/changeTipoName.jsx'
 
 export const serverUrl = 'http://192.168.0.69:8081';
 
@@ -48,6 +50,7 @@ sagaMiddleware.run(studentLendSagas)
 sagaMiddleware.run(studentReturnSagas)
 sagaMiddleware.run(changeEquipStateSagas)
 sagaMiddleware.run(changeFamiliaNameSagas)
+sagaMiddleware.run(changeTipoNameSagas)
 
 main();
 
@@ -82,6 +85,7 @@ function main() {
             <Route path="/logout" onEnter={logUserOut}/>
             <Route path="/login" component={LoginContainer}/>
             <Route path="/changeFamiliaName" component={ChangeFamiliaNameContainer} onEnter={verifyPermission}/>
+            <Route path="/changeTipoName" component={ChangeTipoNameContainer} onEnter={verifyPermission}/>
             <Route path="/changeEquipState" component={ChangeEquipStateContainer} onEnter={verifyPermission}/>
             <Route path="/studentReturn" component={StudentReturnContainer} onEnter={verifyPermission}/>
             <Route path="/studentLend" component={StudentLendContainer} onEnter={verifyPermission}/>

@@ -21,6 +21,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'changeTipoName',
+      linkText: 'Alterar nome de Tipo'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'addEquips',
       linkText: 'Registrar Equipamentos'
     },
