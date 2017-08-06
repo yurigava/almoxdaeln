@@ -4,7 +4,6 @@ const initialState =
 {
   errorCauseEquipNumbers: [],
   errorCode: "",
-  isYesNoMessage: false,
 }
 
 const studentLend = (state = initialState, action) => {
@@ -14,13 +13,6 @@ const studentLend = (state = initialState, action) => {
         update(state, {
           errorCauseEquipNumbers: {$set: action.equipNumbers},
           errorCode: {$set: action.errorCode},
-        })
-      )
-
-    case 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE':
-      return (
-        update(state, {
-          isYesNoMessage: {$set: action.isYesNoMessage},
         })
       )
 

@@ -8,6 +8,7 @@ const initialState =
   isInputDisabled: false,
   isDataSubmitted: false,
   submissionMessage: "",
+  isYesNoMessage: false,
   pagesList
 }
 
@@ -21,6 +22,13 @@ const appUi = (state = initialState, action) => {
     case 'SET_SUBMISSION_MESSAGE':
       return (
         update(state, {submissionMessage: {$set: action.message}})
+      )
+
+    case 'SET_IS_YES_NO_MESSAGE':
+      return (
+        update(state, {
+          isYesNoMessage: {$set: action.isYesNoMessage},
+        })
       )
 
     case 'SET_DATA_SUBMITTED':

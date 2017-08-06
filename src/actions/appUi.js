@@ -31,3 +31,10 @@ export const setDataSubmitted = (submitted) => {
     submitted
   }
 }
+
+export const setIsYesNoMessage = (isYesNoMessage) => {
+  return {
+    type: 'SET_IS_YES_NO_MESSAGE',
+    isYesNoMessage
+  }
+}

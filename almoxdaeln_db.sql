@@ -52,16 +52,19 @@ DROP TABLE IF EXISTS `EquipamentosRequisicao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EquipamentosRequisicao` (
-  `id_EquipamentoRequisicao` int(32) NOT NULL AUTO_INCREMENT,
+  `id_EquipamentoRequisicao` bigint(20) NOT NULL AUTO_INCREMENT,
   `quantidade` int(8) NOT NULL,
-  `Tipos_Id_tipo` int(32) NOT NULL,
-  `Requisicoes_id_requisicao` int(32) NOT NULL,
+  `Tipos_id_tipo` int(32) DEFAULT NULL,
+  `Familias_id_familia` int(32) NOT NULL,
+  `Requisicoes_id_requisicao` bigint(20) NOT NULL,
   PRIMARY KEY (`id_EquipamentoRequisicao`),
   UNIQUE KEY `id_EquipamentoRequisicao_UNIQUE` (`id_EquipamentoRequisicao`),
+  KEY `fk_EquipamentosRequisicao_Tipos1_idx` (`Tipos_id_tipo`),
+  KEY `fk_EquipamentosRequisicao_Familias1_idx` (`Familias_id_familia`),
   KEY `fk_EquipamentosRequisicao_Requisicoes1_idx` (`Requisicoes_id_requisicao`),
-  KEY `fk_EquipamentosRequisicao_Tipos1_idx` (`Tipos_Id_tipo`),
+  CONSTRAINT `fk_EquipamentosRequisicao_Familias1` FOREIGN KEY (`Familias_id_familia`) REFERENCES `Familias` (`id_familia`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_EquipamentosRequisicao_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_EquipamentosRequisicao_Tipos1` FOREIGN KEY (`Tipos_Id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_EquipamentosRequisicao_Tipos1` FOREIGN KEY (`Tipos_id_tipo`) REFERENCES `Tipos` (`id_tipo`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -83,7 +86,7 @@ DROP TABLE IF EXISTS `Estados`;
 /*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Estados` (
   `id_estado` int(8) NOT NULL AUTO_INCREMENT,
-  `estado` varchar(30) NOT NULL,
+  `estado` varchar(30) COLLATE latin1_general_cs NOT NULL,
   PRIMARY KEY (`id_estado`),
   UNIQUE KEY `id_estado_UNIQUE` (`id_estado`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
@@ -108,7 +111,7 @@ DROP TABLE IF EXISTS `EstadosReq`;
 /*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EstadosReq` (
   `id_estadosReq` int(8) NOT NULL AUTO_INCREMENT,
-  `estadoReq` varchar(30) NOT NULL,
+  `estadoReq` varchar(30) COLLATE latin1_general_cs NOT NULL,
   PRIMARY KEY (`id_estadosReq`),
   UNIQUE KEY `id_estados_Req_UNIQUE` (`id_estadosReq`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
@@ -133,7 +136,7 @@ DROP TABLE IF EXISTS `Familias`;
 /*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Familias` (
   `id_familia` int(32) NOT NULL AUTO_INCREMENT,
-  `familia` varchar(50) NOT NULL,
+  `familia` varchar(50) COLLATE latin1_general_cs NOT NULL,
   PRIMARY KEY (`id_familia`),
   UNIQUE KEY `id_familia_UNIQUE` (`id_familia`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
@@ -157,7 +160,7 @@ DROP TABLE IF EXISTS `HistoricoEquipamentos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `HistoricoEquipamentos` (
-  `id_evento` int(32) NOT NULL AUTO_INCREMENT,
+  `id_evento` bigint(20) NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `observacao` varchar(45) COLLATE latin1_general_cs DEFAULT NULL,
   `usuario` varchar(45) CHARACTER SET latin1 NOT NULL,
@@ -189,9 +192,9 @@ DROP TABLE IF EXISTS `Requisicoes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Requisicoes` (
-  `id_requisicao` int(32) NOT NULL AUTO_INCREMENT,
-  `materia` varchar(45) DEFAULT NULL,
-  `usuario` varchar(45) NOT NULL,
+  `id_requisicao` bigint(20) NOT NULL AUTO_INCREMENT,
+  `materia` varchar(45) COLLATE latin1_general_cs DEFAULT NULL,
+  `usuario` varchar(45) COLLATE latin1_general_cs NOT NULL,
   `timestampDeUso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `EstadosReq_id_estadosReq` int(8) NOT NULL,
   PRIMARY KEY (`id_requisicao`),
@@ -219,7 +222,7 @@ DROP TABLE IF EXISTS `Tipos`;
 /*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Tipos` (
   `id_tipo` int(32) NOT NULL AUTO_INCREMENT,
-  `tipo` varchar(50) NOT NULL,
+  `tipo` varchar(50) COLLATE latin1_general_cs NOT NULL,
   `Familias_id_familia` int(32) NOT NULL,
   PRIMARY KEY (`id_tipo`),
   UNIQUE KEY `id_tipo_UNIQUE` (`id_tipo`),
@@ -247,4 +250,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-07-26 22:32:47
+-- Dump completed on 2017-08-05 16:07:46

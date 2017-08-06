@@ -21,7 +21,6 @@ export default class StudentLend extends React.Component {
       <div>
         <UserEquipControlContainer
           selectEquipErrorMessage={this.selectEquipErrorMessage}
-          isYesNoMessage={this.props.isYesNoMessage}
           setIsYesNoMessage={this.props.setIsYesNoMessage}
           submitForm={this.props.insertStudentLendShouldNotAdd}
           submitFormAfterConfirm={this.props.insertStudentLendShouldAdd}
@@ -39,7 +38,6 @@ StudentLend.propTypes = {
   insertStudentLendShouldAdd: PropTypes.func.isRequired,
   insertStudentLendShouldNotAdd: PropTypes.func.isRequired,
   setIsYesNoMessage: PropTypes.func.isRequired,
-  isYesNoMessage: PropTypes.bool.isRequired,
   errorCauseEquipNumbers: PropTypes.array.isRequired,
   errorCode: PropTypes.string.isRequired,
 };

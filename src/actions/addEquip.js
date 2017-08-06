@@ -14,13 +14,14 @@ export const setMissingFieldsError = (isMissingTipo, isMissingFamilia) => {
   }
 }
 
-export const insertEquips = (serverUrl, usuario, patrimonios, id_tipo) => {
+export const insertEquips = (serverUrl, usuario, patrimonios, id_tipo, changeExistent) => {
   return {
     type: 'INSERT_EQUIPS',
     serverUrl,
     usuario,
     patrimonios,
     id_tipo,
+    changeExistent,
   }
 }
 

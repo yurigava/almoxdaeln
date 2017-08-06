@@ -39,7 +39,7 @@ function *insertStudentLend(action) {
         });
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
-        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false });
         break;
 
       case "WAR_ALREADY_LENT":
@@ -53,7 +53,7 @@ function *insertStudentLend(action) {
         message = message + "Deseja emprestar mesmo assim?";
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
-        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: true });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: true });
         break;
 
       case "ER_NOT_FOUND":
@@ -66,7 +66,7 @@ function *insertStudentLend(action) {
           equipNumbers: response.data.notFound,
           errorCode: response.data.code
         });
-        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false });
         break;
 
       case "ER_NOT_AVAILABLE":
@@ -79,20 +79,20 @@ function *insertStudentLend(action) {
           equipNumbers: response.data.notAvailable,
           errorCode: response.data.code
         });
-        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false });
         break;
 
       default:
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro deconhecido, código: " + response.data.code });
-        yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false });
         break;
     }
   }
   catch(e) {
     yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
     yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
-    yield put({ type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE', isYesNoMessage: false });
+    yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false });
   }
   yield put({ type: 'SET_LOADING', isLoading: false });
 }

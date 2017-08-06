@@ -35,6 +35,7 @@ export default class AddEquip extends React.Component {
     this.handleRemoveEquipment = this.handleRemoveEquipment.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleSubmitChangingType = this.handleSubmitChangingType.bind(this);
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
   }
 
@@ -54,7 +55,7 @@ export default class AddEquip extends React.Component {
       let message = "";
       if(this.props.errorCode === "ER_WARN_DATA_OUT_OF_RANGE")
         message = "Código Excedeu o limite de tamanho";
-      else if(this.props.errorCode === "ER_DUP_ENTRY")
+      else if(this.props.errorCode === "WAR_DUP_ENTRY")
         message = "Equipamento já registrado";
       let newState = this.state
       this.props.errorCauseEquipNumbers.forEach((equip, indexErrorEquip) => {
@@ -143,7 +144,12 @@ export default class AddEquip extends React.Component {
 
   handleFormSubmit(event) {
     let patrimonios = this.state.patrimonios.filter(pat => pat.value !== "").map(pat => Number(pat.value));
-    this.props.insertEquips(this.props.usuario, patrimonios, this.props.tipo)
+    this.props.insertEquips(this.props.usuario, patrimonios, this.props.tipo, false)
+  }
+
+  handleSubmitChangingType(event) {
+    let patrimonios = this.state.patrimonios.filter(pat => pat.value !== "").map(pat => Number(pat.value));
+    this.props.insertEquips(this.props.usuario, patrimonios, this.props.tipo, true)
   }
 
   findEquipIndex(name, patrimonios) {
@@ -153,13 +159,31 @@ export default class AddEquip extends React.Component {
   }
 
   render () {
-    const actions = [
-     <FlatButton
-       label="OK"
-       primary={true}
-       onTouchTap={this.handleCloseDialog}
-     />,
-    ];
+    let actions = [];
+    if(this.props.isYesNoMessage) {
+      actions = [
+        <FlatButton
+          label="SIM"
+          primary={false}
+          onTouchTap={this.handleSubmitChangingType}
+        />,
+        <FlatButton
+          label="NÃO"
+          primary={true}
+          onTouchTap={this.handleCloseDialog}
+        />,
+      ];
+    }
+    else {
+      actions = [
+        <FlatButton
+          label="OK"
+          primary={true}
+          onTouchTap={this.handleCloseDialog}
+        />,
+      ];
+    }
+;
 
     const infoNumber = infos[this.props.infoNumber];
 
@@ -170,8 +194,11 @@ export default class AddEquip extends React.Component {
           modal={false}
           open={this.props.submissionMessage !== ""}
           onRequestClose={this.handleCloseDialog}
+          autoScrollBodyContent={true}
         >
-          {this.props.submissionMessage}
+          {this.props.submissionMessage.split(/\\n/).map((item, key) => {
+            return <span key={key}>{item}<br/></span>
+          })}
         </Dialog>
         <br/>
         <div
