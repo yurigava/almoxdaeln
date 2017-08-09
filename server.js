@@ -428,39 +428,22 @@ app.post('/api/studentReturn', function(req, res) {
 
 app.post('/api/insertEquips', function(req, res) {
   var patrimonios = req.body.patrimonios;
-  req.models.EquipamentosMonitorados.find({patrimonio: patrimonios}, function(err, existingEquipsDb) {
+  req.models.EquipamentosMonitorados.find({patrimonio: patrimonios}, function(err, existentPats) {
     if(err)
       res.send(err)
-    else if (existingEquipsDb.length > 0 && !req.body.changeExistent) {
-      var existingEquips = [];
-      existingEquipsDb.forEach(function (equip) {
-        existingEquips.push({
-          pat: equip.patrimonio,
-          familia: equip.Tipo.Familia.familia,
-          tipo: equip.Tipo.tipo,
-        });
+    else if (existentPats.length > 0) {
+      var existentEquipsNumber = existentPats.map(function (equip) {
+        return equip.patrimonio;
       });
-      req.models.Tipos.get(req.body.id_tipo, function(errTipo, tipo) {
-        if(errTipo)
-          res.send(errTipo);
-        else {
-          res.send({
-            code: "WAR_DUP_ENTRY",
-            existingEquips: existingEquips,
-            newTipo: tipo.tipo,
-            newFamilia: tipo.Familia.familia
-          });
-        }
+      res.send({
+        code: "ER_DUP_ENTRY",
+        notFound: existentEquipsNumber
       });
     }
     else {
-      var existingPats = [];
-      existingEquipsDb.forEach(function(equip) {
-        existingPats.push(equip.patrimonio);
-      });
       var equipsToInsert = [];
       var historyEntries = [];
-      findNotContainedAInB(patrimonios, existingPats).forEach(function(pat) {
+      patrimonios.forEach(function(pat) {
         equipsToInsert.push({
           patrimonio: pat,
           Tipos_id_tipo: req.body.id_tipo,
@@ -480,18 +463,8 @@ app.post('/api/insertEquips', function(req, res) {
           req.models.HistoricoEquipamentos.create(historyEntries, function(err) {
             if(err)
               res.send(err);
-            else {
-              req.models.Tipos.get(req.body.id_tipo, function(errTipo, tipo) {
-                if(errTipo)
-                  res.send(errTipo);
-                else {
-                  existingEquipsDb.forEach(function(equip) {
-                    equip.setTipo(tipo, function(e) {});
-                  });
-                }
-                res.send({code: "SUCCESS"});
-              });
-            }
+            else
+              res.send({code: "SUCCESS"});
           });
         }
       });

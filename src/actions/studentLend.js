@@ -15,3 +15,10 @@ export const setErrorDescription = (equipNumbers, errorCode) => {
     errorCode
   }
 }
+
+export const setIsYesNoMessage = (isYesNoMessage) => {
+  return {
+    type: 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE',
+    isYesNoMessage
+  }
+}

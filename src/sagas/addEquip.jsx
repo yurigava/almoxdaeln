@@ -44,7 +44,6 @@ function *insertEquips(action) {
       type: 'SET_SUBMISSION_MESSAGE',
       message: "Insira pelo menos um Equipamento."
     });
-    yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false});
     return;
   }
   let patrimonios = Array.from(new Set(action.patrimonios));
@@ -58,7 +57,6 @@ function *insertEquips(action) {
         usuario: action.usuario,
         patrimonios: patrimonios,
         id_tipo:     action.id_tipo,
-        changeExistent: action.changeExistent,
       },
       {withCredentials:true}
     );
@@ -67,7 +65,6 @@ function *insertEquips(action) {
       yield put({
         type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor."
       });
-      yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false});
       yield put({ type: 'SET_LOADING', isLoading: false });
       return;
     }
@@ -80,30 +77,16 @@ function *insertEquips(action) {
         plural = "Os equipamentos foram registrados com sucesso.";
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: patrimonios.length > 1 ? plural : singular});
-        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false});
         break;
 
-      case "WAR_DUP_ENTRY":
-        let message;
-        if(response.data.existingEquips.length > 1)
-          message = "AVISO: Os seguintes equipamentos já existem:\\n" ;
-        else
-          message = "AVISO: O seguinte equipamento já existe:\\n";
-
-        response.data.existingEquips.forEach(equip => {
-          message = message + equip.pat + " - " + equip.familia + " " + equip.tipo + "\\n";
-        });
-
-        if(response.data.existingEquips.length > 1)
-          message = message + "Deseja mudá-los para '" + response.data.newFamilia + " " + response.data.newTipo + "'?";
-        else
-          message = message + "Deseja mudá-lo para '" + response.data.newFamilia + " " + response.data.newTipo + "'?";
+      case "ER_DUP_ENTRY":
+        singular = "Um equipamento já está registrado.";
+        plural = "Alguns dos equipamentos já estão registrados.";
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
-        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: true});
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: response.data.notFound.length > 1 ? plural : singular});
         yield put({
           type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
-          equipNumbers: response.data.existingEquips.map(equip => equip.pat.toString()),
+          equipNumbers: response.data.notFound.map(nf => nf.toString()),
           errorCode: response.data.code
         });
         break;
@@ -114,7 +97,6 @@ function *insertEquips(action) {
           type: 'SET_SUBMISSION_MESSAGE',
           message: "O código de patrimônio de algum dos equipamentos excedeu o limite de tamanho."
         });
-        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false});
         yield put({
           type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
           equipNumbers: Array.from(response.data.instance.patrimonio),
@@ -127,7 +109,6 @@ function *insertEquips(action) {
         yield put({
           type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
         });
-        yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false});
         if(response.data.instance.patrimonio)
           yield put({
             type: 'SET_INSERT_EQUIP_ERROR_DESCRIPTION',
@@ -140,7 +121,6 @@ function *insertEquips(action) {
   catch (e) {
     yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
     yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor: " + e.toString()});
-    yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false});
   }
   yield put({ type: 'SET_LOADING', isLoading: false });
 }

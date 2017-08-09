@@ -99,7 +99,6 @@ export default class AddTipo extends React.Component {
           modal={false}
           open={this.props.submissionMessage !== ""}
           onRequestClose={this.handleCloseDialog}
-          autoScrollBodyContent={true}
         >
           {this.props.submissionMessage}
         </Dialog>

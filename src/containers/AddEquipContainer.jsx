@@ -8,14 +8,15 @@ import {
   setMissingFieldsError,
   setInfoNumber,
 } from '../actions/addEquip.js'
-import { setSubmissionMessage } from '../actions/appUi.js'
+import {
+  setSubmissionMessage,
+} from '../actions/appUi.js'
 import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
   return {
     isInputDisabled: state.appUi.isInputDisabled,
     submissionMessage: state.appUi.submissionMessage,
-    isYesNoMessage: state.appUi.isYesNoMessage,
     isDataSubmitted: state.appUi.isDataSubmitted,
     usuario: state.login.userRole,
     isMissingTipo: state.addEquip.isMissingTipo,
@@ -30,8 +31,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    insertEquips: (usuario, patrimonios, id_tipo, changeExistent) => {
-      dispatch(insertEquips(serverUrl, usuario, patrimonios, id_tipo, changeExistent))
+    insertEquips: (usuario, patrimonios, id_tipo) => {
+      dispatch(insertEquips(serverUrl, usuario, patrimonios, id_tipo))
     },
     clearSubmissionMessage: () => {
       dispatch(setSubmissionMessage(""))

@@ -130,7 +130,6 @@ export default class AddFamilia extends React.Component {
           modal={false}
           open={this.props.submissionMessage !== ""}
           onRequestClose={this.handleCloseDialog}
-          autoScrollBodyContent={true}
         >
           {submissionMessage}
         </Dialog>
