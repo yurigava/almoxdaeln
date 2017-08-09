@@ -74,10 +74,11 @@ export default class EquipTypeSelector extends React.Component {
           value={this.props.familia}
           onChange={this.handleFamiliaChange}
           disabled={this.props.isInputDisabled}
+          autoWidth={true}
           errorText={(this.props.isMissingFamilia && this.props.familia === null) ?
             "Campo Família não pode ser deixado em branco" : ""}
-          floatingLabelStyle={{color: 'grey'}}
           style={style_inline}
+          floatingLabelStyle={{color: 'grey', left: '0px'}}
         >
           {this.props.familias.map((familia) => (
             <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
@@ -89,10 +90,11 @@ export default class EquipTypeSelector extends React.Component {
           value={this.props.tipo}
           onChange={this.handleTipoChange}
           disabled={this.props.familia === null || this.props.isInputDisabled}
+          autoWidth={true}
           errorText={(this.props.isMissingTipo && this.props.tipo === null) ?
             "Campo Tipo não pode ser deixado em branco" : ""}
-          floatingLabelStyle={{color: 'grey'}}
           style={style_inline}
+          floatingLabelStyle={{color: 'grey', left: '0px'}}
         >
           {this.state.allowedTipos.map((tipo) => (
             <MenuItem key={tipo.id_tipo} value={tipo.id_tipo} primaryText={tipo.tipo} />

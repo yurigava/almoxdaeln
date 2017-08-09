@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `EquipamentosMonitorados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EquipamentosMonitorados` (
   `patrimonio` bigint(20) NOT NULL,
   `Estados_id_estado` int(8) NOT NULL,
@@ -50,7 +50,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EquipamentosRequisicao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EquipamentosRequisicao` (
   `id_EquipamentoRequisicao` int(32) NOT NULL AUTO_INCREMENT,
   `quantidade` int(8) NOT NULL,
@@ -83,7 +83,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Estados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Estados` (
   `id_estado` int(8) NOT NULL AUTO_INCREMENT,
   `estado` varchar(30) COLLATE latin1_general_cs NOT NULL,
@@ -108,7 +108,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `EstadosReq`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `EstadosReq` (
   `id_estadosReq` int(8) NOT NULL AUTO_INCREMENT,
   `estadoReq` varchar(30) COLLATE latin1_general_cs NOT NULL,
@@ -133,7 +133,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Familias`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Familias` (
   `id_familia` int(32) NOT NULL AUTO_INCREMENT,
   `familia` varchar(50) COLLATE latin1_general_cs NOT NULL,
@@ -158,7 +158,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `HistoricoEquipamentos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `HistoricoEquipamentos` (
   `id_evento` int(32) NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -190,7 +190,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Requisicoes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Requisicoes` (
   `id_requisicao` int(32) NOT NULL AUTO_INCREMENT,
   `materia` varchar(45) COLLATE latin1_general_cs DEFAULT NULL,
@@ -219,7 +219,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `Tipos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = latin1 */;
 CREATE TABLE `Tipos` (
   `id_tipo` int(32) NOT NULL AUTO_INCREMENT,
   `tipo` varchar(50) COLLATE latin1_general_cs NOT NULL,

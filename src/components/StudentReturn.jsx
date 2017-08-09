@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import UserEquipControlContainer from '../containers/UserEquipControlContainer.jsx'
 import update from 'immutability-helper';
 
-export default class StudentLend extends React.Component {
+export default class StudentReturn extends React.Component {
 
   constructor(props) {
     super(props);
@@ -11,9 +11,12 @@ export default class StudentLend extends React.Component {
 
   selectEquipErrorMessage(errorCode) {
     if(errorCode === "ER_NOT_FOUND")
-      return "Equipamento Não Registrado";
+      return "Equipamento não emprestado para esse usuário";
     else if(errorCode === "ER_NOT_AVAILABLE")
       return "Equipamento Não Disponível";
+  }
+
+  setIsYesNoMessage(isYesNoMessage) {
   }
 
   render () {
@@ -21,10 +24,9 @@ export default class StudentLend extends React.Component {
       <div>
         <UserEquipControlContainer
           selectEquipErrorMessage={this.selectEquipErrorMessage}
-          isYesNoMessage={this.props.isYesNoMessage}
-          setIsYesNoMessage={this.props.setIsYesNoMessage}
-          submitForm={this.props.insertStudentLendShouldNotAdd}
-          submitFormAfterConfirm={this.props.insertStudentLendShouldAdd}
+          isYesNoMessage={false}
+          setIsYesNoMessage={this.setIsYesNoMessage}
+          submitForm={this.props.insertStudentReturn}
           clearErrorDescription={this.props.clearErrorDescription}
           errorCauseEquipNumbers={this.props.errorCauseEquipNumbers}
           errorCode={this.props.errorCode}
@@ -34,12 +36,9 @@ export default class StudentLend extends React.Component {
   }
 }
 
-StudentLend.propTypes = {
+StudentReturn.propTypes = {
   clearErrorDescription: PropTypes.func.isRequired,
-  insertStudentLendShouldAdd: PropTypes.func.isRequired,
-  insertStudentLendShouldNotAdd: PropTypes.func.isRequired,
-  setIsYesNoMessage: PropTypes.func.isRequired,
-  isYesNoMessage: PropTypes.bool.isRequired,
+  insertStudentReturn: PropTypes.func.isRequired,
   errorCauseEquipNumbers: PropTypes.array.isRequired,
   errorCode: PropTypes.string.isRequired,
 };

@@ -10,6 +10,10 @@ function *logUserOut(action) {
         action.serverUrl + '/logout',
         {withCredentials:true}
       );
+      if(!response) {
+        yield put({ type: 'SET_LOADING', isLoading: false });
+        return;
+      }
     } catch (e) { }
     yield put({ type: 'SET_LOADING', isLoading: false });
 }
@@ -23,6 +27,11 @@ function *submitLogin(action) {
       { login: action.login, password: action.password },
       {withCredentials:true}
     );
+    if(!response) {
+      yield put({ type: 'SET_LOGIN_STATUS', success: false });
+      yield put({ type: 'SET_LOADING', isLoading: false });
+      return;
+    }
     yield put({ type: 'SET_LOGIN_STATUS', success: true });
     yield put({ type: 'CHANGE_ROLE', role: response.data });
   } catch (e) {
@@ -39,6 +48,11 @@ function *getUserRole(action) {
       action.serverUrl + '/getRole',
       {withCredentials:true}
     );
+    if(!response) {
+      yield put({ type: 'CHANGE_ROLE', role: "loggedOut" });
+      yield put({ type: 'SET_LOADING', isLoading: false });
+      return;
+    }
     yield put({ type: 'SET_LOGIN_STATUS', success: true });
     yield put({ type: 'CHANGE_ROLE', role: response.data });
   }

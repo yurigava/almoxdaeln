@@ -8,6 +8,10 @@ import AddTipoContainer from './containers/AddTipoContainer.jsx'
 import AddFamiliaContainer from './containers/AddFamiliaContainer.jsx'
 import StudentLendContainer from './containers/StudentLendContainer.jsx'
 import AddReserveContainer from './containers/AddReserveContainer.jsx';
+import StudentReturnContainer from './containers/StudentReturnContainer.jsx'
+import ChangeEquipStateContainer from './containers/ChangeEquipStateContainer.jsx'
+import ChangeFamiliaNameContainer from './containers/ChangeFamiliaNameContainer.jsx'
+import ChangeTipoNameContainer from './containers/ChangeTipoNameContainer.jsx'
 import EquipTable from './components/EquipTable.jsx';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -26,6 +30,10 @@ import addFamiliaSagas from './sagas/addFamilia.jsx'
 import studentLendSagas from './sagas/studentLend.jsx'
 import addReserveSagas from './sagas/addReserve.jsx'
 import equipTypeSelectSagas from './sagas/equipTypeSelect.jsx'
+import studentReturnSagas from './sagas/studentReturn.jsx'
+import changeEquipStateSagas from './sagas/changeEquipState.jsx'
+import changeFamiliaNameSagas from './sagas/changeFamiliaName.jsx'
+import changeTipoNameSagas from './sagas/changeTipoName.jsx'
 
 export const serverUrl = 'http://192.168.0.69:8081';
 
@@ -44,6 +52,10 @@ sagaMiddleware.run(addFamiliaSagas)
 sagaMiddleware.run(studentLendSagas)
 sagaMiddleware.run(addReserveSagas)
 sagaMiddleware.run(equipTypeSelectSagas)
+sagaMiddleware.run(studentReturnSagas)
+sagaMiddleware.run(changeEquipStateSagas)
+sagaMiddleware.run(changeFamiliaNameSagas)
+sagaMiddleware.run(changeTipoNameSagas)
 
 main();
 
@@ -77,6 +89,10 @@ function main() {
             <IndexRedirect to="/login" />
             <Route path="/logout" onEnter={logUserOut}/>
             <Route path="/login" component={LoginContainer}/>
+            <Route path="/changeFamiliaName" component={ChangeFamiliaNameContainer} onEnter={verifyPermission}/>
+            <Route path="/changeTipoName" component={ChangeTipoNameContainer} onEnter={verifyPermission}/>
+            <Route path="/changeEquipState" component={ChangeEquipStateContainer} onEnter={verifyPermission}/>
+            <Route path="/studentReturn" component={StudentReturnContainer} onEnter={verifyPermission}/>
             <Route path="/studentLend" component={StudentLendContainer} onEnter={verifyPermission}/>
             <Route path="/addFamilia" component={AddFamiliaContainer} onEnter={verifyPermission}/>
             <Route path="/addTipo" component={AddTipoContainer} onEnter={verifyPermission}/>

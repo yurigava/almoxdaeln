@@ -11,8 +11,38 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'changeFamiliaName',
+      linkText: 'Alterar nome de Família'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'changeTipoName',
+      linkText: 'Alterar nome de Tipo'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'addEquips',
       linkText: 'Registrar Equipamentos'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'changeEquipState',
+      linkText: 'Controle de Equipamentos'
     },
     allowedRoles: [
       "almoxarife",
@@ -69,6 +99,16 @@ export const pagesList = [
     allowedRoles: [
       "almoxarife",
       "professor",
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'studentReturn',
+      linkText: 'Devolução de Aluno'
+    },
+    allowedRoles: [
+      "almoxarife",
       "admin"
     ]
   },

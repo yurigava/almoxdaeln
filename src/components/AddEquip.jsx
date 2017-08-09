@@ -50,23 +50,26 @@ export default class AddEquip extends React.Component {
         ]
       }
     }
-    else if(this.props.errorCauseEquipNumber !== "") {
+    else if(this.props.errorCauseEquipNumbers.length > 0) {
       let message = "";
       if(this.props.errorCode === "ER_WARN_DATA_OUT_OF_RANGE")
         message = "Código Excedeu o limite de tamanho";
       else if(this.props.errorCode === "ER_DUP_ENTRY")
         message = "Equipamento já registrado";
-      const index = this.state.patrimonios.findIndex(patrimonio =>
-        this.props.errorCauseEquipNumber == patrimonio.value
-      );
-      this.setState(update(this.state, {
-        patrimonios: {
-          [index]: {
-            errorText: { $set: message }
+      let newState = this.state
+      this.props.errorCauseEquipNumbers.forEach((equip, indexErrorEquip) => {
+        const index = this.state.patrimonios.findIndex(patrimonio =>
+          equip == patrimonio.value
+        );
+        newState = update(newState, {
+          patrimonios: {
+            [index]: { errorText: { $set: message} }
           }
-        }
-      }));
+        });
+      });
+      this.setState(newState);
     }
+    this.props.clearMissingFieldsError();
     this.props.clearSubmissionMessage();
   }
 
@@ -140,7 +143,7 @@ export default class AddEquip extends React.Component {
 
   handleFormSubmit(event) {
     let patrimonios = this.state.patrimonios.filter(pat => pat.value !== "").map(pat => Number(pat.value));
-    this.props.insertEquips(patrimonios, this.props.tipo)
+    this.props.insertEquips(this.props.usuario, patrimonios, this.props.tipo)
   }
 
   findEquipIndex(name, patrimonios) {
@@ -250,7 +253,7 @@ export default class AddEquip extends React.Component {
 AddEquip.propTypes = {
   insertEquips: PropTypes.func.isRequired,
   clearSubmissionMessage: PropTypes.func.isRequired,
-  clearEquipNumberError: PropTypes.func.isRequired,
+  clearErrorDescription: PropTypes.func.isRequired,
   clearMissingFieldsError: PropTypes.func.isRequired,
   setSelectedTipo: PropTypes.func.isRequired,
   setSelectedFamilia: PropTypes.func.isRequired,
@@ -258,11 +261,12 @@ AddEquip.propTypes = {
   isInputDisabled: PropTypes.bool.isRequired,
   tipo: PropTypes.number,
   familia: PropTypes.number,
+  usuario: PropTypes.string.isRequired,
   isMissingTipo: PropTypes.bool.isRequired,
   isMissingFamilia: PropTypes.bool.isRequired,
   isDataSubmitted: PropTypes.bool.isRequired,
   submissionMessage: PropTypes.string.isRequired,
-  errorCauseEquipNumber: PropTypes.string.isRequired,
+  errorCauseEquipNumbers: PropTypes.array.isRequired,
   errorCode: PropTypes.string.isRequired,
   infoNumber: PropTypes.number.isRequired,
 };

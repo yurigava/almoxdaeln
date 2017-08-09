@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
-import SelectField from 'material-ui/SelectField';
+import EquipTypeSelectorContainer from '../containers/EquipTypeSelectorContainer.jsx';
 import TextField from 'material-ui/TextField';
-import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
 import update from 'immutability-helper';
 
 const style = {
@@ -12,78 +11,78 @@ const style = {
   margin: 5,
 };
 
+
 const infos = [
   'Selecione uma Família de Equipamentos',
-  'Digite o nome do novo Tipo de Equipamento'
+  'Selecione um Tipo de Equipamento',
+  'Digite o novo nome do Tipo'
 ];
 
 const initialState = {
-  isMissingTipo: false,
+  isMissingTipoNewName: false,
+  tipoNewName: "",
   isMissingFamilia: false,
-  tipo: "",
-  familia: null,
+  isMissingTipo: false,
   info: 0
 }
 
-export default class AddTipo extends React.Component {
+export default class ChangeTipoName extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = initialState;
-    this.handleFamiliaChange = this.handleFamiliaChange.bind(this);
+    this.setInfoNumber = this.setInfoNumber.bind(this);
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
-  componentDidMount() {
-    if(this.props.familias.length === 0)
-      this.props.getFamilias();
+  setInfoNumber(infoNumber) {
+    this.setState(update(this.state, {info: {$set: infoNumber}}));
   }
 
   handleCloseDialog() {
     if(this.props.isDataSubmitted) {
       this.state = initialState;
       this.props.getTipos();
+      this.props.setFamilia(null);
+      this.props.setTipo(null);
     }
     this.props.clearSubmissionMessage();
-  }
-
-  handleFamiliaChange(event, index, familia) {
-    if(familia == this.props.familia)
-      return;
-    this.setState(update(this.state, {
-      familia: {$set: familia},
-      info: {$set: 1}
-    }))
   }
 
   handleTextFieldChange(event) {
     const value = event.currentTarget.value;
     this.setState(update(this.state, {
-      tipo: {$set: value},
+      tipoNewName: {$set: value},
     }))
   }
 
+
   handleFormSubmit(event) {
-    if(this.state.familia === null) {
+    if(this.props.familia === null) {
       this.setState(update(this.state, {
         isMissingFamilia: {$set: true},
       }))
       return;
     }
-    if(this.state.tipo === "") {
+    if(this.props.tipo === null) {
       this.setState(update(this.state, {
         isMissingTipo: {$set: true},
       }))
       return;
     }
-    this.props.insertTipo(this.state.tipo, this.state.familia)
+    if(this.state.tipoNewName === "") {
+      this.setState(update(this.state, {
+        isMissingTipoNewName: {$set: true},
+      }))
+      return;
+    }
+    this.props.updateTipoName(this.props.familia, this.props.tipo, this.state.tipoNewName)
   }
 
-  render () {
-    const infoNumber = infos[this.state.info];
 
+  render () {
     const actions = [
      <FlatButton
        label="OK"
@@ -91,6 +90,8 @@ export default class AddTipo extends React.Component {
        onTouchTap={this.handleCloseDialog}
      />,
     ];
+
+    const infoText = infos[this.state.info];
 
     return (
       <div>
@@ -108,7 +109,7 @@ export default class AddTipo extends React.Component {
             'fontFamily': 'Roboto,sans-serif'
           }}
         >
-          {infoNumber}
+          {infoText}
         </div>
         <form onSubmit=
           {
@@ -117,33 +118,28 @@ export default class AddTipo extends React.Component {
             }
           }
         >
-          <SelectField
-            style={style}
-            floatingLabelText="Família"
-            value={this.state.familia}
-            onChange={this.handleFamiliaChange}
-            disabled={this.props.isInputDisabled}
-            autoWidth={true}
-            errorText={(this.state.isMissingFamilia && this.state.familia === null) ?
-              "Campo Família não pode ser deixado em branco" : ""}
-            floatingLabelStyle={{color: 'grey', left: '0px'}}
-          >
-            {this.props.familias.map((familia) => (
-              <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
-            ))}
-          </SelectField>
-          &nbsp;
+          <EquipTypeSelectorContainer
+            tipo={this.props.tipo}
+            familia={this.props.familia}
+            setInfoNumber={this.setInfoNumber}
+            setSelectedTipo={this.props.setTipo}
+            setSelectedFamilia={this.props.setFamilia}
+            isMissingTipo={this.state.isMissingTipo}
+            isMissingFamilia={this.state.isMissingFamilia}
+            isInputDisabled={this.props.isInputDisabled}
+          />
+          <br/>
           <TextField
             style={style}
-            name="tipo"
-            hintText="Nome do Novo Tipo"
-            floatingLabelText="Tipo"
-            value={this.state.tipo}
+            name="newTipo"
+            hintText="Novo nome para o Tipo"
+            floatingLabelText="Novo Tipo"
+            value={this.state.tipoNewName}
             disabled={this.props.isInputDisabled}
             onChange={this.handleTextFieldChange}
-            errorText={(this.state.isMissingTipo && this.state.tipo === "") ?
-              "Campo Tipo não pode ser deixado em branco" : ""}
-            floatingLabelStyle={{color: 'grey'}}
+            errorText={(this.state.isMissingTipoNewName && this.state.tipoNewName === "") ?
+              "Campo Novo Tipo não pode ser deixado em branco" : ""}
+            floatingLabelStyle={{color: 'grey', left: '0px'}}
           />
           <br/>
           <br/>
@@ -161,13 +157,15 @@ export default class AddTipo extends React.Component {
   }
 }
 
-AddTipo.propTypes = {
-  getFamilias: PropTypes.func.isRequired,
-  getTipos: PropTypes.func.isRequired,
-  insertTipo: PropTypes.func.isRequired,
+ChangeTipoName.propTypes = {
+  updateTipoName: PropTypes.func.isRequired,
   clearSubmissionMessage: PropTypes.func.isRequired,
-  familias: PropTypes.array.isRequired,
+  getTipos: PropTypes.func.isRequired,
+  setFamilia: PropTypes.func.isRequired,
+  setTipo: PropTypes.func.isRequired,
   isInputDisabled: PropTypes.bool.isRequired,
   submissionMessage: PropTypes.string.isRequired,
   isDataSubmitted: PropTypes.bool.isRequired,
+  tipo: PropTypes.number,
+  familia: PropTypes.number,
 };

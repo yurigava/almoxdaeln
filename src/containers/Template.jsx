@@ -14,9 +14,9 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const templateContainer = connect(
+const TemplateContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(Template)
 
-export default templateContainer
+export default TemplateContainer

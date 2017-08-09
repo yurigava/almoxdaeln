@@ -12,6 +12,14 @@ function *insertFamilia(action) {
       },
       {withCredentials:true}
     );
+    if(!response) {
+      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+      yield put({
+        type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor."
+      });
+      yield put({ type: 'SET_LOADING', isLoading: false });
+      return;
+    }
     if(response.data.code === "SUCCESS") {
       yield put({ type: 'SET_CREATED_FAMILIA_NUMBER', familiaNumber: response.data.id_familia });
     }
@@ -25,7 +33,7 @@ function *insertFamilia(action) {
     else {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({
-        type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
+        type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.data.code
       });
     }
   }

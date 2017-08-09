@@ -4,23 +4,15 @@ const initialState =
 {
   errorCauseEquipNumbers: [],
   errorCode: "",
-  isYesNoMessage: false,
 }
 
-const studentLend = (state = initialState, action) => {
+const studentReturn = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_STUDENT_LEND_ERROR_DESCRIPTION':
+    case 'SET_STUDENT_RETURN_ERROR_DESCRIPTION':
       return (
         update(state, {
           errorCauseEquipNumbers: {$set: action.equipNumbers},
           errorCode: {$set: action.errorCode},
-        })
-      )
-
-    case 'SET_STUDENT_LEND_IS_YES_NO_MESSAGE':
-      return (
-        update(state, {
-          isYesNoMessage: {$set: action.isYesNoMessage},
         })
       )
 
@@ -29,4 +21,4 @@ const studentLend = (state = initialState, action) => {
   }
 }
 
-export default studentLend
+export default studentReturn
