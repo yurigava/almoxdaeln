@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import Field from './Field.jsx';
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import update from 'immutability-helper';
 
@@ -105,7 +104,7 @@ export default class EquipTable extends React.Component {
             stripedRows={true}
           >
             {this.state.data.map( (row) => (
-              <TableRow key={row.eq_id}>
+              <TableRow key={row.patrimonio}>
                 <TableRowColumn>{row.patrimonio}</TableRowColumn>
                 <TableRowColumn>{row.familia}</TableRowColumn>
                 <TableRowColumn>{row.tipo}</TableRowColumn>
