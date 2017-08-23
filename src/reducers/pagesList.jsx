@@ -82,6 +82,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'equipsGraphics',
+      linkText: 'Gráfico de Equipamentos'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'studentLend',
       linkText: 'Empréstimo Para Aluno'
     },
