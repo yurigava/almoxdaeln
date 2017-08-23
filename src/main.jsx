@@ -12,6 +12,7 @@ import ChangeEquipStateContainer from './containers/ChangeEquipStateContainer.js
 import ChangeFamiliaNameContainer from './containers/ChangeFamiliaNameContainer.jsx'
 import ChangeTipoNameContainer from './containers/ChangeTipoNameContainer.jsx'
 import AddReserveContainer from './containers/AddReserveContainer.jsx';
+import EquipsGraphicsContainer from './containers/EquipsGraphicsContainer.jsx';
 import EquipTable from './components/EquipTable.jsx';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -34,6 +35,7 @@ import changeFamiliaNameSagas from './sagas/changeFamiliaName.jsx'
 import changeTipoNameSagas from './sagas/changeTipoName.jsx'
 import addReserveSagas from './sagas/addReserve.jsx'
 import equipTypeSelectSagas from './sagas/equipTypeSelect.jsx'
+import equipsGraphicsSagas from './sagas/equipsGraphics.jsx'
 
 export const serverUrl = 'http://192.168.0.69:8081';
 
@@ -56,6 +58,7 @@ sagaMiddleware.run(changeFamiliaNameSagas)
 sagaMiddleware.run(changeTipoNameSagas)
 sagaMiddleware.run(addReserveSagas)
 sagaMiddleware.run(equipTypeSelectSagas)
+sagaMiddleware.run(equipsGraphicsSagas)
 
 main();
 
@@ -98,6 +101,7 @@ function main() {
             <Route path="/addTipo" component={AddTipoContainer} onEnter={verifyPermission}/>
             <Route path="/addEquips" component={AddEquipContainer} onEnter={verifyPermission}/>
             <Route path="/equips" component={EquipTable} url={serverUrl} onEnter={verifyPermission}/>
+            <Route path="/equipsGraphics" component={EquipsGraphicsContainer} onEnter={verifyPermission}/>
             <Route path="/addReserve" component={AddReserveContainer} onEnter={verifyPermission}/>
           </Route>
         </Router>

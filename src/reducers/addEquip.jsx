@@ -7,8 +7,8 @@ const initialState =
   isMissingTipo: false,
   isMissingFamilia: false,
   errorCauseEquipNumbers: "",
-  errorCode: "",
-  infoNumber: 0
+  infoNumber: 0,
+  errorCode: ""
 }
 
 const addEquip = (state = initialState, action) => {
