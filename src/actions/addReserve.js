@@ -39,7 +39,7 @@ export const removeEquip = (index) => {
 
 export const addEquip = () => {
   return {
-    type: 'RESERVE_REMOVE_EQUIP'
+    type: 'RESERVE_ADD_EQUIP'
   }
 }
 
@@ -65,7 +65,7 @@ export const setSelectedFamilia = (index, familia) => {
   }
 }
 
-export const setinfoNumber = (infoNumber) => {
+export const setInfoNumber = (infoNumber) => {
   return {
     type: 'RESERVE_SET_INFO_NUMBER',
     infoNumber
