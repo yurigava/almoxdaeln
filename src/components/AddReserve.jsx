@@ -494,6 +494,7 @@ export default class AddReserve extends React.Component {
           {this.props.submissionMessage}
         </Dialog>
         <br/>
+
         <div
           style={{
             'fontFamily': 'Roboto,sans-serif'
