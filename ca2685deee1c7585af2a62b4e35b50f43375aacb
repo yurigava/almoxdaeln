@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce8a8291_d98c8f1e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1010068
+      },
+      "writtenOn": "2017-08-23T23:31:15Z",
+      "side": 1,
+      "message": "-error in handle type and family in AddReserve",
+      "revId": "ca2685deee1c7585af2a62b4e35b50f43375aacb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
