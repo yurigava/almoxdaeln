@@ -120,6 +120,9 @@ app.post('/api/insertEquips', insertEquipsRoute);
 var professorReserveRoute = require('./api/professorReserve.js');
 app.post('/api/professorReserve', professorReserveRoute);
 
+var quantidadeEquipsGraphRoute = require('./api/quantidadeEquipsGraph.js');
+app.post('/api/quantidadeEquipsGraph', quantidadeEquipsGraphRoute);
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
