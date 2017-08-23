@@ -6,7 +6,7 @@ import {
   insertReserve,
   quantidadeReserve,
   setMissingFieldsError,
-  setinfoNumber,
+  setInfoNumber,
   setError,
   clearEquips,
   setQuantidade,
@@ -20,6 +20,8 @@ const mapStateToProps = (state) => {
   return {
     isInputDisabled: state.appUi.isInputDisabled,
     submissionMessage: state.appUi.submissionMessage,
+    //isMissingFamilia: state.addReserve.isMissingFamilia,
+    //isMissingTipo: state.addReserve.isMissingTipo,
     isDataSubmitted: state.appUi.isDataSubmitted,
     equipInfos: state.addReserve.equipInfos,
     infoNumber: state.addReserve.infoNumber,
@@ -50,8 +52,8 @@ const mapDispatchToProps = (dispatch) => {
     clearEquips: () => {
       dispatch(clearEquips())
     },
-    setinfoNumber: (infoNumber) => {
-      dispatch(setinfoNumber(infoNumber))
+    setInfoNumber: (infoNumber) => {
+      dispatch(setInfoNumber(infoNumber))
     },
     setError: (error) => {
       dispatch(setSubmissionMessage(error))
