@@ -17,6 +17,7 @@ function *insertStudentReturn(action) {
     );
     if(!response) {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+      yield put({ type: 'SET_IS_YES_NO_MESSAGE', submitted: false });
       yield put({
         type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor."
       });
@@ -31,6 +32,7 @@ function *insertStudentReturn(action) {
       case "SUCCESS":
         message = "Devolução efetuada com sucesso."
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
         break;
 
@@ -43,6 +45,7 @@ function *insertStudentReturn(action) {
           message = message + equip.pat + " - " + equip.familia + " " + equip.tipo + "\\n";
         });
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: message});
         break;
 
@@ -50,6 +53,7 @@ function *insertStudentReturn(action) {
         singular = "ERRO: Existem Equipamentos que não fazem parte do pedido deste usuário." ;
         plural = "ERRO: Existe um Equipamento que não faz parte do pedido deste usuário.";
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: response.data.notFound > 1 ? plural : singular});
         yield put({
           type: 'SET_STUDENT_RETURN_ERROR_DESCRIPTION',
@@ -60,12 +64,14 @@ function *insertStudentReturn(action) {
 
       default:
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+        yield put({ type: 'SET_IS_YES_NO_MESSAGE', submitted: false });
         yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro deconhecido, código: " + response.data.code });
         break;
     }
   }
   catch(e) {
     yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+    yield put({ type: 'SET_IS_YES_NO_MESSAGE', submitted: false });
     yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
   }
   yield put({ type: 'SET_LOADING', isLoading: false });
