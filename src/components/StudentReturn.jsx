@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Grid } from 'react-flexbox-grid';
 import UserEquipControlContainer from '../containers/UserEquipControlContainer.jsx'
 import update from 'immutability-helper';
 
@@ -22,15 +23,16 @@ export default class StudentReturn extends React.Component {
   render () {
     return (
       <div>
-        <UserEquipControlContainer
-          selectEquipErrorMessage={this.selectEquipErrorMessage}
-          isYesNoMessage={false}
-          setIsYesNoMessage={this.setIsYesNoMessage}
-          submitForm={this.props.insertStudentReturn}
-          clearErrorDescription={this.props.clearErrorDescription}
-          errorCauseEquipNumbers={this.props.errorCauseEquipNumbers}
-          errorCode={this.props.errorCode}
-        />
+        <Grid fluid >
+          <UserEquipControlContainer
+            selectEquipErrorMessage={this.selectEquipErrorMessage}
+            setIsYesNoMessage={this.setIsYesNoMessage}
+            submitForm={this.props.insertStudentReturn}
+            clearErrorDescription={this.props.clearErrorDescription}
+            errorCauseEquipNumbers={this.props.errorCauseEquipNumbers}
+            errorCode={this.props.errorCode}
+          />
+        </Grid>
       </div>
     )
   }

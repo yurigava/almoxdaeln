@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -149,41 +150,58 @@ export default class AddFamilia extends React.Component {
             }
           }
         >
-          <TextField
-            style={style}
-            name="familia"
-            hintText="Nome da Nova Família"
-            floatingLabelText="Família"
-            value={this.state.familia}
-            disabled={(this.props.isInputDisabled && this.state.isFamiliaDisabled)}
-            onChange={this.handleTextFieldChange}
-            errorText={(this.state.isMissingFamilia && this.state.familia === "") ?
-              "Campo Família não pode ser deixado em branco" : this.state.familiaError}
-            floatingLabelStyle={{color: 'grey'}}
-          />
-          &nbsp;
-          <TextField
-            style={style}
-            name="tipo"
-            hintText="Nome do Novo Tipo"
-            floatingLabelText="Tipo"
-            value={this.state.tipo}
-            disabled={this.props.isInputDisabled}
-            onChange={this.handleTextFieldChange}
-            errorText={(this.state.isMissingTipo && this.state.tipo === "") ?
-              "Campo Tipo não pode ser deixado em branco" : this.state.tipoError}
-            floatingLabelStyle={{color: 'grey'}}
-          />
-          <br/>
-          <br/>
-          <RaisedButton
-            name="submit"
-            type="button"
-            style= {style}
-            label="Enviar"
-            primary={true}
-            onTouchTap={this.handleFormSubmit}
-          />
+          <Grid fluid >
+            <Row bottom="xs" around="xs" center="xs" >
+              <Col xs={0} sm={2} md={3}/>
+              <Col xs={12} sm={4} md={3} >
+                <TextField
+                  style={style}
+                  name="familia"
+                  hintText="Nome da Nova Família"
+                  floatingLabelText="Família"
+                  value={this.state.familia}
+                  disabled={(this.props.isInputDisabled && this.state.isFamiliaDisabled)}
+                  onChange={this.handleTextFieldChange}
+                  errorText={(this.state.isMissingFamilia && this.state.familia === "") ?
+                    "Campo Família não pode ser deixado em branco" : this.state.familiaError}
+                  floatingLabelStyle={{color: 'grey'}}
+                  fullWidth={true}
+                />
+              </Col>
+              <Col xs={12} sm={4} md={3} >
+                <TextField
+                  style={style}
+                  name="tipo"
+                  hintText="Nome do Novo Tipo"
+                  floatingLabelText="Tipo"
+                  value={this.state.tipo}
+                  disabled={this.props.isInputDisabled}
+                  onChange={this.handleTextFieldChange}
+                  errorText={(this.state.isMissingTipo && this.state.tipo === "") ?
+                    "Campo Tipo não pode ser deixado em branco" : this.state.tipoError}
+                  floatingLabelStyle={{color: 'grey'}}
+                  fullWidth={true}
+                />
+              </Col>
+              <Col xs={0} sm={2} md={3}/>
+            </Row>
+            <Row
+              bottom="xs"
+              center="xs"
+              style={{height: '55px'}}
+            >
+              <Col>
+                <RaisedButton
+                  name="submit"
+                  type="button"
+                  style= {style}
+                  label="Enviar"
+                  primary={true}
+                  onTouchTap={this.handleFormSubmit}
+                />
+              </Col>
+            </Row>
+          </Grid>
         </form>
       </div>
     )

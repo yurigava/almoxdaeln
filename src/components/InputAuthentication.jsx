@@ -21,6 +21,7 @@ export default class InputAuthentication extends React.Component {
     }
     if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
     {
+      this.props.setUsuario(this.state.login);
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
   }
@@ -28,9 +29,9 @@ export default class InputAuthentication extends React.Component {
   componentWillReceiveProps() {
     if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
     {
+      this.props.setUsuario(this.state.login);
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
-    this.props.setUsuario(this.state.login);
   }
 
   handleChange(event) {
