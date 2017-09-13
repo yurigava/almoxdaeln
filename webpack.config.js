@@ -16,8 +16,8 @@ if(TARGET === 'start' || !TARGET) {
       loaders: [
         {
           test: /\.css$/,
-          loaders: ['style', 'css'],
-          include: path.resolve(ROOT_PATH, 'src')
+          loaders: 'style-loader!css-loader',
+          include: /flexboxgrid/
         },
         {
           test: /\.jsx$/,
