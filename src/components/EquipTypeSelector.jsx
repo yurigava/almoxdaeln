@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { Row, Col } from 'react-flexbox-grid';
@@ -61,6 +62,7 @@ export default class EquipTypeSelector extends React.Component {
         <Col xs={12} sm={6}>
           <SelectField
             floatingLabelText="Família"
+            labelStyle={{position: 'absolute'}}
             value={this.props.familia}
             onChange={this.handleFamiliaChange}
             disabled={this.props.isInputDisabled}
@@ -69,6 +71,7 @@ export default class EquipTypeSelector extends React.Component {
               "Campo Família não pode ser deixado em branco" : ""}
             floatingLabelStyle={{color: 'grey', left: '0px'}}
             fullWidth={true}
+            style={{ textOverflow: "ellipsis" }}
           >
             {this.props.familias.map((familia) => (
               <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
@@ -78,6 +81,7 @@ export default class EquipTypeSelector extends React.Component {
         <Col xs={12} sm={6}>
           <SelectField
             floatingLabelText="Tipo"
+            labelStyle={{position: 'absolute'}}
             value={this.props.tipo}
             onChange={this.handleTipoChange}
             disabled={this.props.familia === null || this.props.isInputDisabled}

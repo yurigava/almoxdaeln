@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Row, Col } from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -247,49 +248,66 @@ export default class UserEquipControl extends React.Component {
           }
         >
           {this.state.barCodes.map((barCode, index) => (
-            <div key={index}>
-              <TextField
-                autoFocus
-                name={index}
-                hintText={index === 0 ? "Código do Usuário" : "Patrimônio do Equipamento"}
-                floatingLabelText={index === 0 ? "Usuário" : "Equipamento"}
-                value={barCode.value}
-                onChange={this.handleTextFieldChange}
-                onKeyPress={this.handleKeyPress}
-                errorText={barCode.errorText}
-                floatingLabelStyle={{color: 'grey'}}
-                disabled={this.props.isInputDisabled}
-              />
-              <FloatingActionButton
-                mini={true}
-                type="button"
-                name={index}
-                backgroundColor="#ff0000"
-                onTouchTap={index === 0 ? this.handleClearUsuario :  this.handleRemoveEquipment}
-                zDepth={1}
-                style={style}
-              >
-                {index === 0 ? <NavigationClose/> : <ActionDelete />}
-              </FloatingActionButton>
-            </div>
+            <Row key={index} bottom="xs" around="xs" center="xs" >
+              <Col xs={0} sm={3} md={4}/>
+              <Col xs={10} sm={4} md={3}>
+                <TextField
+                  autoFocus
+                  name={index}
+                  hintText={index === 0 ? "Código do Usuário" : "Patrimônio do Equipamento"}
+                  floatingLabelText={index === 0 ? "Usuário" : "Equipamento"}
+                  value={barCode.value}
+                  onChange={this.handleTextFieldChange}
+                  onKeyPress={this.handleKeyPress}
+                  errorText={barCode.errorText}
+                  floatingLabelStyle={{color: 'grey'}}
+                  disabled={this.props.isInputDisabled}
+                  fullWidth={true}
+                />
+              </Col>
+              <Col xs={2} sm={1} md={1}>
+                <FloatingActionButton
+                  mini={true}
+                  type="button"
+                  name={index}
+                  backgroundColor="#ff0000"
+                  onTouchTap={index === 0 ? this.handleClearUsuario :  this.handleRemoveEquipment}
+                  zDepth={1}
+                  style={style}
+                >
+                  {index === 0 ? <NavigationClose/> : <ActionDelete />}
+                </FloatingActionButton>
+              </Col>
+              <Col xs={0} sm={3} md={4}/>
+            </Row>
           ))}
-          <br/>
-          <RaisedButton
-            name="add"
-            type="button"
-            style={style}
-            label="Adicionar"
-            primary={true}
-            onTouchTap={this.handleNewBarCode}
-          />
-          <RaisedButton
-            name="submit"
-            type="button"
-            style= {style}
-            label="Enviar"
-            primary={true}
-            onTouchTap={this.handleFormSubmit}
-          />
+          <Row
+            bottom="xs"
+            center="xs"
+            style={{height: '55px'}}
+          >
+            <Col>
+              <RaisedButton
+                name="add"
+                type="button"
+                style={style}
+                label="Adicionar"
+                primary={false}
+                onTouchTap={this.handleNewBarCode}
+              />
+            </Col>
+            <Col xs={1}/>
+            <Col>
+              <RaisedButton
+                name="submit"
+                type="button"
+                style= {style}
+                label="Enviar"
+                primary={true}
+                onTouchTap={this.handleFormSubmit}
+              />
+            </Col>
+          </Row>
         </form>
       </div>
     )
