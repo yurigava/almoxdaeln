@@ -32,6 +32,7 @@ const addReserve = (state = initialState, action) => {
           equipInfos: {$set: [emptyEquipInfos]}
         })
       )
+
     case 'RESERVE_REMOVE_EQUIP':
       return (
         update(state, {
