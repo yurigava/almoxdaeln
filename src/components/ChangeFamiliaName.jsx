@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import MenuItem from 'material-ui/MenuItem';
@@ -118,44 +119,62 @@ export default class ChangeFamiliaName extends React.Component {
             }
           }
         >
-          <SelectField
-            style={style}
-            floatingLabelText="Família a ser alterada"
-            value={this.state.familia}
-            onChange={this.handleFamiliaChange}
-            disabled={this.props.isInputDisabled}
-            autoWidth={true}
-            errorText={(this.state.isMissingFamilia && this.state.familia === null) ?
-              "Campo Família não pode ser deixado em branco" : ""}
-            floatingLabelStyle={{color: 'grey', left: '0px'}}
-          >
-            {this.props.familias.map((familia) => (
-              <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
-            ))}
-          </SelectField>
-          &nbsp;
-          <TextField
-            style={style}
-            name="familia"
-            hintText="Novo nome para a Família"
-            floatingLabelText="Família"
-            value={this.state.familiaNewName}
-            disabled={this.props.isInputDisabled}
-            onChange={this.handleTextFieldChange}
-            errorText={(this.state.isMissingFamiliaNewName && this.state.familiaNewName === "") ?
-              "Campo Família não pode ser deixado em branco" : ""}
-            floatingLabelStyle={{color: 'grey'}}
-          />
-          <br/>
-          <br/>
-          <RaisedButton
-            name="submit"
-            type="button"
-            style= {style}
-            label="Enviar"
-            primary={true}
-            onTouchTap={this.handleFormSubmit}
-          />
+          <Grid fluid >
+            <Row bottom="xs" around="xs" center="xs" >
+              <Col xs={0} sm={2} md={3}/>
+              <Col xs={12} sm={4} md={3} >
+                <SelectField
+                  style={style}
+                  labelStyle={{position: 'absolute'}}
+                  floatingLabelText="Família a ser alterada"
+                  value={this.state.familia}
+                  onChange={this.handleFamiliaChange}
+                  disabled={this.props.isInputDisabled}
+                  autoWidth={true}
+                  fullWidth={true}
+                  errorText={(this.state.isMissingFamilia && this.state.familia === null) ?
+                    "Campo Família não pode ser deixado em branco" : ""}
+                  floatingLabelStyle={{color: 'grey', left: '0px'}}
+                >
+                  {this.props.familias.map((familia) => (
+                    <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
+                  ))}
+                </SelectField>
+              </Col>
+              <Col xs={12} sm={4} md={3} >
+                <TextField
+                  style={style}
+                  name="familia"
+                  hintText="Novo nome para a Família"
+                  floatingLabelText="Família"
+                  value={this.state.familiaNewName}
+                  disabled={this.props.isInputDisabled}
+                  onChange={this.handleTextFieldChange}
+                  fullWidth={true}
+                  errorText={(this.state.isMissingFamiliaNewName && this.state.familiaNewName === "") ?
+                    "Campo Família não pode ser deixado em branco" : ""}
+                  floatingLabelStyle={{color: 'grey'}}
+                />
+              </Col>
+              <Col xs={0} sm={2} md={3}/>
+            </Row>
+            <Row
+              center="xs"
+              bottom="xs"
+              style={{height: '55px'}}
+            >
+              <Col>
+                <RaisedButton
+                  name="submit"
+                  type="button"
+                  style= {style}
+                  label="Enviar"
+                  primary={true}
+                  onTouchTap={this.handleFormSubmit}
+                />
+              </Col>
+            </Row>
+          </Grid>
         </form>
       </div>
     )

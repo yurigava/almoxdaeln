@@ -61,6 +61,7 @@ export default class EquipTypeSelector extends React.Component {
         <Col xs={12} sm={6}>
           <SelectField
             floatingLabelText="Família"
+            labelStyle={{position: 'absolute'}}
             value={this.props.familia}
             onChange={this.handleFamiliaChange}
             disabled={this.props.isInputDisabled}
@@ -69,6 +70,7 @@ export default class EquipTypeSelector extends React.Component {
               "Campo Família não pode ser deixado em branco" : ""}
             floatingLabelStyle={{color: 'grey', left: '0px'}}
             fullWidth={true}
+            style={{ textOverflow: "ellipsis" }}
           >
             {this.props.familias.map((familia) => (
               <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
@@ -78,6 +80,7 @@ export default class EquipTypeSelector extends React.Component {
         <Col xs={12} sm={6}>
           <SelectField
             floatingLabelText="Tipo"
+            labelStyle={{position: 'absolute'}}
             value={this.props.tipo}
             onChange={this.handleTipoChange}
             disabled={this.props.familia === null || this.props.isInputDisabled}
@@ -86,6 +89,7 @@ export default class EquipTypeSelector extends React.Component {
               "Campo Tipo não pode ser deixado em branco" : ""}
             floatingLabelStyle={{color: 'grey', left: '0px'}}
             fullWidth={true}
+            style={{ textOverflow: "ellipsis", overflow: "hidden" }}
           >
             {this.state.allowedTipos.map((tipo) => (
               <MenuItem key={tipo.id_tipo} value={tipo.id_tipo} primaryText={tipo.tipo} />

@@ -531,6 +531,7 @@ export default class AddReserve extends React.Component {
               <Col xs={12} sm={6} md={4} >
                 <SelectField
                   floatingLabelText="Turno"
+                  labelStyle={{position: 'absolute'}}
                   value={TurnoReserve[this.state.timeReserve]}
                   disabled={this.props.isInputDisabled}
                   onChange={this.handleChangeTime}
@@ -584,6 +585,7 @@ export default class AddReserve extends React.Component {
                 <Col xs={9} md={3}>
                   <SelectField
                     name={index}
+                    labelStyle={{position: 'absolute'}}
                     floatingLabelText="Quantidade"
                     value={equipReservado.quantidade}
                     onChange={this.handleChangeQuantidade}
@@ -617,7 +619,7 @@ export default class AddReserve extends React.Component {
             <Row
               bottom="xs"
               center="xs"
-              style={{height: '43px'}}
+              style={{height: '55px'}}
             >
               <Col>
                 <RaisedButton

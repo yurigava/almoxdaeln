@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -26,7 +27,7 @@ export default class AddEquip extends React.Component {
     super(props);
     this.state = {
       patrimonios: [
-        {index: 0, name: "equip0", value: "", errorText: ""}
+        {value: "", errorText: ""}
       ]
     }
     this.props.clearMissingFieldsError();
@@ -47,7 +48,7 @@ export default class AddEquip extends React.Component {
       this.props.clearMissingFieldsError();
       this.state = {
         patrimonios: [
-          {index: 0, name: "equip0", value: "", errorText: ""}
+          {value: "", errorText: ""}
         ]
       }
     }
@@ -76,7 +77,7 @@ export default class AddEquip extends React.Component {
 
   handleTextFieldChange(event) {
     const value = event.currentTarget.value;
-    const index = this.findEquipIndex(event.currentTarget.name, this.state.patrimonios);
+    const index = Number(event.currentTarget.name);
     const newValue = (value.match("[0-9]+") || []).pop() || '';
     let newErrorText = this.state.patrimonios[index].errorText;
     if(newValue != this.state.patrimonios[index].value)
@@ -116,15 +117,10 @@ export default class AddEquip extends React.Component {
       return;
     }
     const patrimonios = this.state.patrimonios
-    let nextIndex = 0
-    if(patrimonios.length > 0)
-      nextIndex = patrimonios[patrimonios.length-1].index+1
     this.setState(update(this.state, {
       patrimonios: {
         $push: [
           {
-            index: nextIndex,
-            name: "equip"+nextIndex,
             value: "",
             errorText: ""
           }
@@ -134,7 +130,7 @@ export default class AddEquip extends React.Component {
   }
 
   handleRemoveEquipment(event) {
-    const index = this.findEquipIndex(event.currentTarget.name, this.state.patrimonios);
+    const index = Number(event.currentTarget.name);
     this.setState(update(this.state, {
       patrimonios: {
         $splice: [[index, 1]]
@@ -150,12 +146,6 @@ export default class AddEquip extends React.Component {
   handleSubmitChangingType(event) {
     let patrimonios = this.state.patrimonios.filter(pat => pat.value !== "").map(pat => Number(pat.value));
     this.props.insertEquips(this.props.usuario, patrimonios, this.props.tipo, true)
-  }
-
-  findEquipIndex(name, patrimonios) {
-    return patrimonios.findIndex(patrimonio =>
-      name == patrimonio.name
-    )
   }
 
   render () {
@@ -215,64 +205,85 @@ export default class AddEquip extends React.Component {
             }
           }
         >
-          <div style={{width:'50%'}}>
-            <EquipTypeSelectorContainer
-              tipo={this.props.tipo}
-              familia={this.props.familia}
-              setSelectedTipo={this.props.setSelectedTipo}
-              setSelectedFamilia={this.props.setSelectedFamilia}
-              setInfoNumber={this.props.setInfoNumber}
-              isMissingTipo={this.props.isMissingTipo}
-              isMissingFamilia={this.props.isMissingFamilia}
-              isInputDisabled={this.props.isInputDisabled}
-            />
-          </div>
-          <br/>
-          {this.state.patrimonios.map((patrimonio) => (
-            <div key={patrimonio.index}>
-              <TextField
-                autoFocus
-                name={"equip"+patrimonio.index}
-                hintText="Patrimônio do Equipamento"
-                floatingLabelText="Equipamento"
-                value={patrimonio.value}
-                onChange={this.handleTextFieldChange}
-                onKeyPress={this.handleKeyPress}
-                errorText={patrimonio.errorText}
-                floatingLabelStyle={{color: 'grey'}}
-                disabled={this.props.isInputDisabled}
-              />
-              <FloatingActionButton
-                mini={true}
-                type="button"
-                name={"equip"+patrimonio.index}
-                backgroundColor="#ff0000"
-                onTouchTap={this.handleRemoveEquipment}
-                zDepth={1}
-                style={style}
-              >
-                <ActionDelete />
-              </FloatingActionButton>
-              <br/>
-            </div>
-          ))}
-          <br/>
-          <RaisedButton
-            name="add"
-            type="button"
-            style={style}
-            label="Adicionar"
-            primary={true}
-            onTouchTap={this.handleNewEquipment}
-          />
-          <RaisedButton
-            name="submit"
-            type="button"
-            style= {style}
-            label="Enviar"
-            primary={true}
-            onTouchTap={this.handleFormSubmit}
-          />
+          <Grid fluid >
+            <Row bottom="xs" around="xs" center="xs" >
+              <Col xs={0} sm={2} md={3}/>
+              <Col xs={12} sm={8} md={6} >
+                <EquipTypeSelectorContainer
+                  tipo={this.props.tipo}
+                  familia={this.props.familia}
+                  setSelectedTipo={this.props.setSelectedTipo}
+                  setSelectedFamilia={this.props.setSelectedFamilia}
+                  setInfoNumber={this.props.setInfoNumber}
+                  isMissingTipo={this.props.isMissingTipo}
+                  isMissingFamilia={this.props.isMissingFamilia}
+                  isInputDisabled={this.props.isInputDisabled}
+                />
+              </Col>
+              <Col xs={0} sm={2} md={3}/>
+            </Row>
+            {this.state.patrimonios.map((patrimonio, index) => (
+              <Row key={index} bottom="xs" around="xs" center="xs" >
+                <Col xs={0} sm={3} md={4}/>
+                <Col xs={10} sm={4} md={3}>
+                  <TextField
+                    autoFocus
+                    name={index.toString()}
+                    hintText="Patrimônio do Equipamento"
+                    floatingLabelText="Equipamento"
+                    value={patrimonio.value}
+                    onChange={this.handleTextFieldChange}
+                    onKeyPress={this.handleKeyPress}
+                    errorText={patrimonio.errorText}
+                    floatingLabelStyle={{color: 'grey'}}
+                    disabled={this.props.isInputDisabled}
+                    fullWidth={true}
+                  />
+                </Col>
+                <Col xs={2} sm={1} md={1}>
+                  <FloatingActionButton
+                    mini={true}
+                    type="button"
+                    name={index}
+                    backgroundColor="#ff0000"
+                    onTouchTap={this.handleRemoveEquipment}
+                    zDepth={1}
+                    style={style}
+                  >
+                    <ActionDelete />
+                  </FloatingActionButton>
+                </Col>
+                <Col xs={0} sm={3} md={4}/>
+              </Row>
+            ))}
+            <Row
+              bottom="xs"
+              center="xs"
+              style={{height: '55px'}}
+            >
+              <Col>
+                <RaisedButton
+                  name="add"
+                  type="button"
+                  style={style}
+                  label="Adicionar"
+                  primary={false}
+                  onTouchTap={this.handleNewEquipment}
+                />
+              </Col>
+              <Col xs={1}/>
+              <Col>
+                <RaisedButton
+                  name="submit"
+                  type="button"
+                  style= {style}
+                  label="Enviar"
+                  primary={true}
+                  onTouchTap={this.handleFormSubmit}
+                />
+              </Col>
+            </Row>
+          </Grid>
         </form>
       </div>
     );
@@ -282,7 +293,7 @@ export default class AddEquip extends React.Component {
 AddEquip.propTypes = {
   insertEquips: PropTypes.func.isRequired,
   clearSubmissionMessage: PropTypes.func.isRequired,
-  clearErrorDescription: PropTypes.func.isRequired,
+  clearErrorDescription: PropTypes.func,
   clearMissingFieldsError: PropTypes.func.isRequired,
   setSelectedTipo: PropTypes.func.isRequired,
   setSelectedFamilia: PropTypes.func.isRequired,
@@ -295,7 +306,7 @@ AddEquip.propTypes = {
   isMissingFamilia: PropTypes.bool.isRequired,
   isDataSubmitted: PropTypes.bool.isRequired,
   submissionMessage: PropTypes.string.isRequired,
-  errorCauseEquipNumbers: PropTypes.array.isRequired,
+  errorCauseEquipNumbers: PropTypes.array,
   errorCode: PropTypes.string.isRequired,
   infoNumber: PropTypes.number.isRequired,
 };

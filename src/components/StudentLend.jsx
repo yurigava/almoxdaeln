@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Grid } from 'react-flexbox-grid';
 import UserEquipControlContainer from '../containers/UserEquipControlContainer.jsx'
 import update from 'immutability-helper';
 
@@ -19,15 +20,17 @@ export default class StudentLend extends React.Component {
   render () {
     return (
       <div>
-        <UserEquipControlContainer
-          selectEquipErrorMessage={this.selectEquipErrorMessage}
-          setIsYesNoMessage={this.props.setIsYesNoMessage}
-          submitForm={this.props.insertStudentLendShouldNotAdd}
-          submitFormAfterConfirm={this.props.insertStudentLendShouldAdd}
-          clearErrorDescription={this.props.clearErrorDescription}
-          errorCauseEquipNumbers={this.props.errorCauseEquipNumbers}
-          errorCode={this.props.errorCode}
-        />
+        <Grid fluid >
+          <UserEquipControlContainer
+            selectEquipErrorMessage={this.selectEquipErrorMessage}
+            setIsYesNoMessage={this.props.setIsYesNoMessage}
+            submitForm={this.props.insertStudentLendShouldNotAdd}
+            submitFormAfterConfirm={this.props.insertStudentLendShouldAdd}
+            clearErrorDescription={this.props.clearErrorDescription}
+            errorCauseEquipNumbers={this.props.errorCauseEquipNumbers}
+            errorCode={this.props.errorCode}
+          />
+        </Grid>
       </div>
     )
   }
