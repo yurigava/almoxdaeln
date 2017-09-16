@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "277224d5_b98e4d3f",
+        "filename": "src/components/AddReserve.jsx",
+        "patchSetId": 11
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1010039
+      },
+      "writtenOn": "2017-09-16T02:52:28Z",
+      "side": 1,
+      "message": "Esse cara aqui, vc tá pegando da Store, pode passar o mesmo pra todo mundo, não precisa guardar ele em cada um.",
+      "range": {
+        "startLine": 47,
+        "startChar": 127,
+        "endLine": 47,
+        "endChar": 142
+      },
+      "revId": "e2900147da18427b8130e54756e1f301966d2e60",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9f6227f_68181b63",
+        "filename": "src/components/AddReserve.jsx",
+        "patchSetId": 11
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1010039
+      },
+      "writtenOn": "2017-09-16T02:52:28Z",
+      "side": 1,
+      "message": "N sei se é por isso q tá dando pau, mas aqui vc deveria passar os tipos q tão salvos no seu estado, não o esquema da prop.",
+      "range": {
+        "startLine": 210,
+        "startChar": 53,
+        "endLine": 210,
+        "endChar": 68
+      },
+      "revId": "e2900147da18427b8130e54756e1f301966d2e60",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7e42ad7_5f592e3a",
+        "filename": "src/components/AddReserve.jsx",
+        "patchSetId": 11
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1010039
+      },
+      "writtenOn": "2017-09-16T02:52:28Z",
+      "side": 1,
+      "message": "Só passar aqui o this.props.isInputDisabled, e fechou, inclusive, tenta passar pros outros caras também, o da quantidade etc.",
+      "range": {
+        "startLine": 331,
+        "startChar": 31,
+        "endLine": 331,
+        "endChar": 56
+      },
+      "revId": "e2900147da18427b8130e54756e1f301966d2e60",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09ebb0cf_16dfd598",
+        "filename": "src/components/AddReserve.jsx",
+        "patchSetId": 11
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1010039
+      },
+      "writtenOn": "2017-09-16T02:52:28Z",
+      "side": 1,
+      "message": "Tá indentado errado aqui, ele não tá dentro do cara de cima, deveria estar no msm nível de indentação.",
+      "range": {
+        "startLine": 334,
+        "startChar": 12,
+        "endLine": 334,
+        "endChar": 14
+      },
+      "revId": "e2900147da18427b8130e54756e1f301966d2e60",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74b26e4f_e1caeccd",
+        "filename": "src/sagas/AddReserve.jsx",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1010039
+      },
+      "writtenOn": "2017-09-16T02:52:28Z",
+      "side": 1,
+      "message": "Eu chuto que não tá enviando pro servidor, pq tá parando em um desses casos aqui. Provavelmente o id_tipo não tá setado, já q vc n mexe nele lá no component. Aí vc n deve estar tratando o esse missingFields, por isso parece q nada acontece, pq as actions q o saga cria não aparecem no console.",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 20,
+        "endChar": 11
+      },
+      "revId": "e2900147da18427b8130e54756e1f301966d2e60",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
