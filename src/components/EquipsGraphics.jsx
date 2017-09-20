@@ -142,6 +142,7 @@ export default class EquipsGraphics extends React.Component {
                 onChange={this.handleChangeDateInit}
                 autoOk={true}
                 formatDate={this.formatDate}
+                maxDate={new Date(Date.now())}
                 firstDayOfWeek={0}
                 cancelLabel="Cancelar"
                 locale='pt-BR'
