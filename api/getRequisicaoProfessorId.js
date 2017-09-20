@@ -1,19 +1,16 @@
 module.exports = exports = function(req,res) {
   var usuario = req.body.usuario;
-  console.log(usuario);
   var date = req.body.date;
-  console.log(date);
   var turno = req.body.turno;
-  console.log(turno);
   var materia = req.body.materia;
-  console.log(materia);
+  console.log("Requisição -> usuario: " + usuario + " / date: " + date + " / turno: " + turno + " / matéria: " + materia);
   req.models.Requisicoes.find(
     {
       usuario: usuario,
       dataDeUso: date,
       turno: turno,
       materia: materia,
-      EstadosReq_id_estadosReq: 1,
+      EstadosReq_id_estadosReq: 3,
     },
     function(err, existentRequisicao) {
       if(err)
@@ -29,7 +26,7 @@ module.exports = exports = function(req,res) {
           dataDeUso: date,
           turno: turno,
           materia: materia,
-          EstadosReq_id_estadosReq: 1,
+          EstadosReq_id_estadosReq: 3,
         };
         req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
           if(err)
