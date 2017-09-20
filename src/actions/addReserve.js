@@ -30,6 +30,14 @@ export const setQuantidade = (index, quantidade) => {
   }
 }
 
+export const setAvailable = (index, availableEquips) => {
+  return {
+    type: 'RESERVE_SET_AVAILABLEQUIPS',
+    index,
+    availableEquips
+  }
+}
+
 export const removeEquip = (index) => {
   return {
     type: 'RESERVE_REMOVE_EQUIP',

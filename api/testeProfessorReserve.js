@@ -15,10 +15,11 @@ module.exports = exports = function(req, res) {
           throw(err);
 
         tipos.forEach(function (equips) {
-          req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equips.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+          req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equips.id_tipo}, function(err, quantidade) {
             if(err)
               throw(err);
             quantityTotal = Number(quantityTotal) + Number(quantidade);
+            console.log("quantityTotal: " + quantityTotal );
           });
         });
 
@@ -110,7 +111,7 @@ module.exports = exports = function(req, res) {
           throw(err);
 
         tipos.forEach(function (equips) {
-          req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equips.id_tipo, Estados_id_estado: 4}, function(err, quantidade) {
+          req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equips.id_tipo}, function(err, quantidade) {
             if(err)
               throw(err);
             familyTotal = Number(familyTotal) + Number(quantidade);
