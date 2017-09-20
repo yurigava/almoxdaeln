@@ -10,15 +10,13 @@ export const insertReserve = (serverUrl, usuario, date, turno, materia, equips) 
   }
 }
 
-export const quantidadeReserve = (serverUrl, familia, tipo, name, date, turno) => {
+export const quantidadeReserve = (serverUrl, familia, tipo, name) => {
   return {
     type: 'QUANTIDADE_RESERVE',
     serverUrl,
     familia,
     tipo,
-    name,
-    date,
-    turno
+    name
   }
 }
 
@@ -77,5 +75,13 @@ export const setInfoNumber = (infoNumber) => {
   return {
     type: 'RESERVE_SET_INFO_NUMBER',
     infoNumber
+  }
+}
+
+export const getLastReq = (serverUrl, usuario) => {
+  return {
+    type: 'RESERVE_GET_LAST_REQ',
+    serverUrl,
+    usuario
   }
 }

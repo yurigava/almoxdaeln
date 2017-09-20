@@ -13,18 +13,25 @@ import {
   addEquip,
   removeEquip,
   setAvailable,
+  getLastReq,
 } from '../actions/addReserve.js'
 import {
   setSubmissionMessage,
   setIsYesNoMessage,
   setDataSubmitted,
 } from '../actions/appUi.js'
+import {
+  getFamilias,
+  getTipos,
+} from '../actions/equipTypeSelect.js'
 import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
   return {
     isInputDisabled: state.appUi.isInputDisabled,
     submissionMessage: state.appUi.submissionMessage,
+    familias: state.equipTypeSelect.familias,
+    tipos: state.equipTypeSelect.tipos,
     //isMissingFamilia: state.addReserve.isMissingFamilia,
     //isMissingTipo: state.addReserve.isMissingTipo,
     isDataSubmitted: state.appUi.isDataSubmitted,
@@ -40,8 +47,8 @@ const mapDispatchToProps = (dispatch) => {
     insertReserve: (usuario, date, turno, materia, equips) => {
       dispatch(insertReserve(serverUrl, usuario, date, turno, materia, equips))
     },
-    quantidadeReserve: (familia, tipo, name, date, turno) => {
-      dispatch(quantidadeReserve(serverUrl, familia, tipo, name, date, turno))
+    quantidadeReserve: (familia, tipo, name) => {
+      dispatch(quantidadeReserve(serverUrl, familia, tipo, name))
     },
     clearSubmissionMessage: () => {
       dispatch(setSubmissionMessage(""))
@@ -78,7 +85,16 @@ const mapDispatchToProps = (dispatch) => {
     },
     setIsYesNoMessage: (isYesNoMessage) => {
       dispatch(setIsYesNoMessage(isYesNoMessage))
-    }
+    },
+    getFamilias: () => {
+      dispatch(getFamilias(serverUrl))
+    },
+    getTipos: () => {
+      dispatch(getTipos(serverUrl))
+    },
+    getLastReq: (usuario) => {
+      dispatch(getLastReq(serverUrl, usuario))
+    },
   }
 }
 
