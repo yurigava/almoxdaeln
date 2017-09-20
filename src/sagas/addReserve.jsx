@@ -69,64 +69,49 @@ function *insertReserve(action) {
   yield put({ type: 'SET_LOADING', isLoading: true });
   const equipsUnique = Array.from(new Set(action.equips));
 
-  //const testeOK = yield call(
-  //  testeQuantidade,
-  //  action.serverUrl,
-  //  action.equips,
-  //  action.date,
-  //  action.turno,
-  //);
-  //if(testeOK === -1) {
-  //  yield put({ type: 'SET_LOADING', isLoading: false });
-  //  yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-  //  yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Erro na Quantidade de equipamentos"});
-  //  return;
-  //}
-  //else {
-    const idRequisicao = yield call(
-      insertOrGetRequisicao,
-      action.serverUrl,
-      action.usuario,
-      action.date,
-      action.turno,
-      action.materia,
-    );
-    if(idRequisicao < 1) {
-      yield put({ type: 'SET_LOADING', isLoading: false });
-      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-      yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Requisição não inserida"});
-      return;
-    }
-    try {
-      //const equipsUnique = Array.from(new Set(action.equips));
-      const response = yield call(
-        axios.post,
-        action.serverUrl + '/api/professorReserve',
-        {
-          requisicao: idRequisicao,
-          equips: equipsUnique
-        },
-        {withCredentials:true}
-      );
-      if(response.data === "ok") {
-        let singular = "O equipamento foi reservado com sucesso.";
-        //let plural = "Os equipamentos foram reservado com sucesso.";
-        yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
-        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: singular});
-      }
-      else {
-        yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-        yield put({
-          type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.data.code
-        });
-      }
-    }
-    catch(e) {
-      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-      yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
-    }
+  const idRequisicao = yield call(
+    insertOrGetRequisicao,
+    action.serverUrl,
+    action.usuario,
+    action.date,
+    action.turno,
+    action.materia,
+  );
+  if(idRequisicao < 1) {
     yield put({ type: 'SET_LOADING', isLoading: false });
-  //}
+    yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+    yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Requisição não inserida"});
+    return;
+  }
+  try {
+    const response = yield call(
+      axios.post,
+      action.serverUrl + '/api/professorReserve',
+      {
+        requisicao: idRequisicao,
+        equips: equipsUnique
+      },
+      {withCredentials:true}
+    );
+
+    if(response.data === "ok") {
+      let singular = "O equipamento foi reservado com sucesso.";
+      let plural = "Os equipamentos foram reservados com sucesso.";
+      yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
+      yield put({ type: 'SET_SUBMISSION_MESSAGE', message: equipsUnique.length > 1 ? plural : singular});
+    }
+    else {
+      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+      yield put({
+        type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.data.code
+      });
+    }
+  }
+  catch(e) {
+    yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+    yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
+  }
+  yield put({ type: 'SET_LOADING', isLoading: false });
 }
 
 function *quantidadeReserve(action) {
@@ -138,9 +123,7 @@ function *quantidadeReserve(action) {
       {
         familia: action.familia,
         tipo: action.tipo,
-        name: action.name,
-        date: action.date,
-        turno: action.turno
+        name: action.name
       },
       {withCredentials:true}
     );
@@ -160,9 +143,41 @@ function *quantidadeReserve(action) {
   yield put({ type: 'SET_LOADING', isLoading: false });
 }
 
+function *getLastReq(action) {
+  yield put({ type: 'SET_LOADING', isLoading: true });
+  try {
+    const response = yield call(
+      axios.post,
+      action.serverUrl + '/api/getLastReq',
+      {
+        usuario: action.usuario,
+      },
+      {withCredentials:true}
+    );
+    if(response.data.code === "SUCCESS") {
+      yield put({ type: 'RESERVE_SET_LAST_REQ', equipamentos: response.data.equipamentos , requisicoes: response.data.requisicoes });
+    }
+    else if(response.data.code === "NOTHING") {
+      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+      yield put({ type: 'RESERVE_CLEAR_SET_LAST_REQ', equipamentos: response.data.equipamentos, requisicoes: response.data.requisicoes });
+    }
+    else {
+      yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+      yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Erro na requisição"});
+      yield put({ type: 'RESERVE_SET_LAST_REQ', equipamentos: response.data.equipamentos, requisicoes: response.data.requisicoes});
+    }
+  }
+  catch (e) {
+    yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+    yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
+  }
+  yield put({ type: 'SET_LOADING', isLoading: false });
+}
+
 function *addReserveSagas() {
     yield takeEvery('INSERT_RESERVE', insertReserve);
     yield takeEvery('QUANTIDADE_RESERVE', quantidadeReserve);
+    yield takeEvery('RESERVE_GET_LAST_REQ', getLastReq);
 }
 
 export default addReserveSagas;

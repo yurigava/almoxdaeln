@@ -7,10 +7,26 @@ const emptyEquipInfos = {
   availableEquips: null
 };
 
+const emptyLastReq = {
+  id: null,
+  materia: null,
+  dataDeUso: null,
+  turno: null,
+};
+
+const emptyReqEquips = {
+  id: null,
+  familia: null,
+  tipo: null,
+  quantidade: null,
+};
+
 const initialState =
 {
   infoNumber: 0,
-  equipInfos: [emptyEquipInfos]
+  equipInfos: [emptyEquipInfos],
+  lastReq: [emptyLastReq],
+  reqEquips: [emptyReqEquips]
 }
 
 const addReserve = (state = initialState, action) => {
@@ -84,6 +100,22 @@ const addReserve = (state = initialState, action) => {
       return (
         update(state, {
           infoNumber: {$set: action.infoNumber}
+        })
+      )
+
+    case 'RESERVE_SET_LAST_REQ':
+      return (
+        update(state, {
+          lastReq: {$set: action.requisicoes},
+          reqEquips: {$set: action.equipamentos}
+        })
+      )
+
+    case 'RESERVE_CLEAR_SET_LAST_REQ':
+      return (
+        update(state, {
+          lastReq: {$set: [emptyLastReq]},
+          reqEquips: {$set: [emptyReqEquips]},
         })
       )
 

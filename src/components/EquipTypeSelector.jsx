@@ -71,9 +71,14 @@ export default class EquipTypeSelector extends React.Component {
               "Campo Família não pode ser deixado em branco" : ""}
             floatingLabelStyle={{color: 'grey', left: '0px'}}
             fullWidth={true}
+            //maxHeight={180}
           >
             {this.props.familias.map((familia) => (
-              <MenuItem key={familia.id_familia} value={familia.id_familia} primaryText={familia.familia} />
+              <MenuItem
+                key={familia.id_familia}
+                value={familia.id_familia}
+                primaryText={familia.familia}
+              />
             ))}
           </SelectField>
         </Col>

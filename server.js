@@ -83,9 +83,6 @@ app.get('/api/getTipos', getTiposRoute);
 var quantidadeReserveRoute = require('./api/quantidadeReserve.js');
 app.post('/api/quantidadeReserve', quantidadeReserveRoute);
 
-var testeProfessorReserveRoute = require('./api/testeProfessorReserve.js');
-app.post('/api/testeProfessorReserve', testeProfessorReserveRoute);
-
 var insertFamiliaRoute = require('./api/insertFamilia.js');
 app.post('/api/insertFamilia', insertFamiliaRoute);
 
@@ -133,6 +130,9 @@ app.post('/api/getEquipTipo', getEquipTipo);
 
 var registerReservedEquips = require('./api/registerReservedEquips.js');
 app.post('/api/registerReservedEquips', registerReservedEquips);
+
+var getLastReqRoute = require('./api/getLastReq.js');
+app.post('/api/getLastReq', getLastReqRoute);
 
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
