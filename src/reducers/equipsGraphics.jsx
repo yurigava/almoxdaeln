@@ -35,7 +35,7 @@ const equipsGraphics = (state = initialState, action) => {
             selectedTipo: {$set: action.tipo}
           })
       )
-          
+
     case 'EQUIPGRAPH_SET_INFO_NUMBER':
       return (
           update(state, {

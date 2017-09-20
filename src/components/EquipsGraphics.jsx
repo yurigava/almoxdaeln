@@ -58,7 +58,7 @@ export default class EquipsGraphics extends React.Component {
       if(this.state.dateInit !== "" && this.state.dateFinal !== "") {
         var dateInicial = (this.state.dateInit.getFullYear() + '-' + ("0" + (this.state.dateInit.getMonth()+1)).slice(-2) + '-' + ("0" + this.state.dateInit.getDate()).slice(-2));
         var dateFinal = (this.state.dateFinal.getFullYear() + '-' + ("0" + (this.state.dateFinal.getMonth()+1)).slice(-2) + '-' + ("0" + this.state.dateFinal.getDate()).slice(-2));
-        
+
         this.props.quantidadeEquipsGraph(nextProps.familia, nextProps.tipo, dateInicial, dateFinal);
       }
     }
@@ -98,7 +98,7 @@ export default class EquipsGraphics extends React.Component {
       var dateInicial = (this.state.dateInit.getFullYear() + '-' + ("0" + (this.state.dateInit.getMonth()+1)).slice(-2) + '-' + ("0" + this.state.dateInit.getDate()).slice(-2));
       var dateFinal = (date.getFullYear() + '-' + ("0" + (date.getMonth()+1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2));
       //console.log("Inicial: " + dateInicial + " Final: " + dateFinal);
-      
+
       this.props.quantidadeEquipsGraph(this.props.familia, this.props.tipo, dateInicial, dateFinal);
     }
   }
@@ -120,7 +120,7 @@ export default class EquipsGraphics extends React.Component {
           <Row bottom="xs" around="xs" center="xs" >
             <Col xs={0} sm={2} md={3}/>
             <Col xs={12} sm={8} md={6} >
-              <EquipTypeSelectorContainer 
+              <EquipTypeSelectorContainer
                 tipo={this.props.tipo}
                 familia={this.props.familia}
                 setSelectedFamilia={this.props.setSelectedFamilia}
@@ -141,7 +141,7 @@ export default class EquipsGraphics extends React.Component {
                 value={this.state.dateInit !== '' ? this.state.dateInit : null}
                 onChange={this.handleChangeDateInit}
                 autoOk={true}
-                formatDate={this.formatDate}               
+                formatDate={this.formatDate}
                 firstDayOfWeek={0}
                 cancelLabel="Cancelar"
                 locale='pt-BR'
@@ -175,7 +175,7 @@ export default class EquipsGraphics extends React.Component {
           <Col xs={0} sm={2} md={3}/>
           {"Máximo Emprestado Manhã: " + this.props.quantidade[0] + " / Máximo Emprestado Tarde: " + this.props.quantidade[1] + " / Máximo Emprestado Noite: " + this.props.quantidade[2] + " - Máxima Referência: " + this.props.referencia}
           <Col xs={0} sm={2} md={3}/>
-              
+
           <div
             style={{
               width: this.state.width+'%'
@@ -251,7 +251,7 @@ export default class EquipsGraphics extends React.Component {
               {this.state.width + '%'}
             </Col>
           </Row>
-        </Grid>      
+        </Grid>
       </div>
     );
   }

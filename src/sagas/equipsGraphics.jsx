@@ -22,7 +22,7 @@ function *quantidadeEquipsGraph(action) {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Não há equipamento disponível no momento"});
       yield put({ type: 'SET_QUANTIDADE_EQUIPGRAPH', quantidade: response.data.quantidade, referencia: response.data.referencia });
-    } 
+    }
   }
   catch (e) {
     yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });

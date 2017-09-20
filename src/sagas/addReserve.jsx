@@ -69,20 +69,20 @@ function *insertReserve(action) {
   yield put({ type: 'SET_LOADING', isLoading: true });
   const equipsUnique = Array.from(new Set(action.equips));
 
-  const testeOK = yield call(
-    testeQuantidade,
-    action.serverUrl,
-    action.equips,
-    action.date,
-    action.turno,
-  );
-  if(testeOK === -1) {
-    yield put({ type: 'SET_LOADING', isLoading: false });
-    yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
-    yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Erro na Quantidade de equipamentos"});
-    return;
-  }
-  else {
+  //const testeOK = yield call(
+  //  testeQuantidade,
+  //  action.serverUrl,
+  //  action.equips,
+  //  action.date,
+  //  action.turno,
+  //);
+  //if(testeOK === -1) {
+  //  yield put({ type: 'SET_LOADING', isLoading: false });
+  //  yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
+  //  yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Erro na Quantidade de equipamentos"});
+  //  return;
+  //}
+  //else {
     const idRequisicao = yield call(
       insertOrGetRequisicao,
       action.serverUrl,
@@ -126,7 +126,7 @@ function *insertReserve(action) {
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor"});
     }
     yield put({ type: 'SET_LOADING', isLoading: false });
-  }
+  //}
 }
 
 function *quantidadeReserve(action) {
@@ -145,12 +145,12 @@ function *quantidadeReserve(action) {
       {withCredentials:true}
     );
     if(response.data.code === "SUCCESS") {
-      yield put({ type: 'SET_QUANTIDADE', quantidade: response.data.quantidade, name: response.data.name });
+      yield put({ type: 'RESERVE_SET_AVAILABLEQUIPS', availableEquips: response.data.quantidade, index: response.data.name });
     }
     else {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Não há equipamento disponível no momento"});
-      yield put({ type: 'SET_QUANTIDADE', quantidade: response.data.quantidade, name: response.data.name });
+      yield put({ type: 'RESERVE_SET_AVAILABLEQUIPS', availableEquips: response.data.quantidade, index: response.data.name });
     }
   }
   catch (e) {
