@@ -134,6 +134,9 @@ app.post('/api/getEquipTipo', getEquipTipo);
 var registerReservedEquips = require('./api/registerReservedEquips.js');
 app.post('/api/registerReservedEquips', registerReservedEquips);
 
+var getLastReqRoute = require('./api/getLastReq.js');
+app.post('/api/getLastReq', getLastReqRoute);
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
