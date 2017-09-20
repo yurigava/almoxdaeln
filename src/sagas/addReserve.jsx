@@ -108,11 +108,12 @@ function *insertReserve(action) {
         },
         {withCredentials:true}
       );
+
       if(response.data === "ok") {
         let singular = "O equipamento foi reservado com sucesso.";
-        //let plural = "Os equipamentos foram reservado com sucesso.";
+        let plural = "Os equipamentos foram reservados com sucesso.";
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: true });
-        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: singular});
+        yield put({ type: 'SET_SUBMISSION_MESSAGE', message: equipsUnique.length > 1 ? plural : singular});
       }
       else {
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
@@ -138,9 +139,7 @@ function *quantidadeReserve(action) {
       {
         familia: action.familia,
         tipo: action.tipo,
-        name: action.name,
-        date: action.date,
-        turno: action.turno
+        name: action.name
       },
       {withCredentials:true}
     );
