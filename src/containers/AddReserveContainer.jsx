@@ -10,6 +10,8 @@ import {
   setError,
   clearEquips,
   setQuantidade,
+  addEquip,
+  removeEquip,
 } from '../actions/addReserve.js'
 import {
   setSubmissionMessage,
@@ -51,6 +53,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     clearEquips: () => {
       dispatch(clearEquips())
+    },
+    addEquip: () => {
+      dispatch(addEquip())
+    },
+    removeEquip: (index) => {
+      dispatch(removeEquip(index))
     },
     setInfoNumber: (infoNumber) => {
       dispatch(setInfoNumber(infoNumber))
