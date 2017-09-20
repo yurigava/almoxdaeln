@@ -145,12 +145,12 @@ function *quantidadeReserve(action) {
       {withCredentials:true}
     );
     if(response.data.code === "SUCCESS") {
-      yield put({ type: 'SET_QUANTIDADE', quantidade: response.data.quantidade, name: response.data.name });
+      yield put({ type: 'RESERVE_SET_AVAILABLEQUIPS', availableEquips: response.data.quantidade, index: response.data.name });
     }
     else {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Não há equipamento disponível no momento"});
-      yield put({ type: 'SET_QUANTIDADE', quantidade: response.data.quantidade, name: response.data.name });
+      yield put({ type: 'RESERVE_SET_AVAILABLEQUIPS', availableEquips: response.data.quantidade, index: response.data.name });
     }
   }
   catch (e) {
