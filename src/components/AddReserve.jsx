@@ -56,7 +56,6 @@ export default class AddReserve extends React.Component {
     this.handleKeyPressMateria = this.handleKeyPressMateria.bind(this);
     this.funcSetSelectedFamilia = this.funcSetSelectedFamilia.bind(this);
     this.funcSetSelectedTipo = this.funcSetSelectedTipo.bind(this);
-    this.funcSetInfoNumber = this.funcSetInfoNumber.bind(this);
     this.handleChangeQuantidade = this.handleChangeQuantidade.bind(this);
   }
 
@@ -110,84 +109,24 @@ export default class AddReserve extends React.Component {
   }
 
   handleChangeQuantidade(event, key, payload) {
-    alert("oi");
-    //const index = Number(event.currentTarget.name);
-    //const quantidade = key+1;
-    //this.props.setQuantidade(index, quantidade);
+    const index = Number(event.currentTarget.name);
+    const quantidade = key+1;
+    this.props.setQuantidade(index, quantidade);
   }
 
   componentWillReceiveProps(nextProps) {
-    var quantidadeRecebida = 0;
-    if(nextProps.quantidade !== this.props.quantidade && nextProps.quantidade !== null ) {
-      //let index = this.findEquipIndex(nextProps.name, this.props.equipInfos);
-      quantidadeRecebida = nextProps.quantidade;
-
-      var tamanhoFamilia = 0;
-      var tipoNotNULLDisponivel = 0;
-      var tipoNotNULLReservado = 0;
-      var tipoNotNULLRecebido = 0;
-      var tipoNULLDisponivel = 0;
-      var tipoNULLReservado = 0;
-      var tipoDisponivel = 0;
-      var tipoReservado = 0;
-      var tipoNULLENotDisponivel = 0;
-      var maxRecebido = false;
-      var equips = this.props.equipInfos;
-      //console.log("equips.length: " + equips.length);
-
-      for(var j = 0; j < equips.length; j++) {
-        //console.log("j: " + j);
-        if(equips[index].familia === equips[j].familia && (equips[j].tipo === undefined || equips[j].tipo === null)) {
-          tipoNULLReservado = tipoNULLReservado + equips[j].value;
-          console.log("NullReservado: " + tipoNULLReservado);
-          if(index === j && maxRecebido === false) {
-            tipoNULLDisponivel = tipoNULLDisponivel + quantidadeRecebida;
-            maxRecebido = true;
-            console.log("NullDisponivel["+index+"]: " + tipoNULLDisponivel + " quantidadeRecebida: " + quantidadeRecebida);
-          }
-          if(maxRecebido === false) {
-            tipoNULLDisponivel = tipoNULLDisponivel + equips[j].maxQuantidade;
-            maxRecebido = true;
-            console.log("NullDisponivel["+index+"]: " + tipoNULLDisponivel + " maxQuantidade["+j+"]: " + equips[j].maxQuantidade);
-          }
-        }
-        else if(equips[index].familia === equips[j].familia) {
-          tipoNotNULLReservado = tipoNotNULLReservado + equips[j].value;
-          console.log("Reservado["+j+"]: " + equips[j].value);
-          if(index === j) {
-            //tipoNotNULLDisponivel = tipoNotNULLDisponivel + quantidadeRecebida;
-            tipoNotNULLRecebido = quantidadeRecebida;
-            console.log("Recebido["+index+"]: " + tipoNotNULLRecebido);
-          }
-          else {
-            //tipoNotNULLDisponivel = tipoNotNULLDisponivel + equips[j].maxQuantidade;
-            console.log("com tipo e não atual: " + equips[j].maxQuantidade);
-            //console.log("Disponivel["+index+"]: " + tipoNotNULLDisponivel + " maxQuantidade["+j+"]: " + equips[j].maxQuantidade);
-          }
-        }
+    for(var i=0; i<nextProps.equipInfos.length ; i++) {
+      if(nextProps.equipInfos[i].familia !== this.props.equipInfos[i].familia && nextProps.equipInfos[i].familia !== null ) {
+        alert("familia " + nextProps.equipInfos[i].familia);
+        
+        let sendDateReserve = this.state.dateReserve;
+        sendDateReserve = (sendDateReserve.getFullYear() + '-' + ("0" + (sendDateReserve.getMonth()+1)).slice(-2) + '-' + ("0" + sendDateReserve.getDate()).slice(-2));
+        this.props.quantidadeReserve(nextProps.equipInfos[i].familia, null, 0, sendDateReserve, this.state.timeReserve);
       }
-      tipoReservado = Number(tipoNotNULLReservado) + Number(tipoNULLReservado);
-      tipoDisponivel = Number(tipoNotNULLDisponivel) + Number(tipoNULLDisponivel);
-      //tipoNULLENotDisponivel = Number(tipoNULLENotDisponivel) - Number(tipoReservado);
-      console.log("tipoDisponivel: " + tipoDisponivel + " tipoReservado: " + tipoReservado);
-      if(equips[index].tipo === null || equips[index].tipo === undefined) {
-        tamanhoFamilia = tipoDisponivel - tipoReservado;
-        //tipoDisponivel <= 0 ? tamanhoFamilia = quantidadeRecebida : tamanhoFamilia = tipoDisponivel
+      if(nextProps.equipInfos[i].tipo !== this.props.equipInfos[i].tipo && nextProps.equipInfos[i].tipo !== null ) {
+        alert("tipo " + nextProps.equipInfos[i].tipo);
       }
-      else {
-        if(maxRecebido === false) {
-          tamanhoFamilia = tipoNotNULLRecebido;
-        }
-        else {
-          tipoNotNULLRecebido < tipoDisponivel - tipoReservado ? tamanhoFamilia = tipoNotNULLRecebido : tamanhoFamilia = tipoDisponivel - tipoReservado
-        }
-      }
-
-      tamanhoFamilia < 0 ? tamanhoFamilia = 0 : tamanhoFamilia = tamanhoFamilia
-
-      this.setState(update(this.state, {
-      }));
-    }
+    }    
   }
 
   handleCloseDialog() {
