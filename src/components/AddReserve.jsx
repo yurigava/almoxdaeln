@@ -12,7 +12,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import DatePicker from 'material-ui/DatePicker';
-import {Table, TableBody, TableRow, TableHeader, TableHeaderColumn, TableRowColumn} from 'material-ui/Table';
+import Divider from 'material-ui/Divider';
 
 const infos = [
   'Selecione o dia para reservar os Equipamentos',
@@ -43,6 +43,7 @@ export default class AddReserve extends React.Component {
       materia: "",
       indexinfoNumber: 0,
       error: "",
+      flag: true
     }
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
     this.handleNewEquipment = this.handleNewEquipment.bind(this);
@@ -56,22 +57,23 @@ export default class AddReserve extends React.Component {
     this.handleKeyPressMateria = this.handleKeyPressMateria.bind(this);
     this.funcSetSelectedFamilia = this.funcSetSelectedFamilia.bind(this);
     this.funcSetSelectedTipo = this.funcSetSelectedTipo.bind(this);
-    this.funcSetInfoNumber = this.funcSetInfoNumber.bind(this);
     this.handleChangeQuantidade = this.handleChangeQuantidade.bind(this);
   }
 
   handleChangeDate(event, date) {
-    if(this.state.dateReserve !== date && this.state.dateReserve !== "") {
+    this.setState(update(this.state, {
+      dateReserve: { $set: date }
+    }));
+
+    if(this.state.dateReserve !== date && this.state.dateReserve !== ""  && this.props.equipInfos[0].familia !== null) {
       this.state = {
         timeReserve: this.state.timeReserve,
         materia: this.state.materia
       }
+      this.props.clearEquips();
       this.props.setError("Equipamentos Resetados devido troca da data.");
+      return;
     }
-
-    this.setState(update(this.state, {
-      dateReserve: { $set: date }
-    }));
 
     let NewIndexinfoNumber = this.state.indexinfoNumber + 1;
     this.setState(update(this.state, {
@@ -80,18 +82,18 @@ export default class AddReserve extends React.Component {
   }
 
   handleChangeTime(event, value) {
-    if(this.state.timeReserve !== value && this.state.timeReserve !== "") {
+    this.setState(update(this.state, {
+      timeReserve: { $set: value }
+    }));
+    if(this.state.timeReserve !== value && this.state.timeReserve !== "" && this.props.equipInfos[0].familia !== null) {
       this.state = {
         dateReserve: this.state.dateReserve,
         materia: this.state.materia
       }
+      this.props.clearEquips();
       this.props.setError("Equipamentos Resetados devido troca do turno.");
+      return;
     }
-
-    this.setState(update(this.state, {
-      timeReserve: { $set: value }
-    }));
-
   }
 
   handleChangeMateria(event) {
@@ -109,84 +111,37 @@ export default class AddReserve extends React.Component {
     }
   }
 
-  handleChangeQuantidade(event, key, payload) {
-    alert("oi");
-    //const index = Number(event.currentTarget.name);
-    //const quantidade = key+1;
-    //this.props.setQuantidade(index, quantidade);
+  handleChangeQuantidade(name, event, key, payload) {
+    //alert("name: " + name + " key: " + key + " event: " + event + " payload: " + payload);
+    //var index = Number(name);
+    //var quantidade = key+1;
+    this.props.setQuantidade(Number(name), key+1);
   }
 
   componentWillReceiveProps(nextProps) {
-    var quantidadeRecebida = 0;
-    if(nextProps.quantidade !== this.props.quantidade && nextProps.quantidade !== null ) {
-      //let index = this.findEquipIndex(nextProps.name, this.props.equipInfos);
-      quantidadeRecebida = nextProps.quantidade;
-
-      var tamanhoFamilia = 0;
-      var tipoNotNULLDisponivel = 0;
-      var tipoNotNULLReservado = 0;
-      var tipoNotNULLRecebido = 0;
-      var tipoNULLDisponivel = 0;
-      var tipoNULLReservado = 0;
-      var tipoDisponivel = 0;
-      var tipoReservado = 0;
-      var tipoNULLENotDisponivel = 0;
-      var maxRecebido = false;
-      var equips = this.props.equipInfos;
-      //console.log("equips.length: " + equips.length);
-
-      for(var j = 0; j < equips.length; j++) {
-        //console.log("j: " + j);
-        if(equips[index].familia === equips[j].familia && (equips[j].tipo === undefined || equips[j].tipo === null)) {
-          tipoNULLReservado = tipoNULLReservado + equips[j].value;
-          console.log("NullReservado: " + tipoNULLReservado);
-          if(index === j && maxRecebido === false) {
-            tipoNULLDisponivel = tipoNULLDisponivel + quantidadeRecebida;
-            maxRecebido = true;
-            console.log("NullDisponivel["+index+"]: " + tipoNULLDisponivel + " quantidadeRecebida: " + quantidadeRecebida);
-          }
-          if(maxRecebido === false) {
-            tipoNULLDisponivel = tipoNULLDisponivel + equips[j].maxQuantidade;
-            maxRecebido = true;
-            console.log("NullDisponivel["+index+"]: " + tipoNULLDisponivel + " maxQuantidade["+j+"]: " + equips[j].maxQuantidade);
-          }
+    var equips = 0;
+    for(var i=0; i<this.props.equipInfos.length ; i++) {
+      if(nextProps.equipInfos[i].availableEquips !== this.props.equipInfos[i].availableEquips && nextProps.equipInfos[i].availableEquips !== null && this.state.flag === false) {
+        for(var j=0; j<this.props.equipInfos.length ; j++) {
+          equips = equips + this.props.equipInfos[j].quantidade
+          //alert("quant["+j+"]: "+ nextProps.equipInfos[j].quantidade + " equips: " + equips);
         }
-        else if(equips[index].familia === equips[j].familia) {
-          tipoNotNULLReservado = tipoNotNULLReservado + equips[j].value;
-          console.log("Reservado["+j+"]: " + equips[j].value);
-          if(index === j) {
-            //tipoNotNULLDisponivel = tipoNotNULLDisponivel + quantidadeRecebida;
-            tipoNotNULLRecebido = quantidadeRecebida;
-            console.log("Recebido["+index+"]: " + tipoNotNULLRecebido);
-          }
-          else {
-            //tipoNotNULLDisponivel = tipoNotNULLDisponivel + equips[j].maxQuantidade;
-            console.log("com tipo e não atual: " + equips[j].maxQuantidade);
-            //console.log("Disponivel["+index+"]: " + tipoNotNULLDisponivel + " maxQuantidade["+j+"]: " + equips[j].maxQuantidade);
-          }
+        equips = nextProps.equipInfos[i].availableEquips - equips;
+        alert("equips["+i+"]: " + equips + " ava: " + nextProps.equipInfos[i].availableEquips);
+        
+        //equips >= 0 ? this.props.setAvailable(i, equips) : this.props.setAvailable(i, 0); this.props.setError("OI")
+        if(equips > 0) {
+          this.props.setAvailable(i, equips);
         }
+        else{
+          this.props.setAvailable(i, 0);
+          this.props.setError("Não há equipamento disponível no momento");
+        }
+        
+        this.setState(update(this.state, {
+          flag: { $set: true }
+        }));
       }
-      tipoReservado = Number(tipoNotNULLReservado) + Number(tipoNULLReservado);
-      tipoDisponivel = Number(tipoNotNULLDisponivel) + Number(tipoNULLDisponivel);
-      //tipoNULLENotDisponivel = Number(tipoNULLENotDisponivel) - Number(tipoReservado);
-      console.log("tipoDisponivel: " + tipoDisponivel + " tipoReservado: " + tipoReservado);
-      if(equips[index].tipo === null || equips[index].tipo === undefined) {
-        tamanhoFamilia = tipoDisponivel - tipoReservado;
-        //tipoDisponivel <= 0 ? tamanhoFamilia = quantidadeRecebida : tamanhoFamilia = tipoDisponivel
-      }
-      else {
-        if(maxRecebido === false) {
-          tamanhoFamilia = tipoNotNULLRecebido;
-        }
-        else {
-          tipoNotNULLRecebido < tipoDisponivel - tipoReservado ? tamanhoFamilia = tipoNotNULLRecebido : tamanhoFamilia = tipoDisponivel - tipoReservado
-        }
-      }
-
-      tamanhoFamilia < 0 ? tamanhoFamilia = 0 : tamanhoFamilia = tamanhoFamilia
-
-      this.setState(update(this.state, {
-      }));
     }
   }
 
@@ -219,37 +174,17 @@ export default class AddReserve extends React.Component {
   }
 
   handleNewEquipment(event) {
-    let hasEmptyFields = false;
-    let newState = this.state;
-    for (var i = 0; i < this.props.equipInfos.length; i++) {
-      if(this.props.equipInfos[i].familia === "") {
-        hasEmptyFields = true;
-        newState = update(newState, {
-        });
-      }
-      if(this.props.equipInfos[i].value === "") {
-        hasEmptyFields = true;
-        newState = update(newState, {
-        });
-      }
-    }
-    if(hasEmptyFields)
-    {
-      this.setState(newState);
-      return;
-    }
-    const equipReservados = this.props.equipInfos
-    let nextIndex = 0
-    if(equipReservados.length > 0)
-      nextIndex = equipReservados[equipReservados.length-1].index+1
-    this.setState(update(this.state, {
-    }));
+    this.props.addEquip();
   }
 
-  handleRemoveEquipment(event) {
-    const index = this.findEquipIndex(event.currentTarget.name, this.props.equipInfos);
-    this.setState(update(this.state, {
-    }));
+  handleRemoveEquipment(name, event) {
+    if(this.props.equipInfos.length <= 1) {
+      this.props.setError("Não é possível remover esse campo.");
+      return;
+    }
+    else {
+      this.props.removeEquip(Number(name));
+    }
   }
 
   handleFormSubmit(event) {
@@ -291,8 +226,7 @@ export default class AddReserve extends React.Component {
         //console.log("j " + j);
         if(this.props.equipInfos[i].familia === this.props.equipInfos[j].familia && (this.props.equipInfos[i].tipo === null || this.props.equipInfos[i].tipo === undefined) && (this.props.equipInfos[j].tipo == null || this.props.equipInfos[j].tipo === undefined)) {
           this.props.setError("Familia de equipamento duplicado.");
-          this.setState(update(this.state, {
-          }));
+          //this.props.clearEquips();
           return;
         }
       }
@@ -306,7 +240,7 @@ export default class AddReserve extends React.Component {
       equips.push({
         familia: pat.familia,
         tipo: pat.tipo,
-        quantidade: pat.value
+        quantidade: pat.quantidade
       });
     });
     equips.forEach( pat => {
@@ -317,17 +251,6 @@ export default class AddReserve extends React.Component {
   }
 
   funcSetSelectedFamilia(name, familia) {
-    const index = Number(name);
-    const newValue = familia;
-    //let newErrorText = this.state.equipReservados[index].errorText;
-    if(newValue != this.props.equipInfos[index].familia) {
-      newErrorText = "";
-      this.setState(update(this.state, {
-      }));
-    }
-    this.setState(update(this.state, {
-    }));
-
     if(this.state.dateReserve === null || this.state.dateReserve === undefined || this.state.dateReserve === "" ) {
       this.props.setError("Por favor, insira data da reserva.");
       return;
@@ -337,29 +260,26 @@ export default class AddReserve extends React.Component {
       return;
     }
 
+    this.props.setSelectedFamilia(name, familia);
+
     let sendDateReserve = this.state.dateReserve;
     sendDateReserve = (sendDateReserve.getFullYear() + '-' + ("0" + (sendDateReserve.getMonth()+1)).slice(-2) + '-' + ("0" + sendDateReserve.getDate()).slice(-2));
 
-    console.log(this.props.equipInfos[index].tipo);
-    this.props.quantidadeReserve(newValue, null, name, sendDateReserve, this.state.timeReserve);
+    this.props.quantidadeReserve(familia, null, name, sendDateReserve, this.state.timeReserve);
+    
+    this.setState(update(this.state, {
+      flag: { $set: false }
+    }));
   }
 
   funcSetSelectedTipo(name, tipo) {
-    const index = this.findEquipIndex(name, this.props.equipInfos);
-    const newValue = tipo;
-    //let newErrorText = this.state.equipReservados[index].errorText;
-    if(newValue != this.props.equipInfos[index].tipo)
-      newErrorText = "";
-    this.setState(update(this.state, {
-    }));
-
+    var duplicado = false;
     for(var i = 0; i < this.props.equipInfos.length; i++) {
       //&& tipo !== ""
       //alert("this.props.equipInfos[i].tipo: " + this.props.equipInfos[i].tipo + " tipo: " + tipo);
       if(this.props.equipInfos[i].tipo === tipo && tipo !== null) {
         this.props.setError("Tipo de equipamento duplicado.");
-        this.setState(update(this.state, {
-        }));
+        duplicado = true;
         return;
       }
     }
@@ -373,6 +293,8 @@ export default class AddReserve extends React.Component {
       return;
     }
 
+    duplicado === false ? this.props.setSelectedTipo(name, tipo) : this.props.setSelectedTipo(name, null)
+
     let sendDateReserve = this.state.dateReserve;
     sendDateReserve = (sendDateReserve.getFullYear() + '-' + ("0" + (sendDateReserve.getMonth()+1)).slice(-2) + '-' + ("0" + sendDateReserve.getDate()).slice(-2));
 
@@ -380,7 +302,7 @@ export default class AddReserve extends React.Component {
       //this.props.quantidadeReserve(this.props.equipInfos[index].familia, null, name);
     }
     else{
-      this.props.quantidadeReserve(this.props.equipInfos[index].familia, newValue, name, sendDateReserve, this.state.timeReserve);
+      this.props.quantidadeReserve(this.props.equipInfos[name].familia, tipo, name, sendDateReserve, this.state.timeReserve);
     }
   }
 
@@ -491,13 +413,16 @@ export default class AddReserve extends React.Component {
                 center="xs"
                 key={index}
               >
+                <br/>
+                <Divider inset={true} />
+                <br/>
                 <Col xs={12} md={8} >
                   <EquipTypeSelectorContainer
                     name={index}
                     tipo={equipReservado.tipo}
                     familia={equipReservado.familia}
-                    setSelectedFamilia={this.props.setSelectedFamilia}
-                    setSelectedTipo={this.props.setSelectedTipo}
+                    setSelectedFamilia={this.funcSetSelectedFamilia}
+                    setSelectedTipo={this.funcSetSelectedTipo}
                     setInfoNumber={this.props.setInfoNumber}
                     isMissingTipo={false}
                     isMissingFamilia={false}
@@ -510,16 +435,17 @@ export default class AddReserve extends React.Component {
                     labelStyle={{position: 'absolute'}}
                     floatingLabelText="Quantidade"
                     value={equipReservado.quantidade}
-                    onChange={this.handleChangeQuantidade}
-                    disabled={this.props.isInputDisabled}
+                    onChange={this.handleChangeQuantidade.bind(null,index)}
                     floatingLabelStyle={{color: 'grey', left: '0px'}}
-                    disabled={equipReservado.tipo === null || this.props.isInputDisabled}
+                    disabled={equipReservado.availableEquips <= 0 || this.props.isInputDisabled}
                     fullWidth={true}
                     autoWidth={true}
                   >
-                    {[...Array(equipReservado.maxQuantidade)].map((i) => (
+                    {[...Array(equipReservado.availableEquips)].map((x, i) => (
                       <MenuItem
-                        key={i}
+                        key={i === null || i === undefined || i >= 0 ? i+1 : 0}
+                        value={i === null || i === undefined || i >= 0 ? i+1 : 0}
+                        primaryText={i === null || i === undefined || i >= 0 ? i+1 : 0}
                       />
                     ))}
                   </SelectField>
@@ -530,7 +456,7 @@ export default class AddReserve extends React.Component {
                     type="button"
                     name={index}
                     backgroundColor="#ff0000"
-                    onTouchTap={this.handleRemoveEquipment}
+                    onTouchTap={this.handleRemoveEquipment.bind(null,index)}
                     zDepth={1}
                   >
                     <ActionDelete />
@@ -548,7 +474,8 @@ export default class AddReserve extends React.Component {
                   name="add"
                   type="button"
                   label="Adicionar"
-                  primary={false}
+                  disabled={this.props.equipInfos[0].quantidade === null ? true : false}
+                  primary={true}
                   onTouchTap={this.handleNewEquipment}
                 />
               </Col>
@@ -558,6 +485,7 @@ export default class AddReserve extends React.Component {
                   name="submit"
                   type="button"
                   label="Enviar"
+                  disabled={this.props.equipInfos[0].quantidade === null ? true : false}
                   primary={true}
                   onTouchTap={this.handleFormSubmit}
                 />
@@ -589,4 +517,8 @@ AddReserve.propTypes = {
   //name: PropTypes.string,
   usuario: PropTypes.string,
   equipInfos: PropTypes.array,
+  setQuantidade: PropTypes.func.isRequired,
+  addEquip: PropTypes.func.isRequired,
+  removeEquip: PropTypes.func.isRequired,
+  setAvailable: PropTypes.func.isRequired,
 };
