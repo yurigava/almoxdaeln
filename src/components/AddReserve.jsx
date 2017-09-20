@@ -62,24 +62,9 @@ export default class AddReserve extends React.Component {
   }
 
   handleChangeDate(event, date) {
-    if(this.state.dateReserve !== date && this.state.dateReserve !== ""  && this.props.equipInfos[0].familia !== null) {
-      this.state = {
-        dateReserve: this.state.dateReserve,
-        timeReserve: this.state.timeReserve,
-        materia: this.state.materia
-      }
-      this.setState(update(this.state, {
-        changeDateTime: { $set: true }
-      }));
-      this.props.setError("Deseja resetar os equipamentos devido troca da data?");
-      this.props.setIsYesNoMessage(true);
-      return;
-    }
-    else{
-      this.setState(update(this.state, {
-        dateReserve: { $set: date }
-      }));
-    }
+    this.setState(update(this.state, {
+      dateReserve: { $set: date }
+    }));
 
     let NewIndexinfoNumber = this.state.indexinfoNumber + 1;
     this.setState(update(this.state, {
@@ -88,24 +73,9 @@ export default class AddReserve extends React.Component {
   }
 
   handleChangeTime(event, value) {
-    if(this.state.timeReserve !== value && this.state.timeReserve !== "" && this.props.equipInfos[0].familia !== null) {
-      this.state = {
-        dateReserve: this.state.dateReserve,
-        timeReserve: this.state.timeReserve,
-        materia: this.state.materia
-      }
-      this.setState(update(this.state, {
-        changeDateTime: { $set: true }
-      }));
-      this.props.setError("Deseja resetar os equipamentos devido troca do turno?");
-      this.props.setIsYesNoMessage(true);
-      return;
-    }
-    else {
-      this.setState(update(this.state, {
-        timeReserve: { $set: value }
-      }));
-    }
+    this.setState(update(this.state, {
+      timeReserve: { $set: value }
+    }));
   }
 
   handleChangeMateria(event) {
@@ -202,13 +172,13 @@ export default class AddReserve extends React.Component {
   handleForcedSubmit() {
     if(this.state.changeDateTime) {
       this.state = {
+        materia: this.state.materia,
         dateReserve: this.state.dateReserve,
-        timeReserve: this.state.timeReserve,
-        materia: this.state.materia
+        timeReserve: this.state.timeReserve
       }
-      this.props.clearSubmissionMessage();
-      this.props.setDataSubmitted(false);
       this.props.clearEquips();
+      this.props.setDataSubmitted(false);
+      this.props.clearSubmissionMessage();
     }
     else {
       let sendDateReserve = this.state.dateReserve;
@@ -232,7 +202,6 @@ export default class AddReserve extends React.Component {
       this.props.setIsYesNoMessage(false);
     }
   }
-
 
   handleCloseDialog() {
     //alert(this.props.isDataSubmitted);
@@ -333,23 +302,9 @@ export default class AddReserve extends React.Component {
   }
 
   funcSetSelectedFamilia(name, familia) {
-    if(this.state.dateReserve === null || this.state.dateReserve === undefined || this.state.dateReserve === "" ) {
-      this.props.setError("Por favor, insira data da reserva.");
-      this.props.setIsYesNoMessage(false);
-      return;
-    }
-    if(this.state.timeReserve === null || this.state.timeReserve === undefined || this.state.timeReserve === "" ) {
-      this.props.setError("Por favor, insira o turno da reserva.");
-      this.props.setIsYesNoMessage(false);
-      return;
-    }
-
     this.props.setSelectedFamilia(name, familia);
 
-    let sendDateReserve = this.state.dateReserve;
-    sendDateReserve = (sendDateReserve.getFullYear() + '-' + ("0" + (sendDateReserve.getMonth()+1)).slice(-2) + '-' + ("0" + sendDateReserve.getDate()).slice(-2));
-
-    this.props.quantidadeReserve(familia, null, name, sendDateReserve, this.state.timeReserve);
+    this.props.quantidadeReserve(familia, null, name);
     this.props.setQuantidade(name, null);
 
     this.setState(update(this.state, {
@@ -370,27 +325,14 @@ export default class AddReserve extends React.Component {
       }
     }
 
-    if(this.state.dateReserve === null || this.state.dateReserve === undefined || this.state.dateReserve === "" ) {
-      this.props.setError("Por favor, insira data da reserva.");
-      this.props.setIsYesNoMessage(false);
-      return;
-    }
-    if(this.state.timeReserve === null || this.state.timeReserve === undefined || this.state.timeReserve === "" ) {
-      this.props.setError("Por favor, insira o turno da reserva.");
-      this.props.setIsYesNoMessage(false);
-      return;
-    }
-
     duplicado === false ? this.props.setSelectedTipo(name, tipo) : this.props.setSelectedTipo(name, null)
-
-    let sendDateReserve = this.state.dateReserve;
-    sendDateReserve = (sendDateReserve.getFullYear() + '-' + ("0" + (sendDateReserve.getMonth()+1)).slice(-2) + '-' + ("0" + sendDateReserve.getDate()).slice(-2));
 
     if(tipo === null) {
       //this.props.quantidadeReserve(this.props.equipInfos[index].familia, null, name);
     }
     else{
-      this.props.quantidadeReserve(this.props.equipInfos[name].familia, tipo, name, sendDateReserve, this.state.timeReserve);
+
+      this.props.quantidadeReserve(this.props.equipInfos[name].familia, tipo, name);
       this.props.setQuantidade(name, null);
 
       this.setState(update(this.state, {
@@ -425,7 +367,8 @@ export default class AddReserve extends React.Component {
       ];
     }
     const Text_info = infos[this.state.indexinfoNumber];
-
+    
+    let submissionMessage = this.props.submissionMessage;
     return (
       <div>
 				<Dialog
@@ -433,8 +376,9 @@ export default class AddReserve extends React.Component {
           modal={false}
           open={this.props.submissionMessage !== ""}
           onRequestClose={this.handleCloseDialog}
+          autoScrollBodyContent={true}
         >
-          {this.props.submissionMessage}
+          {submissionMessage}
         </Dialog>
         <br/>
 
@@ -599,7 +543,7 @@ export default class AddReserve extends React.Component {
 }
 
 AddReserve.propTypes = {
-  setError: PropTypes.func.isRequired,
+  submissionMessage: PropTypes.func.isRequired,
   insertReserve: PropTypes.func.isRequired,
   clearSubmissionMessage: PropTypes.func.isRequired,
   setSelectedTipo: PropTypes.func.isRequired,
@@ -611,7 +555,7 @@ AddReserve.propTypes = {
   //isMissingFamilia: PropTypes.bool.isRequired,
   isDataSubmitted: PropTypes.bool.isRequired,
   setDataSubmitted: PropTypes.func.isRequired,
-  submissionMessage: PropTypes.string.isRequired,
+  setError: PropTypes.string.isRequired,
   infoNumber: PropTypes.number.isRequired,
   quantidadeReserve: PropTypes.func.isRequired,
   usuario: PropTypes.string,
