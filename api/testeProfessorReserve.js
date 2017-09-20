@@ -12,12 +12,12 @@ module.exports = exports = function(req, res) {
       var quantityTotal = 0;
       req.models.Tipos.find({Familias_id_familia: equip.familia}, function (err, tipos) {
         if(err)
-          throw(err);
+          res.send(err);
 
         tipos.forEach(function (equips) {
           req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equips.id_tipo}, function(err, quantidade) {
             if(err)
-              throw(err);
+              res.send(err);
             quantityTotal = Number(quantityTotal) + Number(quantidade);
             console.log("quantityTotal: " + quantityTotal );
           });
@@ -25,7 +25,7 @@ module.exports = exports = function(req, res) {
 
         req.models.Requisicoes.find({dataDeUso: date, turno: turno}, function (err, reqs) {
           if(err)
-            throw(err);
+            res.send(err);
           
           reqs.forEach(function (equips) {
             quantidadeReq.push(equips.id_requisicao);
@@ -35,7 +35,7 @@ module.exports = exports = function(req, res) {
           if(quantidadeReq.length === 0) {
             req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: quantidadeReq[0], Familias_id_familia: equip.familia}, function (err, tipos) {
               if(err)
-                throw(err);
+                res.send(err);
               tipos.forEach(function (equip) {
                 quantityTotal = Number(quantityTotal) - Number(equip.quantidade);
                 console.log("quantidadeReservada: " + equip.quantidade);
@@ -65,7 +65,7 @@ module.exports = exports = function(req, res) {
               console.log("vetorquantidadeReq: " + equips);
               req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: equips, Familias_id_familia: req.body.familia}, function (err, tipos) {
                 if(err)
-                  throw(err);
+                  res.send(err);
                 tipos.forEach(function (equips) {
                   quantityTotal = Number(quantityTotal) - Number(equips.quantidade);
                   console.log("quantidadeReservada: " + equips.quantidade);
@@ -108,12 +108,12 @@ module.exports = exports = function(req, res) {
       var quantityTotal = 0;
       req.models.Tipos.find({Familias_id_familia: equip.familia}, function (err, tipos) {
         if(err)
-          throw(err);
+          res.send(err);
 
         tipos.forEach(function (equips) {
           req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equips.id_tipo}, function(err, quantidade) {
             if(err)
-              throw(err);
+              res.send(err);
             familyTotal = Number(familyTotal) + Number(quantidade);
             console.log("familyTotal: " + familyTotal);
           });
@@ -121,13 +121,13 @@ module.exports = exports = function(req, res) {
 
         req.models.EquipamentosMonitorados.count({Tipos_id_tipo: equip.tipo, Estados_id_estado: 4}, function(err, quantidade) {
           if(err)
-            throw(err);
+            res.send(err);
           quantityTotalTipo = Number(quantityTotal) + Number(quantidade);
           console.log("quantityTotalTipo: " + quantityTotalTipo);
 
           req.models.Requisicoes.find({dataDeUso: date, turno: turno}, function (err, reqs) {
             if(err)
-              throw(err);
+              res.send(err);
           
             reqs.forEach(function (equips) {
               quantidadeReq.push(equips.id_requisicao);
@@ -137,7 +137,7 @@ module.exports = exports = function(req, res) {
             if(quantidadeReq.length === 0) {
               req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: quantidadeReq[0], Familias_id_familia: equip.familia}, function (err, tipos) {
                 if(err)
-                  throw(err);
+                  res.send(err);
                 tipos.forEach(function (equip) {
                   familyReserve = Number(familyReserve) + Number(equip.quantidade);
                   console.log("quantidadeReservada: " + equip.quantidade + " familyReserve: " + familyReserve);
@@ -145,7 +145,7 @@ module.exports = exports = function(req, res) {
 
                 req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: quantidadeReq[0], Familias_id_familia: equip.familia, Tipos_id_tipo: equip.tipo}, function (err, tipos) {
                   if(err)
-                    throw(err);
+                    res.send(err);
                   tipos.forEach(function (equip) {
                     typeReserve = Number(typeReserve) + Number(equip.quantidade);
                     console.log("typeReserve: " + typeReserve);
@@ -182,7 +182,7 @@ module.exports = exports = function(req, res) {
                 console.log("vetorquantidadeReq: " + equips);
                 req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: equips, Familias_id_familia: equip.familia}, function (err, tipos) {
                   if(err)
-                    throw(err);
+                    res.send(err);
                   tipos.forEach(function (equips) {
                     familyReserve = Number(familyReserve) + Number(equips.quantidade);
                     console.log("quantidadeReservada: " + equips.quantidade + " familyReserve: " + familyReserve);
@@ -190,7 +190,7 @@ module.exports = exports = function(req, res) {
 
                   req.models.EquipamentosRequisicao.find({Requisicoes_id_requisicao: equips, Familias_id_familia: equip.familia, Tipos_id_tipo: equip.tipo}, function (err, tipos) {
                     if(err)
-                      throw(err);
+                      res.send(err);
                     tipos.forEach(function (equips) {
                       typeReserve = Number(typeReserve) + Number(equips.quantidade);
                       console.log("typeReserve: " + typeReserve);
