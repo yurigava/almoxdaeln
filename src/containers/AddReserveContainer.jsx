@@ -40,8 +40,8 @@ const mapDispatchToProps = (dispatch) => {
     insertReserve: (usuario, date, turno, materia, equips) => {
       dispatch(insertReserve(serverUrl, usuario, date, turno, materia, equips))
     },
-    quantidadeReserve: (familia, tipo, name, date, turno) => {
-      dispatch(quantidadeReserve(serverUrl, familia, tipo, name, date, turno))
+    quantidadeReserve: (familia, tipo, name) => {
+      dispatch(quantidadeReserve(serverUrl, familia, tipo, name))
     },
     clearSubmissionMessage: () => {
       dispatch(setSubmissionMessage(""))

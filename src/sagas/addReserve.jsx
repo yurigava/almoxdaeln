@@ -138,9 +138,7 @@ function *quantidadeReserve(action) {
       {
         familia: action.familia,
         tipo: action.tipo,
-        name: action.name,
-        date: action.date,
-        turno: action.turno
+        name: action.name
       },
       {withCredentials:true}
     );
