@@ -10,9 +10,14 @@ import {
   setError,
   clearEquips,
   setQuantidade,
+  addEquip,
+  removeEquip,
+  setAvailable,
 } from '../actions/addReserve.js'
 import {
   setSubmissionMessage,
+  setIsYesNoMessage,
+  setDataSubmitted,
 } from '../actions/appUi.js'
 import { serverUrl } from '../main.jsx'
 
@@ -26,6 +31,7 @@ const mapStateToProps = (state) => {
     equipInfos: state.addReserve.equipInfos,
     infoNumber: state.addReserve.infoNumber,
     usuario: state.login.usuario,
+    isYesNoMessage: state.appUi.isYesNoMessage,
   }
 }
 
@@ -49,14 +55,29 @@ const mapDispatchToProps = (dispatch) => {
     setQuantidade: (index, quantidade) => {
       dispatch(setQuantidade(index, quantidade))
     },
+    setAvailable: (index, availableEquips) => {
+      dispatch(setAvailable(index, availableEquips))
+    },
     clearEquips: () => {
       dispatch(clearEquips())
+    },
+    addEquip: () => {
+      dispatch(addEquip())
+    },
+    removeEquip: (index) => {
+      dispatch(removeEquip(index))
     },
     setInfoNumber: (infoNumber) => {
       dispatch(setInfoNumber(infoNumber))
     },
     setError: (error) => {
       dispatch(setSubmissionMessage(error))
+    },
+    setDataSubmitted: (submitted) => {
+      dispatch(setDataSubmitted(submitted))
+    },
+    setIsYesNoMessage: (isYesNoMessage) => {
+      dispatch(setIsYesNoMessage(isYesNoMessage))
     }
   }
 }
