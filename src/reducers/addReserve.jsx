@@ -26,6 +26,17 @@ const addReserve = (state = initialState, action) => {
         })
       )
 
+    case 'RESERVE_SET_AVAILABLEQUIPS':
+      return (
+        update(state, {
+          equipInfos: {
+            [action.index]: {
+              availableEquips: {$set: action.availableEquips}
+            }
+          }
+        })
+      )
+
     case 'RESERVE_CLEAR_EQUIPS':
       return (
         update(state, {
@@ -36,14 +47,14 @@ const addReserve = (state = initialState, action) => {
     case 'RESERVE_REMOVE_EQUIP':
       return (
         update(state, {
-          equipInfos: {$splice: [[index, 1]]}
+          equipInfos: {$splice: [[action.index, 1]]}
         })
       )
 
     case 'RESERVE_ADD_EQUIP':
         return (
           update(state, {
-            equipInfos: {$push: emptyEquipInfos}
+            equipInfos: {$push: [emptyEquipInfos]}
           })
         )
 
