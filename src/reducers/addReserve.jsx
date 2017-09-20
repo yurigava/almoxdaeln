@@ -26,6 +26,18 @@ const addReserve = (state = initialState, action) => {
         })
       )
 
+    case 'RESERVE_SET_AVAILABLEQUIPS':
+      return (
+        alert(action.availableEquips + " " + action.index),
+        update(state, {
+          equipInfos: {
+            [action.index]: {
+              availableEquips: {$set: action.availableEquips}
+            }
+          }
+        })
+      )
+
     case 'RESERVE_CLEAR_EQUIPS':
       return (
         update(state, {
