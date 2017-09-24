@@ -471,7 +471,6 @@ export default class AddReserve extends React.Component {
                   locale='pt-BR'
                   shouldDisableDate={shouldDisableDate}
                   minDate={new Date(Date.now() + 1*24*60*60*1000)}
-                  mode='landscape'
                   fullWidth={true}
                 />
               </Col>
