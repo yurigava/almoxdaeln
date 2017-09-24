@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -21,7 +22,6 @@ export default class InputAuthentication extends React.Component {
     }
     if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
     {
-      this.props.setUsuario(this.state.login);
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
   }
@@ -29,7 +29,6 @@ export default class InputAuthentication extends React.Component {
   componentWillReceiveProps() {
     if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
     {
-      this.props.setUsuario(this.state.login);
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
   }
@@ -89,7 +88,6 @@ export default class InputAuthentication extends React.Component {
 InputAuthentication.propTypes = {
   onLoginSubmit: PropTypes.func.isRequired,
   getUserRole: PropTypes.func.isRequired,
-  setUsuario: PropTypes.func,
   isInputDisabled: PropTypes.bool.isRequired,
   errorTextLogin: PropTypes.string.isRequired,
   errorTextPassword: PropTypes.string.isRequired,

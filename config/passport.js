@@ -8,6 +8,7 @@ var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./database');
 var connection = mysql.createConnection(dbconfig.connection);
+handleDisconnect(connection);
 
 connection.query('USE ' + dbconfig.database);
 // expose this function to our app using module.exports
@@ -103,4 +104,16 @@ module.exports = function(passport) {
       });
     })
   );
+};
+
+function handleDisconnect(client) {
+  client.on('error', function (error) {
+    if (!error.fatal) return;
+    if (error.code !== 'PROTOCOL_CONNECTION_LOST') throw err;
+
+    console.error('> Re-connecting lost MySQL connection: ' + error.stack);
+
+    connection = mysql.createConnection(dbconfig.connection);
+    handleDisconnect(connection);
+  });
 };

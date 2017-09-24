@@ -12,7 +12,7 @@ module.exports = function(app, passport) {
   }),
   function(req, res) {
     //Inserir lógica para verificar papel aqui
-    res.send('almoxarife');
+    res.send({role: 'almoxarife', username: req.user.username});
 
     if (req.body.remember) {
       req.session.cookie.maxAge = 1000 * 60 * 3;
@@ -40,11 +40,7 @@ module.exports = function(app, passport) {
 
   app.get('/getRole', isLoggedIn, function (req, res) {
     //Inserir lógica para verificar papel aqui
-    res.send('almoxarife')
-  });
-
-  app.get('/login', function(req, res) {
-    res.send('ok');
+    res.send({role: 'almoxarife', username: req.user.username})
   });
 
   app.get('/equips', isLoggedIn, function(req, res) {
@@ -61,5 +57,5 @@ function isLoggedIn(req, res, next) {
     return next();
 
   // if they aren't redirect them to the home page
-  res.status(401).send('loggedOut')
+  res.status(401).send({role: 'loggedOut'})
 }
