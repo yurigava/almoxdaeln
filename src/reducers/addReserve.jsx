@@ -41,11 +41,11 @@ const addReserve = (state = initialState, action) => {
       )
 
     case 'RESERVE_ADD_EQUIP':
-        return (
-          update(state, {
-            equipInfos: {$push: emptyEquipInfos}
-          })
-        )
+      return (
+        update(state, {
+          equipInfos: {$push: emptyEquipInfos}
+        })
+      )
 
     case 'RESERVE_SET_SELECTED_FAMILIA':
       return (

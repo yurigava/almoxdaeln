@@ -19,7 +19,8 @@ const style = {
   },
   refresh: {
     display: 'inline-block',
-    position: 'relative'
+    position: 'relative',
+    pointerEvents: 'none'
   },
 };
 
@@ -37,7 +38,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const index = this.props.visibleLinks.findIndex(page => "/"+page.link == this.props.location.pathname);
+    const index = this.props.visibleLinks.findIndex(page => this.props.location.pathname.includes(page.link));
     const title = index >= 0 ? "Almoxarifado DAELN - " + this.props.visibleLinks[index].linkText : "Almoxarifado DAELN";
     return (
       <div>

@@ -8,13 +8,9 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import EquipTypeSelectorContainer from '../containers/EquipTypeSelectorContainer.jsx';
 import update from 'immutability-helper';
-
-const style = {
-  verticalAlign: 'bottom',
-  margin: 5,
-};
 
 const infos = [
   'Selecione uma Família de Equipamentos',
@@ -100,43 +96,44 @@ export default class AddEquip extends React.Component {
   }
 
   handleNewEquipment(event) {
-    let hasEmptyFields = false;
-    let newState = this.state;
-    for (var i = 0; i < this.state.patrimonios.length; i++) {
-      if(this.state.patrimonios[i].value === "") {
-        hasEmptyFields = true;
-        newState = update(newState, {
-          patrimonios: { [i]: { errorText: {
-               $set: "Preencha este campo antes de criar um novo"
-          }}}
-        });
-      }
+    const indexOfEmptyField = this.state.patrimonios.findIndex(equip =>
+      equip.value == ""
+    )
+      if(indexOfEmptyField < 0) {
+      this.setState(update(this.state, {
+        patrimonios: {
+          $push: [
+            {
+              value: "",
+              errorText: ""
+            }
+          ]
+        }
+      }));
     }
-    if(hasEmptyFields)
-    {
-      this.setState(newState);
-      return;
-    }
-    const patrimonios = this.state.patrimonios
-    this.setState(update(this.state, {
-      patrimonios: {
-        $push: [
-          {
-            value: "",
-            errorText: ""
-          }
-        ]
-      }
-    }));
+    else
+      this.refs["textField"+indexOfEmptyField].focus();
   }
 
   handleRemoveEquipment(event) {
     const index = Number(event.currentTarget.name);
-    this.setState(update(this.state, {
-      patrimonios: {
-        $splice: [[index, 1]]
-      }
-    }));
+    if(this.state.patrimonios.length > 1) {
+      this.setState(update(this.state, {
+        patrimonios: {
+          $splice: [[index, 1]]
+        }
+      }));
+    }
+    else {
+      this.setState(update(this.state, {
+        patrimonios: {
+          [index]: {
+            value: { $set: "" },
+            errorText: { $set: "" },
+          }
+        }
+      }));
+    }
   }
 
   handleFormSubmit(event) {
@@ -174,7 +171,6 @@ export default class AddEquip extends React.Component {
         />,
       ];
     }
-;
 
     const infoNumber = infos[this.props.infoNumber];
 
@@ -229,6 +225,7 @@ export default class AddEquip extends React.Component {
                 <Col xs={10} sm={4} md={3}>
                   <TextField
                     autoFocus
+                    ref={"textField" + index}
                     name={index.toString()}
                     hintText="Patrimônio do Equipamento"
                     floatingLabelText="Equipamento"
@@ -249,9 +246,8 @@ export default class AddEquip extends React.Component {
                     backgroundColor="#ff0000"
                     onTouchTap={this.handleRemoveEquipment}
                     zDepth={1}
-                    style={style}
                   >
-                    <ActionDelete />
+                    {(this.state.patrimonios.length < 2) ? <NavigationClose /> : <ActionDelete/>}
                   </FloatingActionButton>
                 </Col>
                 <Col xs={0} sm={3} md={4}/>
@@ -266,7 +262,6 @@ export default class AddEquip extends React.Component {
                 <RaisedButton
                   name="add"
                   type="button"
-                  style={style}
                   label="Adicionar"
                   primary={false}
                   onTouchTap={this.handleNewEquipment}
@@ -277,7 +272,6 @@ export default class AddEquip extends React.Component {
                 <RaisedButton
                   name="submit"
                   type="button"
-                  style= {style}
                   label="Enviar"
                   primary={true}
                   onTouchTap={this.handleFormSubmit}
