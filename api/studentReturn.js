@@ -25,15 +25,17 @@ module.exports = exports = function(req, res) {
             req.models.EquipamentosMonitorados.find({patrimonio: notReturned}, function(err, equips) {
               if(err)
                 res.send(err);
-              var notReturnedInfo = [];
-              equips.forEach(function (equip) {
-                notReturnedInfo.push({
-                  pat: equip.patrimonio,
-                  familia: equip.Tipo.Familia.familia,
-                  tipo: equip.Tipo.tipo,
+              else {
+                var notReturnedInfo = [];
+                equips.forEach(function (equip) {
+                  notReturnedInfo.push({
+                    pat: equip.patrimonio,
+                    familia: equip.Tipo.Familia.familia,
+                    tipo: equip.Tipo.tipo,
+                  });
                 });
-              });
-              res.send({code: "WAR_MISSING_EQUIPS", missingEquips: notReturnedInfo});
+                res.send({code: "WAR_MISSING_EQUIPS", missingEquips: notReturnedInfo});
+              }
             });
           }
           else {
