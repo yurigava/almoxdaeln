@@ -97,7 +97,7 @@ function *insertEquips(action) {
       default:
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
         yield put({
-          type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
+          type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.data.code
         });
         yield put({ type: 'SET_IS_YES_NO_MESSAGE', isYesNoMessage: false});
         if(response.data.instance.patrimonio)

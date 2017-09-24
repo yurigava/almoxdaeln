@@ -1,7 +1,8 @@
-export const changeRole = (role) => {
+export const changeRole = (role, usuario) => {
   return {
     type: 'CHANGE_ROLE',
-    role
+    role,
+    usuario
   }
 }
 

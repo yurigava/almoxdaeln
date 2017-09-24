@@ -29,7 +29,7 @@ module.exports = exports = function(req,res) {
           dataDeUso: date,
           turno: turno,
           materia: materia,
-          EstadosReq_id_estadosReq: 1,
+          EstadosReq_id_estadosReq: 3,
         };
         req.models.Requisicoes.create(requisicao, function(err, createdRequisicao) {
           if(err)
