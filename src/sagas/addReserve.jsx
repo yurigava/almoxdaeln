@@ -117,7 +117,7 @@ function *insertReserve(action) {
       else {
         yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
         yield put({
-          type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.code
+          type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado. Código: " + response.data.code
         });
       }
     }

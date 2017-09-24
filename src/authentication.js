@@ -12,22 +12,16 @@ module.exports = function(app, passport) {
   }),
   function(req, res) {
     //Inserir lógica para verificar papel aqui
-    res.send('almoxarife');
+    res.send({
+      role:req.user.role === null ? "professor" : req.user.role,
+      username: req.user.username
+    });
 
     if (req.body.remember) {
       req.session.cookie.maxAge = 1000 * 60 * 3;
     } else {
       req.session.cookie.expires = false;
     }
-  });
-
-  // =====================================
-  // PROFILE SECTION =========================
-  // =====================================
-  // we will want this protected so you have to be logged in to visit
-  // we will use route middleware to verify this (the isLoggedIn function)
-  app.get('/profile', isLoggedIn, function(req, res) {
-    res.send('ok');
   });
 
   // =====================================
@@ -40,11 +34,10 @@ module.exports = function(app, passport) {
 
   app.get('/getRole', isLoggedIn, function (req, res) {
     //Inserir lógica para verificar papel aqui
-    res.send('almoxarife')
-  });
-
-  app.get('/login', function(req, res) {
-    res.send('ok');
+    res.send({
+      role:req.user.role === null ? "professor" : req.user.role,
+      username: req.user.username
+    });
   });
 
   app.get('/equips', isLoggedIn, function(req, res) {
@@ -61,5 +54,5 @@ function isLoggedIn(req, res, next) {
     return next();
 
   // if they aren't redirect them to the home page
-  res.status(401).send('loggedOut')
+  res.status(401).send({role: 'loggedOut'})
 }

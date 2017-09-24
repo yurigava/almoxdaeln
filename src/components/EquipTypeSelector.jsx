@@ -106,7 +106,7 @@ EquipTypeSelector.propTypes = {
   setSelectedTipo: PropTypes.func.isRequired,
   setSelectedFamilia: PropTypes.func.isRequired,
   setInfoNumber: PropTypes.func,
-  name: PropTypes.string,
+  name: PropTypes.number,
   tipos: PropTypes.array.isRequired,
   familias: PropTypes.array.isRequired,
   tipo: PropTypes.number,
