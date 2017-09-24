@@ -8,6 +8,7 @@ var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./database');
 var connection = mysql.createConnection(dbconfig.connection);
+handleDisconnect(connection);
 
 connection.query('USE ' + dbconfig.database);
 // expose this function to our app using module.exports
@@ -41,12 +42,11 @@ module.exports = function(passport) {
     'local-signup',
     new LocalStrategy({
       // by default, local strategy uses username and password, we will override with email
-      usernameField : 'username',
+      usernameField : 'login',
       passwordField : 'password',
       passReqToCallback : true // allows us to pass back the entire request to the callback
     },
     function(req, username, password, done) {
-      // find a user whose email is the same as the forms email
       // we are checking to see if the user trying to login already exists
       connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
         if (err)
@@ -103,4 +103,17 @@ module.exports = function(passport) {
       });
     })
   );
+};
+
+function handleDisconnect(client) {
+  client.on('error', function (error) {
+    if (!error.fatal) return;
+    if (error.code !== 'PROTOCOL_CONNECTION_LOST') throw err;
+
+    console.error('> Re-connecting lost MySQL connection: ' + error.stack);
+
+    connection = mysql.createConnection(dbconfig.connection);
+    handleDisconnect(connection);
+    connection.query('USE ' + dbconfig.database);
+  });
 };
