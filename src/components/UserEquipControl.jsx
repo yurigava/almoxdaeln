@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col } from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
@@ -70,24 +71,6 @@ export default class UserEquipControl extends React.Component {
   }
 
   handleNewBarCode(event) {
-    let hasEmptyFields = false
-    let newState = this.state;
-    for (var i = 0; i < this.state.barCodes.length; i++) {
-      if(this.state.barCodes[i].value === "") {
-        hasEmptyFields = true;
-        newState = update(newState, {
-          barCodes: {
-            [i]: {
-              errorText: { $set: "Preencha este campo antes de criar um novo" }
-            }
-          }
-        });
-      }
-    }
-    if(hasEmptyFields) {
-      this.setState(newState);
-      return;
-    }
     const barCodes = this.state.barCodes;
     if(barCodes.length > 1 && barCodes[barCodes.length-1].value === barCodes[0].value) {
       barCodes.pop();
@@ -101,17 +84,24 @@ export default class UserEquipControl extends React.Component {
     if(barCodes.length > 1) {
       newInfoNumber = 2;
     }
-    this.setState(update(this.state, {
-      barCodes: {
-        $push: [
-          {
-            value: "",
-            errorText: ""
-          }
-        ]
-      },
-      infoNumber: {$set: newInfoNumber}
-    }));
+    const indexOfEmptyField = barCodes.findIndex(equip =>
+      equip.value == ""
+    )
+    if(indexOfEmptyField < 0) {
+      this.setState(update(this.state, {
+        barCodes: {
+          $push: [
+            {
+              value: "",
+              errorText: ""
+            }
+          ]
+        },
+        infoNumber: {$set: newInfoNumber}
+      }));
+    }
+    else
+      this.refs["textField"+indexOfEmptyField].focus();
   }
 
   handleTextFieldChange(event) {
@@ -253,7 +243,8 @@ export default class UserEquipControl extends React.Component {
               <Col xs={10} sm={4} md={3}>
                 <TextField
                   autoFocus
-                  name={index}
+                  ref={"textField" + index}
+                  name={index.toString()}
                   hintText={index === 0 ? "Código do Usuário" : "Patrimônio do Equipamento"}
                   floatingLabelText={index === 0 ? "Usuário" : "Equipamento"}
                   value={barCode.value}
@@ -272,6 +263,7 @@ export default class UserEquipControl extends React.Component {
                   name={index}
                   backgroundColor="#ff0000"
                   onTouchTap={index === 0 ? this.handleClearUsuario :  this.handleRemoveEquipment}
+                  disabled={this.props.isInputDisabled}
                   zDepth={1}
                   style={style}
                 >
