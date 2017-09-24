@@ -1,7 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import update from 'immutability-helper';
 
 export default class InputAuthentication extends React.Component {
@@ -21,7 +24,6 @@ export default class InputAuthentication extends React.Component {
     }
     if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
     {
-      this.props.setUsuario(this.state.login);
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
   }
@@ -29,7 +31,6 @@ export default class InputAuthentication extends React.Component {
   componentWillReceiveProps() {
     if(this.props.userRole !== "" && this.props.userRole !== "loggedOut")
     {
-      this.props.setUsuario(this.state.login);
       this.props.router.push('/'+this.props.visibleLinks[0]);
     }
   }
@@ -41,8 +42,27 @@ export default class InputAuthentication extends React.Component {
   }
 
   render() {
+    const actions = [
+      <FlatButton
+        label="OK"
+        primary={true}
+        onTouchTap={this.clearSubmissionMessage}
+      />,
+    ];
+
     return (
       <div>
+				<Dialog
+          actions={actions}
+          modal={false}
+          open={this.props.submissionMessage !== ""}
+          onRequestClose={this.props.clearSubmissionMessage}
+          autoScrollBodyContent={true}
+        >
+          {this.props.submissionMessage.split(/\\n/).map((item, key) => {
+            return <span key={key}>{item}<br/></span>
+          })}
+        </Dialog>
         <center>
           <form onSubmit=
             {
@@ -87,12 +107,13 @@ export default class InputAuthentication extends React.Component {
 }
 
 InputAuthentication.propTypes = {
+  clearSubmissionMessage: PropTypes.func.isRequired,
   onLoginSubmit: PropTypes.func.isRequired,
   getUserRole: PropTypes.func.isRequired,
-  setUsuario: PropTypes.func,
   isInputDisabled: PropTypes.bool.isRequired,
   errorTextLogin: PropTypes.string.isRequired,
   errorTextPassword: PropTypes.string.isRequired,
   userRole: PropTypes.string.isRequired,
-  visibleLinks: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+  visibleLinks: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  submissionMessage: PropTypes.string.isRequired
 }
