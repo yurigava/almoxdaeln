@@ -11,28 +11,18 @@ export const pagesList = [
   },
   {
     info: {
-      link: 'changeFamiliaName',
-      linkText: 'Alterar nome de Família'
+      link: 'addReserve',
+      linkText: 'Adicionar Reservas'
     },
     allowedRoles: [
-      "almoxarife",
+      "professor",
       "admin"
     ]
   },
   {
     info: {
-      link: 'changeTipoName',
-      linkText: 'Alterar nome de Tipo'
-    },
-    allowedRoles: [
-      "almoxarife",
-      "admin"
-    ]
-  },
-  {
-    info: {
-      link: 'addEquips',
-      linkText: 'Registrar Equipamentos'
+      link: 'prepareReserve',
+      linkText: 'Preparar Reserva'
     },
     allowedRoles: [
       "almoxarife",
@@ -51,11 +41,38 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'addEquips',
+      linkText: 'Registrar Equipamentos'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'changeFamiliaName',
+      linkText: 'Alterar nome de Família'
+    },
+    allowedRoles: [
+      "admin"
+    ]
+  },
+  {
+    info: {
+      link: 'changeTipoName',
+      linkText: 'Alterar nome de Tipo'
+    },
+    allowedRoles: [
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'addFamilia',
       linkText: 'Adicionar Família de Equipamentos'
     },
     allowedRoles: [
-      "almoxarife",
       "admin"
     ]
   },
@@ -65,7 +82,6 @@ export const pagesList = [
       linkText: 'Adicionar Tipo de Equipamento'
     },
     allowedRoles: [
-      "almoxarife",
       "admin"
     ]
   },
@@ -96,20 +112,7 @@ export const pagesList = [
       linkText: 'Empréstimo Para Aluno'
     },
     allowedRoles: [
-      "almoxarife",
-      "professor",
-      "admin"
-    ]
-  },
-  {
-    info: {
-      link: 'addReserve',
-      linkText: 'Adicionar Reservas'
-    },
-    allowedRoles: [
-      "almoxarife",
-      "professor",
-      "admin"
+      "almoxarife"
     ]
   },
   {
@@ -118,8 +121,7 @@ export const pagesList = [
       linkText: 'Devolução de Aluno'
     },
     allowedRoles: [
-      "almoxarife",
-      "admin"
+      "almoxarife"
     ]
   },
   {

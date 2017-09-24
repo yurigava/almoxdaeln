@@ -114,7 +114,7 @@ CREATE TABLE `EstadosReq` (
   `estadoReq` varchar(30) COLLATE latin1_general_cs NOT NULL,
   PRIMARY KEY (`id_estadosReq`),
   UNIQUE KEY `id_estados_Req_UNIQUE` (`id_estadosReq`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE `EstadosReq` (
 
 LOCK TABLES `EstadosReq` WRITE;
 /*!40000 ALTER TABLE `EstadosReq` DISABLE KEYS */;
-INSERT INTO `EstadosReq` VALUES (1,'Em Uso'),(2,'Devolvido'),(3,'Reservado');
+INSERT INTO `EstadosReq` VALUES (1,'Em Uso'),(2,'Devolvido'),(3,'Reservado'),(4,'Separado');
 /*!40000 ALTER TABLE `EstadosReq` ENABLE KEYS */;
 UNLOCK TABLES;
 
