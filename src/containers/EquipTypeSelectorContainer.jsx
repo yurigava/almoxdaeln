@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import EquipTypeSelector from '../components/EquipTypeSelector.jsx'
 import {
   getTipos,
-  getFamilias,
+  getFamilias
 } from '../actions/equipTypeSelect.js'
 import { serverUrl } from '../main.jsx'
 
