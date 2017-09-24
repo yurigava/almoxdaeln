@@ -17,8 +17,6 @@ module.exports = exports = function changeEquipState(req, res, stateToSet, sendR
       if(err) {
         if(sendResponse)
           res.send(err);
-        else
-          return -1;
       }
       else {
         req.models.EquipamentosMonitorados.find(
@@ -35,8 +33,6 @@ module.exports = exports = function changeEquipState(req, res, stateToSet, sendR
             });
             if(sendResponse)
               res.send({code: "SUCCESS", registeredEquips: registeredEquips});
-            else
-              return 1;
           }
         );
       }
