@@ -4,6 +4,7 @@ import {
   setErrorDescription,
   insertStudentReturn,
 } from '../actions/studentReturn.js'
+import { setIsYesNoMessage } from '../actions/appUi.js'
 import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
@@ -17,6 +18,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     insertStudentReturn: (usuario, patrimonios) => {
       dispatch(insertStudentReturn(serverUrl, usuario, patrimonios))
+    },
+    setIsYesNoMessage: (isYesNoMessage) => {
+      dispatch(setIsYesNoMessage(isYesNoMessage))
     },
     clearErrorDescription: () => {
       dispatch(setErrorDescription([], ""))

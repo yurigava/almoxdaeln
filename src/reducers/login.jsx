@@ -11,12 +11,10 @@ const login = (state = initialState, action) => {
   switch (action.type) {
     case 'CHANGE_ROLE':
       return (
-        update(state, {userRole: {$set: action.role}})
-      )
-
-    case 'SET_USUARIO':
-      return (
-        update(state, {usuario: {$set: action.usuario}})
+        update(state, {
+          userRole: {$set: action.role},
+          usuario: {$set: action.usuario}
+        })
       )
 
     case 'SET_LOGIN_STATUS':

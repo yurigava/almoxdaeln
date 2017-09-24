@@ -4,6 +4,7 @@ import {
   insertStudentLend,
   setErrorDescription
 } from '../actions/studentLend.js'
+import { setIsYesNoMessage } from '../actions/appUi.js'
 import { serverUrl } from '../main.jsx'
 
 const mapStateToProps = (state) => {
@@ -20,6 +21,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     insertStudentLendShouldNotAdd: (usuario, patrimonios) => {
       dispatch(insertStudentLend(serverUrl, usuario, patrimonios, false))
+    },
+    setIsYesNoMessage: (isYesNoMessage) => {
+      dispatch(setIsYesNoMessage(isYesNoMessage))
     },
     clearErrorDescription: () => {
       dispatch(setErrorDescription([], ""))

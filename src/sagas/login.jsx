@@ -33,7 +33,7 @@ function *submitLogin(action) {
       return;
     }
     yield put({ type: 'SET_LOGIN_STATUS', success: true });
-    yield put({ type: 'CHANGE_ROLE', role: response.data });
+    yield put({ type: 'CHANGE_ROLE', role: response.data.role, usuario: response.data.username });
   } catch (e) {
     yield put({ type: 'SET_LOGIN_STATUS', success: false });
   }
@@ -54,7 +54,7 @@ function *getUserRole(action) {
       return;
     }
     yield put({ type: 'SET_LOGIN_STATUS', success: true });
-    yield put({ type: 'CHANGE_ROLE', role: response.data });
+    yield put({ type: 'CHANGE_ROLE', role: response.data.role, usuario: response.data.username });
   }
   catch (e) {
     console.log(e)
