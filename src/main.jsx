@@ -12,8 +12,10 @@ import ChangeEquipStateContainer from './containers/ChangeEquipStateContainer.js
 import ChangeFamiliaNameContainer from './containers/ChangeFamiliaNameContainer.jsx'
 import ChangeTipoNameContainer from './containers/ChangeTipoNameContainer.jsx'
 import AddReserveContainer from './containers/AddReserveContainer.jsx';
+import SelectReserveContainer from './containers/SelectReserveContainer.jsx';
+import ReadEquipsReserve from './components/ReadEquipsReserve.jsx';
 import EquipTable from './components/EquipTable.jsx';
-import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
+import { Router, Route, hashHistory, IndexRedirect, IndexRoute } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { createStore, applyMiddleware } from 'redux'
@@ -34,6 +36,7 @@ import changeFamiliaNameSagas from './sagas/changeFamiliaName.jsx'
 import changeTipoNameSagas from './sagas/changeTipoName.jsx'
 import addReserveSagas from './sagas/addReserve.jsx'
 import equipTypeSelectSagas from './sagas/equipTypeSelect.jsx'
+import prepareReserve from './sagas/prepareReserve.jsx'
 
 export const serverUrl = 'http://192.168.0.69:8081';
 
@@ -56,6 +59,7 @@ sagaMiddleware.run(changeFamiliaNameSagas)
 sagaMiddleware.run(changeTipoNameSagas)
 sagaMiddleware.run(addReserveSagas)
 sagaMiddleware.run(equipTypeSelectSagas)
+sagaMiddleware.run(prepareReserve)
 
 main();
 
@@ -69,7 +73,7 @@ function verifyPermission(nextState, replace)
 {
   let { login } = store.getState();
   let { appUi } = store.getState();
-  let pageData = appUi.pagesList.filter(page => "/"+page.info.link === nextState.location.pathname);
+  let pageData = appUi.pagesList.filter(page => nextState.location.pathname.includes(page.info.link));
   if(!pageData[0].allowedRoles.includes(login.userRole))
   {
     //Manda para página de notAllowed
@@ -99,6 +103,10 @@ function main() {
             <Route path="/addEquips" component={AddEquipContainer} onEnter={verifyPermission}/>
             <Route path="/equips" component={EquipTable} url={serverUrl} onEnter={verifyPermission}/>
             <Route path="/addReserve" component={AddReserveContainer} onEnter={verifyPermission}/>
+            <Route path="/prepareReserve" onEnter={verifyPermission}>
+              <IndexRoute component={SelectReserveContainer}/>
+              <Route path="/prepareReserve/readEquips" component={ReadEquipsReserve}/>
+            </Route>
           </Route>
         </Router>
       </Provider>

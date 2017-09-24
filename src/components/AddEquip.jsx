@@ -11,11 +11,6 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 import EquipTypeSelectorContainer from '../containers/EquipTypeSelectorContainer.jsx';
 import update from 'immutability-helper';
 
-const style = {
-  verticalAlign: 'bottom',
-  margin: 5,
-};
-
 const infos = [
   'Selecione uma Família de Equipamentos',
   'Selecione um Tipo de Equipamento',
@@ -174,7 +169,6 @@ export default class AddEquip extends React.Component {
         />,
       ];
     }
-;
 
     const infoNumber = infos[this.props.infoNumber];
 
@@ -249,7 +243,6 @@ export default class AddEquip extends React.Component {
                     backgroundColor="#ff0000"
                     onTouchTap={this.handleRemoveEquipment}
                     zDepth={1}
-                    style={style}
                   >
                     <ActionDelete />
                   </FloatingActionButton>
@@ -266,7 +259,6 @@ export default class AddEquip extends React.Component {
                 <RaisedButton
                   name="add"
                   type="button"
-                  style={style}
                   label="Adicionar"
                   primary={false}
                   onTouchTap={this.handleNewEquipment}
@@ -277,7 +269,6 @@ export default class AddEquip extends React.Component {
                 <RaisedButton
                   name="submit"
                   type="button"
-                  style= {style}
                   label="Enviar"
                   primary={true}
                   onTouchTap={this.handleFormSubmit}
