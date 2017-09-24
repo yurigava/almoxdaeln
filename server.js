@@ -34,10 +34,11 @@ app.use(session({
   secret: 'vidyapathaisalwaysrunning',
   resave: true,
   saveUninitialized: true,
+  rolling: true,
   cookie: {
     //secure: true, // Assegura que o navegador só envie o cookie por HTTPS.
     //httpOnly: true, //Assegura que o cookie seja enviado apenas por HTTP(S), não por cliente JavaScript, ajudando assim a se proteger contra ataques de cross-site scripting.
-    expires: expiryDate
+    expires: 20 * 60 * 1000
   }
 } )); // session secret
 
@@ -49,6 +50,7 @@ app.use('/', express.static('public'));
 
 app.use(orm.express("mysql://"+ username +":"+ password +"@"+ host +"/"+ database, {
     define: function (db, models, next) {
+      orm.settings.set("connection.reconnect", true);
       db.load('./src/models/ormModels.js', function(err) {
         for (var model in db.models) {
           if (db.models.hasOwnProperty(model)) {
@@ -119,6 +121,15 @@ app.post('/api/insertEquips', insertEquipsRoute);
 
 var professorReserveRoute = require('./api/professorReserve.js');
 app.post('/api/professorReserve', professorReserveRoute);
+
+var getReserves = require('./api/getReserves.js');
+app.post('/api/getReserves', getReserves);
+
+var getReserveDetails = require('./api/getReserveDetails.js');
+app.post('/api/getReserveDetails', getReserveDetails);
+
+var getEquipTipo = require('./api/getEquipTipo.js');
+app.post('/api/getEquipTipo', getEquipTipo);
 
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');

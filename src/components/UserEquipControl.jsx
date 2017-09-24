@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col } from 'react-flexbox-grid';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
@@ -272,6 +273,7 @@ export default class UserEquipControl extends React.Component {
                   name={index}
                   backgroundColor="#ff0000"
                   onTouchTap={index === 0 ? this.handleClearUsuario :  this.handleRemoveEquipment}
+                  disabled={this.props.isInputDisabled}
                   zDepth={1}
                   style={style}
                 >
