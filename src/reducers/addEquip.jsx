@@ -6,7 +6,7 @@ const initialState =
   selectedFamilia: null,
   isMissingTipo: false,
   isMissingFamilia: false,
-  errorCauseEquipNumbers: "",
+  errorCauseEquipNumbers: [],
   infoNumber: 0,
   errorCode: ""
 }

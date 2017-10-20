@@ -103,23 +103,29 @@ export default class ReadEquipsReserve extends React.Component {
       const barCode = this.props.barCodes.find(barCode => barCode.id == newBarCode.id);
       const newTipo = newBarCode.equipTipo;
       const newBarCodeId = newBarCode.id;
-      if(newTipo === null || barCode === undefined || barCode.equipTipo === newTipo)
+      const repeatedEquips = nextProps.barCodes.filter(repBar => repBar.value == newBarCode.value);
+      if(newTipo === null && newBarCode.value != "") {
+        if(repeatedEquips.length > 1 && newBarCodeId != this.state.fieldIdOnFocus) {
+          const countedEquip = repeatedEquips.find(rep => rep.equipTipo !== null)
+          if(countedEquip)
+            this.props.setBarcodeTipo(newBarCodeId, countedEquip.equipTipo);
+        }
+        return;
+      }
+      if(newTipo === null || barCode === undefined || barCode.equipTipo === newTipo
+          || (repeatedEquips.length > 1 && newBarCode.errorCode != ""))
         return;
 
       let newTipoIndexReserve = null;
       let newFamiliaIndexReserve = null;
-      if(newTipo !== null) {
-        newTipoIndexReserve = this.props.reserveEquips.findIndex(reserveEquip =>
-            reserveEquip.tipo == newTipo);
-        if(newTipoIndexReserve < 0)
-          newFamiliaIndexReserve = this.props.reserveEquips.findIndex(reserveEquip =>
-              reserveEquip.tipo === null
-              && reserveEquip.familia == this.findTipoById(newTipo).Familias_id_familia);
-      }
+      newTipoIndexReserve = this.props.reserveEquips.findIndex(reserveEquip =>
+          reserveEquip.tipo == newTipo);
+      if(newTipoIndexReserve < 0)
+        newFamiliaIndexReserve = this.props.reserveEquips.findIndex(reserveEquip =>
+            reserveEquip.tipo === null
+            && reserveEquip.familia == this.findTipoById(newTipo).Familias_id_familia);
 
       if(barCode.errorCode == "ER_NOT_AVAILABLE") {}
-      else if(nextProps.barCodes.filter(repBar => repBar.value == newBarCode.value).length > 1)//equip already exists in array
-        this.props.setBarcodeErrorCode(newBarCodeId, "ER_REPEATED_EQUIP");
       else if(newTipoIndexReserve !== null && newTipoIndexReserve >= 0) {
         this.props.incrementMissingReserve(newTipoIndexReserve);
         this.props.setBarcodeErrorCode(newBarCodeId, "");
@@ -227,11 +233,22 @@ export default class ReadEquipsReserve extends React.Component {
       fieldIdOnFocus: {$set: -1}
     }));
 
-    if(!barCode.value) {
+    if(!barCode.value || barCode.value == "") {
+      this.props.clearBarcodeTipo(id);
+      this.props.setBarcodeErrorCode(id, "");
       return;
     }
 
-    if(this.state.fieldValueOnFocus != barCode.value
+    const repeatedEquips = this.props.barCodes.filter(repBar => repBar.value == barCode.value)
+    if(repeatedEquips.length > 1) {
+      this.props.setBarcodeErrorCode(id, "ER_REPEATED_EQUIP");
+      if(barCode.equipTipo === null && repeatedEquips.length > 1 && barCode != this.state.fieldIdOnFocus) {
+        const countedEquip = repeatedEquips.find(rep => rep.equipTipo !== null)
+        if(countedEquip)
+          this.props.setBarcodeTipo(id, countedEquip.equipTipo);
+      }
+    }
+    else if(this.state.fieldValueOnFocus != barCode.value
         || (barCode.errorCode == "" && barCode.equipTipo == null)) {
       this.props.clearBarcodeTipo(id);
       this.props.setBarcodeErrorCode(id, "");

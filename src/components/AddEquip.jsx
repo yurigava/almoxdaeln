@@ -301,7 +301,7 @@ AddEquip.propTypes = {
   isMissingFamilia: PropTypes.bool.isRequired,
   isDataSubmitted: PropTypes.bool.isRequired,
   submissionMessage: PropTypes.string.isRequired,
-  isYesNoMessage: PropTypes.string.isRequired,
+  isYesNoMessage: PropTypes.bool.isRequired,
   errorCauseEquipNumbers: PropTypes.array,
   errorCode: PropTypes.string.isRequired,
   infoNumber: PropTypes.number.isRequired,
