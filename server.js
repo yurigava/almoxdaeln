@@ -34,7 +34,7 @@ app.use(session({
   cookie: {
     //secure: true, // Assegura que o navegador só envie o cookie por HTTPS.
     //httpOnly: true, //Assegura que o cookie seja enviado apenas por HTTP(S), não por cliente JavaScript, ajudando assim a se proteger contra ataques de cross-site scripting.
-    expires: 20 * 60 * 1000
+    expires: 6 * 60 * 60 * 1000
   }
 } )); // session secret
 
@@ -133,6 +133,9 @@ app.post('/api/registerReservedEquips', registerReservedEquips);
 
 var getLastReqRoute = require('./api/getLastReq.js');
 app.post('/api/getLastReq', getLastReqRoute);
+
+var getCarrinhosRoute = require('./api/getCarrinhos.js');
+app.get('/api/getCarrinhos', getCarrinhosRoute);
 
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');

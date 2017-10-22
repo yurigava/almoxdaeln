@@ -1,4 +1,13 @@
 module.exports = function(db, cb) {
+  var Carrinhos = db.define("Carrinhos", {
+    id_carrinho: {
+      type: 'integer',
+      required: true,
+      unique: true,
+      key: true
+    }
+  });
+
   var EquipamentosMonitorados = db.define("EquipamentosMonitorados", {
     patrimonio: {
       type: 'integer',
@@ -172,6 +181,11 @@ module.exports = function(db, cb) {
     required: true,
     field: "Familias_id_familia",
     autoFetch: true
+  });
+
+  Carrinhos.hasOne("Reserva", Requisicoes, {
+    required: false,
+    field: "Requisicoes_id_requisicao"
   });
   return cb();
 };

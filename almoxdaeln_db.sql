@@ -16,6 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `Carrinhos`
+--
+
+DROP TABLE IF EXISTS `Carrinhos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Carrinhos` (
+  `id_carrinho` int(11) NOT NULL,
+  `Requisicoes_id_requisicao` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id_carrinho`),
+  UNIQUE KEY `id_Carrinho_UNIQUE` (`id_carrinho`),
+  KEY `fk_Carrinhos_Requisicoes1_idx` (`Requisicoes_id_requisicao`),
+  CONSTRAINT `fk_Carrinhos_Requisicoes1` FOREIGN KEY (`Requisicoes_id_requisicao`) REFERENCES `Requisicoes` (`id_requisicao`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Carrinhos`
+--
+
+LOCK TABLES `Carrinhos` WRITE;
+/*!40000 ALTER TABLE `Carrinhos` DISABLE KEYS */;
+INSERT INTO `Carrinhos` VALUES (1,NULL),(2,NULL),(3,NULL),(4,NULL),(5,NULL),(6,NULL),(7,NULL),(8,NULL),(9,NULL),(10,NULL);
+/*!40000 ALTER TABLE `Carrinhos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `EquipamentosMonitorados`
 --
 
