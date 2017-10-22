@@ -46,7 +46,7 @@ export default class InputAuthentication extends React.Component {
       <FlatButton
         label="OK"
         primary={true}
-        onTouchTap={this.clearSubmissionMessage}
+        onTouchTap={this.props.clearSubmissionMessage}
       />,
     ];
 

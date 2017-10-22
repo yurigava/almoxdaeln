@@ -88,10 +88,41 @@ function *getEquipTipo(action) {
   catch (e) {
     yield put({
       type: 'PREPARE_RESERVE_SET_BARCODE_ERROR_CODE',
-      message: "Erro ao verificar equipamento."
+      message: "ER_CONN_ERROR"
     });
   }
   yield put({ type: 'PREPARE_RESERVE_SET_BARCODE_LOADING', id: action.id, isLoading: false });
+}
+
+function *getCarrinhos(action) {
+  try {
+    const response = yield call(
+      axios.get,
+      action.serverUrl + '/api/getCarrinhos',
+      {withCredentials:true}
+    );
+    switch(response.data.code) {
+      case "SUCCESS":
+        yield put({
+          type: 'PREPARE_RESERVE_SET_AVAILABLE_CARRINHOS',
+          carrinhos: response.data.carrinhos
+        });
+        break;
+
+      default:
+        yield put({
+          type: 'PREPARE_RESERVE_SET_CARRINHO_ERROR_TEXT',
+          message: "Falha ao comunicar com o servidor"
+        });
+        break;
+    }
+  }
+  catch (e) {
+    yield put({
+      type: 'PREPARE_RESERVE_SET_CARRINHO_ERROR_TEXT',
+      message: "Falha ao comunicar com o servidor"
+    });
+  }
 }
 
 function *getReserveDetails(action) {
@@ -175,6 +206,7 @@ function *prepareReserveSagas() {
     yield takeEvery('GET_RESERVE_DETAILS', getReserveDetails);
     yield takeEvery('GET_EQUIP_TIPO', getEquipTipo);
     yield takeEvery('REGISTER_RESERVED_EQUIPS', registerReservedEquips);
+    yield takeEvery('GET_AVAILABLE_CARRINHOS', getCarrinhos);
 }
 
 export default prepareReserveSagas;
