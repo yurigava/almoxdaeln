@@ -5,12 +5,13 @@ export const setReserves = (reserves) => {
   }
 }
 
-export const registerReservedEquips = (serverUrl, requisicao, usuario, patrimonios) => {
+export const registerReservedEquips = (serverUrl, requisicao, usuario, carrinhos, patrimonios) => {
   return {
     type: 'REGISTER_RESERVED_EQUIPS',
     serverUrl,
     requisicao,
     usuario,
+    carrinhos,
     patrimonios
   }
 }
@@ -20,6 +21,13 @@ export const getReserveDetails = (serverUrl, reserveId) => {
     type: 'GET_RESERVE_DETAILS',
     serverUrl,
     reserveId
+  }
+}
+
+export const getCarrinhos = (serverUrl) => {
+  return {
+    type: 'GET_AVAILABLE_CARRINHOS',
+    serverUrl
   }
 }
 
@@ -117,6 +125,20 @@ export const resetMissingReserve = (index) => {
   return {
     type: 'PREPARE_RESERVE_RESET_RESERVE_EQUIP',
     index
+  }
+}
+
+export const setCarrinhoErrorText = (message) => {
+  return {
+    type: 'PREPARE_RESERVE_SET_CARRINHO_ERROR_TEXT',
+    message
+  }
+}
+
+export const setCarrinhos = (carrinhos) => {
+  return {
+    type: 'PREPARE_RESERVE_SET_AVAILABLE_CARRINHOS',
+    carrinhos
   }
 }
 

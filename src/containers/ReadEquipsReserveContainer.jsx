@@ -14,6 +14,7 @@ import {
   setBarcodeTipo,
   insertStudentLend,
   registerReservedEquips,
+  getCarrinhos
 } from '../actions/prepareReserve.js'
 import { getTipos, getFamilias } from '../actions/equipTypeSelect.js'
 import {
@@ -32,6 +33,8 @@ const mapStateToProps = (state) => {
     dialogMessage: state.appUi.submissionMessage,
     isDataSubmitted: state.appUi.isDataSubmitted,
     requisicao: state.prepareReserve.requisicao,
+    carrinhoErrorText: state.prepareReserve.carrinhoErrorText,
+    availableCarrinhos: state.prepareReserve.availableCarrinhos,
     usuario: state.login.usuario
   }
 }
@@ -80,8 +83,11 @@ const mapDispatchToProps = (dispatch) => {
     getFamilias: () => {
       dispatch(getFamilias(serverUrl))
     },
-    registerReservedEquips: (requisicao, usuario, patrimonios) => {
-      dispatch(registerReservedEquips(serverUrl, requisicao, usuario, patrimonios))
+    registerReservedEquips: (requisicao, usuario, carrinhos, patrimonios) => {
+      dispatch(registerReservedEquips(serverUrl, requisicao, usuario, carrinhos, patrimonios))
+    },
+    getCarrinhos: () => {
+      dispatch(getCarrinhos(serverUrl))
     },
     setIsYesNoMessage: (isYesNoMessage) => {
       dispatch(setIsYesNoMessage(isYesNoMessage))

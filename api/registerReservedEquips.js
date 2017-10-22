@@ -7,14 +7,23 @@ module.exports = exports = function(req, res) {
       res.send(err);
     else if(requisicao !== null) {
       req.body.usuario = req.body.usuario;
-      req.models.EstadosReq.one({id_estadosReq: 4}, function(err, state) {
-        changeEquipState(req, res, "Reservado", false);
-        requisicao.setEstadoReq(state, function(err) {});
-        res.send({code: "SUCCESS"});
-      })
+      req.models.Carrinhos.find({id_carrinho: req.body.carrinhos}, function(err, carrinhos) {
+        if(err)
+          res.send(err);
+        else {
+          carrinhos.forEach(function(carrinho) {
+            carrinho.setRequisicao(requisicao, function(err) {})
+          });
+          req.models.EstadosReq.one({id_estadosReq: 4}, function(err, state) {
+            changeEquipState(req, res, "Reservado", false);
+            requisicao.setEstadoReq(state, function(err) {});
+            res.send({code: "SUCCESS"});
+          });
+        }
+      });
     }
     else {
       res.send({code: "ER_NOT_FOUND"});
     }
-  })
+  });
 }
