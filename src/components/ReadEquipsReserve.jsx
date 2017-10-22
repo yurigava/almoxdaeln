@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import ChipInput from 'material-ui-chip-input';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
@@ -60,6 +61,9 @@ const getErrorText = (errorCode) => {
     case 'ER_WRONG_EQUIP':
       return 'Equipamento não faz parte do pedido'
 
+    case 'ER_CONN_ERROR':
+    return 'Erro ao verificar equipamento.'
+
     default:
       return "Erro inesperado. Código: " + errorCode;
   }
@@ -72,6 +76,7 @@ export default class ReadEquipsReserve extends React.Component {
       fieldIdOnFocus: -1,
       fieldValueOnFocus: "",
       callbackOnYesDialog: null,
+      selectedCarrinhos: []
     }
     this.findTipoById = this.findTipoById.bind(this);
     this.findFamiliaById = this.findFamiliaById.bind(this);
@@ -86,6 +91,8 @@ export default class ReadEquipsReserve extends React.Component {
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
     this.handleSendRequest = this.handleSendRequest.bind(this);
     this.handleSendIncorrectRequest = this.handleSendIncorrectRequest.bind(this);
+    this.addCarrinho = this.addCarrinho.bind(this);
+    this.removeCarrinho = this.removeCarrinho.bind(this);
   }
 
   componentDidMount() {
@@ -93,6 +100,7 @@ export default class ReadEquipsReserve extends React.Component {
       this.props.getTipos();
     if(this.props.familias.length === 0)
       this.props.getFamilias();
+    this.props.getCarrinhos();
   }
 
   componentWillUpdate(nextProps) {
@@ -309,6 +317,18 @@ export default class ReadEquipsReserve extends React.Component {
         .filter(equip => equip.errorCode === "" && equip.value !== "").map(equip => Number(equip.value)))
   }
 
+  addCarrinho(carrinho) {
+    this.setState(update(this.state, {
+      selectedCarrinhos: {$push: [carrinho]}
+    }));
+  }
+
+  removeCarrinho(carrinho, index) {
+    this.setState(update(this.state, {
+      selectedCarrinhos: {$splice: [[index, 1]]}
+    }));
+  }
+
   render () {
 
     let reserveInfo;
@@ -470,6 +490,24 @@ export default class ReadEquipsReserve extends React.Component {
               </Sticky>
             </Col>
             <Col xs={12} sm={5} md={6}>
+              <Row bottom="xs" center="xs" style={{position: "relative"}}>
+                <Col xs={12}>
+                  <ChipInput
+                    hintText="Carrinho"
+                    floatingLabelText="Número(s) do(s) carrinho(s)"
+                    floatingLabelStyle={{color: 'grey', left: '0px'}}
+                    openOnFocus={true}
+                    fullWidth={true}
+                    dataSource={this.props.availableCarrinhos}
+                    errorText={this.props.carrinhoErrorText}
+                    newChipKeyCodes={[13,32]}
+                    onRequestDelete={(carrinho, index) => this.removeCarrinho(carrinho, index)}
+                    value={this.state.selectedCarrinhos}
+                    onBeforeRequestAdd={(carrinho) => this.props.availableCarrinhos.includes(carrinho)}
+                    onRequestAdd={(carrinho) => this.addCarrinho(carrinho)}
+                  />
+                </Col>
+              </Row>
               {this.props.barCodes.map((barCode, index) => (
                 <Row key={index} bottom="xs" center="xs" style={{position: "relative"}}>
                   <Col xs={10}>
@@ -553,6 +591,7 @@ ReadEquipsReserve.propTypes = {
   getFamilias: PropTypes.func.isRequired,
   setSubmissionMessage: PropTypes.func.isRequired,
   registerReservedEquips: PropTypes.func.isRequired,
+  getCarrinhos: PropTypes.func.isRequired,
   barCodes: PropTypes.array,
   reserveEquips: PropTypes.array,
   tipos: PropTypes.array,
@@ -561,5 +600,7 @@ ReadEquipsReserve.propTypes = {
   isYesNoMessage: PropTypes.bool.isRequired,
   isDataSubmitted: PropTypes.bool.isRequired,
   requisicao: PropTypes.number,
+  carrinhoErrorText: PropTypes.string.isRequired,
+  availableCarrinhos: PropTypes.array.isRequired,
   usuario: PropTypes.string.isRequired
 };

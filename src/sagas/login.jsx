@@ -37,6 +37,8 @@ function *submitLogin(action) {
   } catch (e) {
     if(e.response && e.response.status === 401)
       yield put({ type: 'SET_LOGIN_STATUS', success: false });
+    else if(!e.response)
+      yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor." });
     else
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Ocorreu um erro inesperado: " + e });
   }

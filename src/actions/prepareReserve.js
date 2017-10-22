@@ -23,6 +23,13 @@ export const getReserveDetails = (serverUrl, reserveId) => {
   }
 }
 
+export const getCarrinhos = (serverUrl) => {
+  return {
+    type: 'GET_AVAILABLE_CARRINHOS',
+    serverUrl
+  }
+}
+
 export const getReserves = (serverUrl, date, shift) => {
   return {
     type: 'GET_RESERVES',
@@ -117,6 +124,20 @@ export const resetMissingReserve = (index) => {
   return {
     type: 'PREPARE_RESERVE_RESET_RESERVE_EQUIP',
     index
+  }
+}
+
+export const setCarrinhoErrorText = (message) => {
+  return {
+    type: 'PREPARE_RESERVE_SET_CARRINHO_ERROR_TEXT',
+    message
+  }
+}
+
+export const setCarrinhos = (carrinhos) => {
+  return {
+    type: 'PREPARE_RESERVE_SET_AVAILABLE_CARRINHOS',
+    carrinhos
   }
 }
 

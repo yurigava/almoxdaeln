@@ -14,7 +14,9 @@ const initialState =
   reserves: [],
   barCodes: [emptyBarCode],
   reserveEquips: [],
-  requisicao: null
+  requisicao: null,
+  availableCarrinhos: [],
+  carrinhoErrorText: ""
 }
 
 let barCodeIndex;
@@ -52,6 +54,20 @@ const prepareReserve = (state = initialState, action) => {
               value: {$set: action.value}
             }
           }
+        })
+      )
+
+    case 'PREPARE_RESERVE_SET_CARRINHO_ERROR_TEXT':
+      return (
+        update(state, {
+            carrinhoErrorText: {$set: action.message}
+        })
+      )
+
+    case 'PREPARE_RESERVE_SET_AVAILABLE_CARRINHOS':
+      return (
+        update(state, {
+            availableCarrinhos: {$set: action.carrinhos}
         })
       )
 
