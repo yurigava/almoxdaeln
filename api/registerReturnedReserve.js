@@ -19,9 +19,11 @@ module.exports = exports = function(req, res) {
               res.send({code: "SUCCESS"});
             });
             carrinhos.forEach(function(carrinho) {
-              carrinho.setRequisicao(null, function(err) {})
+              carrinho.Requisicoes_id_requisicao = null;
+              carrinho.save(function(err) {});
             });
           }
+        });
       }
     }
     else {
