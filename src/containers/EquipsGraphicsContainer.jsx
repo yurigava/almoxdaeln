@@ -5,7 +5,6 @@ import {
   setSelectedTipo,
   setSelectedFamilia,
   setInfoNumber,
-  raiseLowerWidth,
   quantidadeEquipsGraph,
   setQuantidadeEquipGraph,
 } from '../actions/equipsGraphics.js'
@@ -22,11 +21,9 @@ const mapStateToProps = (state) => {
     isMissingTipo: state.equipsGraphics.isMissingTipo,
     submissionMessage: state.appUi.submissionMessage,
     infoNumber: state.equipsGraphics.infoNumber,
-    width: state.equipsGraphics.width,
     quantidade: state.equipsGraphics.quantidade,
     referencia: state.equipsGraphics.referencia,
     isInputDisabled: state.appUi.isInputDisabled,
-    //errorCode: state.equipsGraphics.errorCode,
   }
 }
 
@@ -43,9 +40,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     setInfoNumber: (infoNumber) => {
       dispatch(setInfoNumber(infoNumber))
-    },
-    raiseLowerWidth: (widthActual, width) => {
-      dispatch(raiseLowerWidth(widthActual, width))
     },
     quantidadeEquipsGraph: (familia, tipo, dataInicial, dataFinal) => {
       dispatch(quantidadeEquipsGraph(serverUrl, familia, tipo, dataInicial, dataFinal))
