@@ -27,14 +27,6 @@ export const setInfoNumber = (infoNumber) => {
   }
 }
 
-export const raiseLowerWidth = (widthActual, width) => {
-  return {
-    type: 'RAISE_LOWER_WIDTH_EQUIPGRAPH',
-    widthActual,
-    width
-  }
-}
-
 export const quantidadeEquipsGraph = (serverUrl, familia, tipo, dataInicial, dataFinal) => {
   return {
     type: 'QUANTIDADE_EQUIPGRAPH',
