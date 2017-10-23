@@ -148,14 +148,16 @@ function *getLastReq(action) {
   try {
     const response = yield call(
       axios.post,
-      action.serverUrl + '/api/getLastReq',
-      {
-        usuario: action.usuario,
-      },
+      //action.serverUrl + '/api/getLastReq',
+      action.serverUrl + '/api/getLentEquips',
+      //{
+      //  usuario: action.usuario,
+      //},
       {withCredentials:true}
     );
     if(response.data.code === "SUCCESS") {
       yield put({ type: 'RESERVE_SET_LAST_REQ', equipamentos: response.data.equipamentos , requisicoes: response.data.requisicoes });
+      alert(response.data.equipamentos);
     }
     else if(response.data.code === "NOTHING") {
       yield put({ type: 'SET_DATA_SUBMITTED', submitted: false });
