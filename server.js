@@ -143,6 +143,9 @@ app.get('/api/getPreparedReserves', getPreparedReserves);
 var registerDeliveredReserve = require('./api/registerDeliveredReserve.js');
 app.post('/api/registerDeliveredReserve', registerDeliveredReserve);
 
+var getAllLentEquipsRoute = require('./api/getAllLentEquips.js');
+app.post('/api/getAllLentEquips', getAllLentEquipsRoute);
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });

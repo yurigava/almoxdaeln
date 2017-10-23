@@ -20,15 +20,12 @@ export default class EquipsGraphics extends React.Component {
     super(props);
     this.state = {
       dateInit: "",
-      dateFinal: "",
-      width: 75
+      dateFinal: ""
     }
     this.props.clearMissingFieldsError();
     this.formatDate = this.formatDate.bind(this);
     this.handleChangeDateInit = this.handleChangeDateInit.bind(this);
     this.handleChangeDateFinal = this.handleChangeDateFinal.bind(this);
-    this.raiseWidth = this.raiseWidth.bind(this);
-    this.lowerWidth = this.lowerWidth.bind(this);
   }
 
   componentDidMount() {
@@ -39,11 +36,6 @@ export default class EquipsGraphics extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    //console.log("atual: " + this.props.width + " prox: " + nextProps.width);
-    this.setState(update(this.state, {
-        width: { $set: nextProps.width}
-    }));
-
     if(nextProps.quantidade !== this.props.quantidade && nextProps.quantidade !== null) {
       console.log("quantidade: " + nextProps.quantidade);
     }
@@ -101,16 +93,6 @@ export default class EquipsGraphics extends React.Component {
 
       this.props.quantidadeEquipsGraph(this.props.familia, this.props.tipo, dateInicial, dateFinal);
     }
-  }
-
-  raiseWidth() {
-    if(this.props.width < 100)
-      this.props.raiseLowerWidth(this.props.width, 5);
-  }
-
-  lowerWidth() {
-    if(this.props.width > 0)
-      this.props.raiseLowerWidth(this.props.width, -5);
   }
 
   render () {
@@ -179,7 +161,7 @@ export default class EquipsGraphics extends React.Component {
 
           <div
             style={{
-              width: this.state.width+'%'
+              width: '60%'
             }}
             >
             <Row center="xs, sm, md" >
@@ -225,33 +207,6 @@ export default class EquipsGraphics extends React.Component {
               </Col>
             </Row>
           </div>
-            <Row bottom="xs" center="xs" style={{height: '55px'}}>
-              <Col>
-                <RaisedButton
-                  name="raise"
-                  type="button"
-                  style={style}
-                  label="Aumentar"
-                  primary={true}
-                  onTouchTap={this.raiseWidth}
-                />
-              </Col>
-              <Col xs={1}/>
-              <Col>
-                <RaisedButton
-                  name="lower"
-                  type="button"
-                  style={style}
-                  label="Diminuir"
-                  primary={true}
-                  onTouchTap={this.lowerWidth}
-                />
-              </Col>
-              <Col xs={12}/>
-              <Col>
-              {this.state.width + '%'}
-            </Col>
-          </Row>
         </Grid>
       </div>
     );
@@ -271,8 +226,6 @@ EquipsGraphics.propTypes = {
   submissionMessage: PropTypes.string.isRequired,
   setInfoNumber: PropTypes.func.isRequired,
   infoNumber: PropTypes.number.isRequired,
-  raiseLowerWidth: PropTypes.func,
-  width: PropTypes.number,
   quantidadeEquipsGraph: PropTypes.func.isRequired,
   getFamilias: PropTypes.func.isRequired,
   getTipos: PropTypes.func.isRequired,

@@ -7,7 +7,6 @@ const initialState =
   isMissingTipo: false,
   isMissingFamilia: false,
   infoNumber: 0,
-  width: 75,
   quantidade: [],
   referencia: 0,
 }
@@ -40,13 +39,6 @@ const equipsGraphics = (state = initialState, action) => {
       return (
           update(state, {
             infoNumber: {$set: action.infoNumber}
-          })
-      )
-
-    case 'RAISE_LOWER_WIDTH_EQUIPGRAPH':
-      return (
-          update(state, {
-            width: {$set: (action.widthActual + action.width) }
           })
       )
 
