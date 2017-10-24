@@ -35,7 +35,7 @@ function *submitLogin(action) {
     yield put({ type: 'SET_LOGIN_STATUS', success: true });
     yield put({ type: 'CHANGE_ROLE', role: response.data.role, usuario: response.data.username });
   } catch (e) {
-    if(e.response && e.response.status === 401)
+    if(e.response && (e.response.status === 401 || e.response.status === 400))
       yield put({ type: 'SET_LOGIN_STATUS', success: false });
     else if(!e.response)
       yield put({ type: 'SET_SUBMISSION_MESSAGE', message: "Falha ao comunicar com o servidor." });

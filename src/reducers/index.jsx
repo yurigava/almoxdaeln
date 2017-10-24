@@ -11,6 +11,7 @@ import changeTipoName from './changeTipoName.jsx'
 import addReserve from './addReserve.jsx'
 import equipsGraphics from './equipsGraphics.jsx'
 import prepareReserve from './prepareReserve.jsx'
+import provideReserve from './provideReserve.jsx'
 //import visibilityFilter from './visibilityFilter'
 
 const almoxApp = combineReducers({
@@ -26,6 +27,7 @@ const almoxApp = combineReducers({
   addReserve,
   equipsGraphics,
   prepareReserve,
+  provideReserve,
 })
 
 export default almoxApp

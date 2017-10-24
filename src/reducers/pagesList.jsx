@@ -31,6 +31,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'provideReserve',
+      linkText: 'Entregar Reserva ao Professor'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'changeEquipState',
       linkText: 'Controle de Equipamentos'
     },

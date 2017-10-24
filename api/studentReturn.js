@@ -5,7 +5,7 @@ module.exports = exports = function(req, res) {
   var usuario = req.body.usuario;
   req.db.driver.execQuery(
     sqlQueryGetLentEquips,
-    [usuario],
+    [usuario, 1],
     function (err, equipsInRequest) {
       if(err)
         res.send(err);

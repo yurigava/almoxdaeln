@@ -15,6 +15,7 @@ import AddReserveContainer from './containers/AddReserveContainer.jsx';
 import EquipsGraphicsContainer from './containers/EquipsGraphicsContainer.jsx';
 import SelectReserveContainer from './containers/SelectReserveContainer.jsx';
 import ReadEquipsReserveContainer from './containers/ReadEquipsReserveContainer.jsx';
+import ProvideReserveContainer from './containers/ProvideReserveContainer.jsx';
 import EquipTable from './components/EquipTable.jsx';
 import { Router, Route, hashHistory, IndexRedirect, IndexRoute } from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -39,6 +40,7 @@ import addReserveSagas from './sagas/addReserve.jsx'
 import equipTypeSelectSagas from './sagas/equipTypeSelect.jsx'
 import equipsGraphicsSagas from './sagas/equipsGraphics.jsx'
 import prepareReserveSagas from './sagas/prepareReserve.jsx'
+import provideReserveSagas from './sagas/provideReserve.jsx'
 
 export const serverUrl = 'http://192.168.0.69:8081';
 
@@ -63,6 +65,7 @@ sagaMiddleware.run(addReserveSagas)
 sagaMiddleware.run(equipTypeSelectSagas)
 sagaMiddleware.run(equipsGraphicsSagas)
 sagaMiddleware.run(prepareReserveSagas)
+sagaMiddleware.run(provideReserveSagas)
 
 main();
 
@@ -107,6 +110,7 @@ function main() {
             <Route path="/equips" component={EquipTable} url={serverUrl} onEnter={verifyPermission}/>
             <Route path="/equipsGraphics" component={EquipsGraphicsContainer} onEnter={verifyPermission}/>
             <Route path="/addReserve" component={AddReserveContainer} onEnter={verifyPermission}/>
+            <Route path="/provideReserve" component={ProvideReserveContainer} onEnter={verifyPermission}/>
             <Route path="/prepareReserve" onEnter={verifyPermission}>
               <IndexRoute component={SelectReserveContainer}/>
               <Route path="/prepareReserve/readEquips" component={ReadEquipsReserveContainer}/>

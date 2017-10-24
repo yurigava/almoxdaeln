@@ -27,7 +27,7 @@ module.exports = exports = function(req, res) {
           if(notAvailableEquips.length > 0)
             res.send({code: "ER_NOT_AVAILABLE", notAvailable: notAvailableEquips});
           else {
-            req.db.driver.execQuery(sqlQueryGetLentEquips, [usuario], function (err, equipsInRequest) {
+            req.db.driver.execQuery(sqlQueryGetLentEquips, [usuario, 1], function (err, equipsInRequest) {
               if(err)
                 res.send(err);
               else if(!shouldAddToRequest && equipsInRequest.length > 0) {

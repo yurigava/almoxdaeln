@@ -1,12 +1,12 @@
 var changeEquipState = require('../utils/changeEquipState.js')
-var sqlQueryGetLentEquips = require('../utils/sqlQueryGetLentEquips.js')
 
 module.exports = exports = function(req, res) {
   req.models.Requisicoes.one({id_requisicao: req.body.requisicao}, function(err, requisicao) {
     if(err)
       res.send(err);
     else if(requisicao !== null) {
-      req.body.usuario = req.body.usuario;
+      req.body.observacao = "Separado por " + req.body.usuario;
+      req.body.usuario = requisicao.usuario;
       req.models.Carrinhos.find({id_carrinho: req.body.carrinhos}, function(err, carrinhos) {
         if(err)
           res.send(err);

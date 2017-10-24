@@ -10,4 +10,4 @@ module.exports = exports = `SELECT EquipamentosMonitorados_patrimonio FROM
     AND t1.timestamp = t2.timestamp
     AND t1.usuario = t2.usuario) LastStates
   WHERE
-    Estados_id_estado = 1`;
+    Estados_id_estado = ?`;
