@@ -6,7 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 
-export default class ProvideReserve extends React.Component {
+export default class ReturnReserve extends React.Component {
 
   constructor(props) {
     super(props);
@@ -25,7 +25,6 @@ export default class ProvideReserve extends React.Component {
   handleCloseDialog() {
     if(this.props.isDataSubmitted) {
       this.props.getReserves()
-      this.props.clearDataSent();
     }
     this.props.setSubmissionMessage("");
   }
@@ -33,12 +32,12 @@ export default class ProvideReserve extends React.Component {
   handleReserveSelect(id, user, carrinhos) {
     let message;
     if(carrinhos.length === 1)
-      message = "O Carrinho " + carrinhos + " deve ser entregue.";
+      message = "Os equipamentos do carrinho " + carrinhos + " devem ser conferidos.";
     else if(carrinhos.length === 2)
-      message = "Os Carrinhos " + carrinhos.join(' e ') + " devem ser entregues.";
+      message = "Os equipamentos dos carrinhos " + carrinhos.join(' e ') + " devem ser conferidos.";
     else
-      message = "Os Carrinhos " + carrinhos.join(', ') + " devem ser entregues.";
-    this.props.setSubmissionMessage("Tem certeza que deseja entregar o pedido para o professor " + user + "?\\n" + message);
+      message = "Os equipamentos dos carrinhos " + carrinhos.join(', ') + " devem ser conferidos.";
+    this.props.setSubmissionMessage("Conferir o pedido do professor " + user + "?\\n" + message);
     this.props.setIsYesNoMessage(true);
     this.setState(update(this.state, {
       callbackOnYesDialog: {$set: () => this.handleReserveConfirm(id)}
@@ -46,7 +45,9 @@ export default class ProvideReserve extends React.Component {
   }
 
   handleReserveConfirm(id) {
-    this.props.registerDeliveredReserve(id);
+    this.props.setSubmissionMessage("");
+    this.props.getReturnedReserveDetails(id);
+    this.props.router.push("/returnReserve/verifyReserve");
   }
 
   render () {
@@ -131,12 +132,11 @@ export default class ProvideReserve extends React.Component {
   }
 }
 
-ProvideReserve.propTypes = {
+ReturnReserve.propTypes = {
   getReserves: PropTypes.func.isRequired,
   setSubmissionMessage: PropTypes.func.isRequired,
-  clearDataSent: PropTypes.func.isRequired,
   setIsYesNoMessage: PropTypes.func.isRequired,
-  registerDeliveredReserve: PropTypes.func.isRequired,
+  getReturnedReserveDetails: PropTypes.func.isRequired,
   reserves: PropTypes.array.isRequired,
   dialogMessage: PropTypes.string.isRequired,
   isYesNoMessage: PropTypes.bool.isRequired,

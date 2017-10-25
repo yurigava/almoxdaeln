@@ -12,7 +12,7 @@ import addReserve from './addReserve.jsx'
 import equipsGraphics from './equipsGraphics.jsx'
 import prepareReserve from './prepareReserve.jsx'
 import provideReserve from './provideReserve.jsx'
-//import visibilityFilter from './visibilityFilter'
+import returnReserve from './returnReserve.jsx'
 
 const almoxApp = combineReducers({
   login,
@@ -28,6 +28,7 @@ const almoxApp = combineReducers({
   equipsGraphics,
   prepareReserve,
   provideReserve,
+  returnReserve,
 })
 
 export default almoxApp

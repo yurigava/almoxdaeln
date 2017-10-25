@@ -270,6 +270,9 @@ export default class ReadEquipsReserve extends React.Component {
     for (let index = 0; index < this.props.reserveEquips.length; index++) {
       this.props.resetMissingReserve(index);
     }
+    this.setState(update(this.state, {
+      selectedCarrinhos: {$set: []}
+    }));
   }
 
   yesNoDialog(dialogMessage, callBackFunction) {

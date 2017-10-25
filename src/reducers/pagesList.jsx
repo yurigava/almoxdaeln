@@ -41,6 +41,16 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'returnReserve',
+      linkText: 'Devolver Reserva'
+    },
+    allowedRoles: [
+      "almoxarife",
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'changeEquipState',
       linkText: 'Controle de Equipamentos'
     },
