@@ -5,8 +5,11 @@ function *getReserves(action) {
   yield put({ type: 'SET_LOADING', isLoading: true });
   try {
     const response = yield call(
-      axios.get,
+      axios.post,
       action.serverUrl + '/api/getPreparedReserves',
+      {
+        stateToGet: 4
+      },
       {withCredentials:true}
     );
 

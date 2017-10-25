@@ -1,10 +1,9 @@
 module.exports = exports = function(req, res) {
-  req.models.Requisicoes.find({ EstadosReq_id_estadosReq: 4 },
+  req.models.Requisicoes.find({ EstadosReq_id_estadosReq: req.body.stateToGet },
     function(err, requisicoes) {
       if(err)
         res.send(err)
       else {
-        console.log(requisicoes.length)
         req.models.EquipamentosRequisicao
             .aggregate({Requisicoes_id_requisicao: requisicoes.map(requisicao => requisicao.id_requisicao)})
             .sum("quantidade").groupBy("Requisicoes_id_requisicao").get(function(err, quantidades) {

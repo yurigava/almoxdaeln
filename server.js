@@ -138,10 +138,13 @@ var getCarrinhosRoute = require('./api/getCarrinhos.js');
 app.get('/api/getCarrinhos', getCarrinhosRoute);
 
 var getPreparedReserves = require('./api/getPreparedReserves.js');
-app.get('/api/getPreparedReserves', getPreparedReserves);
+app.post('/api/getPreparedReserves', getPreparedReserves);
 
 var registerDeliveredReserve = require('./api/registerDeliveredReserve.js');
 app.post('/api/registerDeliveredReserve', registerDeliveredReserve);
+
+var getReturnedReserveDetails = require('./api/getReturnedReserveDetails.js');
+app.post('/api/getReturnedReserveDetails', getReturnedReserveDetails);
 
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
