@@ -100,10 +100,10 @@ export default class ReturnReserve extends React.Component {
             adjustForCheckbox={false}
           >
             <TableRow>
-              <TableHeaderColumn style={{color: 'black', fontWeight: 'bold', fontSize: '16px'}}>Professor</TableHeaderColumn>
-              <TableHeaderColumn style={{color: 'black', fontWeight: 'bold', fontSize: '16px'}}>Carrinho(s)</TableHeaderColumn>
-              <TableHeaderColumn style={{color: 'black', fontWeight: 'bold', fontSize: '16px'}}>Quantidade</TableHeaderColumn>
-              <TableHeaderColumn style={{color: 'black', fontWeight: 'bold', fontSize: '16px'}}>Matéria</TableHeaderColumn>
+              <TableHeaderColumn style={{color: 'black', fontSize: '18px'}}>Professor</TableHeaderColumn>
+              <TableHeaderColumn style={{color: 'black', fontSize: '18px'}}>Carrinho(s)</TableHeaderColumn>
+              <TableHeaderColumn style={{color: 'black', fontSize: '18px'}}>Quantidade</TableHeaderColumn>
+              <TableHeaderColumn style={{color: 'black', fontSize: '18px'}}>Matéria</TableHeaderColumn>
             </TableRow>
           </TableHeader>
 

@@ -62,7 +62,7 @@ export default class InformationTable extends React.Component {
           >
             <TableRow>
               {this.props.headerNames.map((headerName, index) => (
-                <TableHeaderColumn key={index} style={{color: 'black', fontWeight: 'bold', fontSize: '16px'}}>{headerName}</TableHeaderColumn>
+                <TableHeaderColumn key={index} style={{color: 'black', fontSize: '18px'}}>{headerName}</TableHeaderColumn>
               ))}
             </TableRow>
           </TableHeader>
