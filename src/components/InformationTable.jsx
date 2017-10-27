@@ -76,8 +76,11 @@ export default class InformationTable extends React.Component {
               <TableRow
                 key={rowIndex}
                 name={rowIndex}
-                style={{cursor: 'pointer'}}
-                onTouchTap={() => this.props.handleSelectedLine(informationLine[this.props.selectedLineIndexToSend])}
+                style={this.props.isRowClickable ? {cursor: 'pointer'} : {}}
+                onTouchTap={this.props.isRowClickable ?
+                    () => this.props.handleSelectedLine(informationLine[this.props.selectedLineIndexToSend]) :
+                    () => {}
+                }
               >
                 {informationLine.map((column, index) => (
                   <TableRowColumn key={index} style={{fontSize: '16px'}}>{column}</TableRowColumn>
@@ -100,4 +103,5 @@ InformationTable.propTypes = {
   informationLines: PropTypes.array.isRequired,
   headerNames: PropTypes.array.isRequired,
   dialogMessage: PropTypes.string.isRequired,
+  isRowClickable: PropTypes.bool.isRequired
 };

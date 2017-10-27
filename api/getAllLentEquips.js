@@ -1,7 +1,7 @@
 var sqlQueryGetAllLentEquips = require('../utils/sqlQueryGetAllLentEquips.js')
 
 module.exports = exports = function(req, res) {
-  req.db.driver.execQuery(sqlQueryGetAllLentEquips, [3], function (err, equipsInRequest) {
+  req.db.driver.execQuery(sqlQueryGetAllLentEquips, [1], function (err, equipsInRequest) {
     if(err)
       res.send(err);
     else {
@@ -29,7 +29,7 @@ module.exports = exports = function(req, res) {
       }
 
       del.forEach(function(element,index) {
-        pegetAllLentEquipsndencias.splice((element.i - index),1);
+        pendencias.splice((element.i - index),1);
       });
       pendencias.forEach(function(element,index) {
         console.log("usuario: " + element.usuario + " quantidade: " + element.quantidade);
