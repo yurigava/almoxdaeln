@@ -252,6 +252,7 @@ export default class VerifyReturnedReserve extends React.Component {
           handleSelectedLine={this.handleSelectedTipo}
           selectedLineIndexToSend={0}
           isYesNoMessage={this.props.isYesNoMessage}
+          isRowClickable={true}
           informationLines={
             this.props.lentEquips.map(lentEquip => [lentEquip.name, lentEquip.count,
                 this.state.readEquipsByTipo[lentEquip.name] === undefined ?

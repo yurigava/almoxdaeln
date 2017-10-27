@@ -107,12 +107,11 @@ export const pagesList = [
   },
   {
     info: {
-      link: 'equips',
-      linkText: 'Equipamentos'
+      link: 'pendingEquips',
+      linkText: 'Ver Pendências'
     },
     allowedRoles: [
       "almoxarife",
-      "professor",
       "admin"
     ]
   },
