@@ -153,5 +153,14 @@ export const pagesList = [
       "professor",
       "admin"
     ]
-  }
+  },
+  {
+    info: {
+      link: 'managerUser',
+      linkText: 'Gerenciar Usuários'
+    },
+    allowedRoles: [
+      "admin"
+    ]
+  },
 ];
