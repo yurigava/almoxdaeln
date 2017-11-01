@@ -14,6 +14,7 @@ import prepareReserve from './prepareReserve.jsx'
 import provideReserve from './provideReserve.jsx'
 import returnReserve from './returnReserve.jsx'
 import pendingEquipsTable from './pendingEquipsTable.jsx'
+import managerUser from './managerUser.jsx'
 
 const almoxApp = combineReducers({
   login,
@@ -30,7 +31,9 @@ const almoxApp = combineReducers({
   prepareReserve,
   provideReserve,
   returnReserve,
-  pendingEquipsTable
+  pendingEquipsTable,
+  managerUser
+
 })
 
 export default almoxApp
