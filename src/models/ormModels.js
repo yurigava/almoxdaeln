@@ -8,6 +8,26 @@ module.exports = function(db, cb) {
     }
   });
 
+  var Usuarios = db.define("Usuarios", {
+    //id_user: {
+    //  type: 'integer',
+    //  unique: true,
+    //  key: true
+    //},
+    user: {
+      type: 'text',
+      size: 45,
+      required: true,
+      unique: true,
+      key: true
+    },
+    role: {
+      type: 'text',
+      size: 45,
+      required: true
+    }
+  });
+
   var EquipamentosMonitorados = db.define("EquipamentosMonitorados", {
     patrimonio: {
       type: 'integer',
