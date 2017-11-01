@@ -36,9 +36,9 @@ export const setLoginStatus = (success) => {
   }
 }
 
-export const getUserRole = (serverUrl) => {
+export const getUsersRole = (serverUrl) => {
   return {
-    type: 'GET_USER_ROLE',
+    type: 'GET_USERS_ROLE',
     serverUrl
   }
 }

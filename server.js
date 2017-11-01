@@ -152,6 +152,9 @@ app.post('/api/registerReturnedReserve', registerReturnedReserve);
 var getAllLentEquipsRoute = require('./api/getAllLentEquips.js');
 app.get('/api/getAllLentEquips', getAllLentEquipsRoute);
 
+var getUsersRoute = require('./api/getUsers.js');
+app.get('/api/getUsers', getUsersRoute);
+
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
