@@ -145,6 +145,15 @@ export const pagesList = [
   },
   {
     info: {
+      link: 'managerUser',
+      linkText: 'Gerenciar Usuários'
+    },
+    allowedRoles: [
+      "admin"
+    ]
+  },
+  {
+    info: {
       link: 'logout',
       linkText: 'Logout'
     },
@@ -153,5 +162,5 @@ export const pagesList = [
       "professor",
       "admin"
     ]
-  }
+  }  
 ];

@@ -456,7 +456,6 @@ export default class AddReserve extends React.Component {
                   value={TurnoReserve[this.state.timeReserve]}
                   disabled={this.props.isInputDisabled}
                   onChange={this.handleChangeTime}
-                  disabled={this.props.isInputDisabled}
                   floatingLabelStyle={{color: 'grey', left: '0px'}}
                   inputStyle={{left: '0px'}}
                   fullWidth={true}
