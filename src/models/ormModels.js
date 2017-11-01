@@ -8,6 +8,19 @@ module.exports = function(db, cb) {
     }
   });
 
+  var Usuarios = db.define("Usuarios", {
+    user: {
+      type: 'text',
+      size: 45,
+      required: true
+    },
+    role: {
+      type: 'text',
+      size: 45,
+      required: true
+    }
+  });
+
   var EquipamentosMonitorados = db.define("EquipamentosMonitorados", {
     patrimonio: {
       type: 'integer',
